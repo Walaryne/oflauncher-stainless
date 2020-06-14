@@ -32,12 +32,15 @@ add_executable(${PROJECT_NAME} src/main.cpp src/gui/OFSGui.cpp src/gui/OFSGui.h 
 
 INCLUDE(FindPkgConfig)
 
+PKG_SEARCH_MODULE(JSONCPP REQUIRED jsoncpp)
+include_directories(${JSONCPP_INCLUDE_DIRS})
+
 if(USE_GUI)
     PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 
     INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} curlcpp)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} ${JSONCPP_LIBRARIES}  curlcpp)
     add_compile_definitions(USE_GUI)
 else()
-    target_link_libraries(oflauncher_stainless PUBLIC curlcpp)
+    target_link_libraries(oflauncher_stainless PUBLIC ${JSONCPP_LIBRARIES} curlcpp)
 endif()
