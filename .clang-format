@@ -5,6 +5,7 @@ SpaceBeforeParens: Never
 SpacesInParentheses: false
 Standard: Auto
 TabWidth: 4
-UseTab: Always
+IndentWidth: 4
+UseTab: ForContinuationAndIndentation
 
 ...
