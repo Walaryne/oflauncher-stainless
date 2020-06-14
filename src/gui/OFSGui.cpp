@@ -3,12 +3,15 @@
 //
 
 #include "OFSGui.h"
+#include <iostream>
 
 OFSGui::OFSGui() {
+	e_quit = false;
 	k = true;
 	er = "";
+	e = new SDL_Event();
 
-	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		setError("Error initializing SDL: ");
 	} else {
 		w = SDL_CreateWindow("Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED,
@@ -18,12 +21,14 @@ OFSGui::OFSGui() {
 			setError("Error initializing SDL window: ");
 		} else {
 			s = SDL_GetWindowSurface(w);
-			SDL_FillRect(s, NULL, SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF));
-
-			SDL_UpdateWindowSurface(w);
-			SDL_Delay(2000);
 		}
 	}
+}
+
+OFSGui::~OFSGui() {
+	// TODO: Clean up all the surfaces and textures loaded here
+	SDL_DestroyWindow(w);
+	SDL_Quit();
 }
 
 void OFSGui::setError(std::string err_msg_pre) {
@@ -34,3 +39,20 @@ void OFSGui::setError(std::string err_msg_pre) {
 bool OFSGui::isOk() { return k; }
 
 std::string OFSGui::getError() { return er; }
+
+bool OFSGui::loop() {
+	while(!e_quit) {
+		SDL_FillRect(s, NULL, SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF));
+
+		SDL_UpdateWindowSurface(w);
+
+		while(SDL_PollEvent(e) != 0) {
+			switch(e->type) {
+			case SDL_QUIT:
+				e_quit = true;
+				break;
+			}
+		}
+	}
+	return !e_quit;
+}

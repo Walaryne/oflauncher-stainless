@@ -9,4 +9,6 @@ int main() {
 		return 1;
 	}
 	OFSNet::test();
+	while(g.loop()) {
+	}
 }
