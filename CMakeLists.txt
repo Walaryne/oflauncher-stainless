@@ -9,7 +9,7 @@ add_executable(${PROJECT_NAME} src/main.cpp src/gui/OFSGui.cpp src/gui/OFSGui.h 
 
 INCLUDE(FindPkgConfig)
 
-if(USE_GUIS)
+if(USE_GUI)
     PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 
     INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS})
