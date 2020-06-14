@@ -9,8 +9,6 @@ OFSGui::OFSGui() {
 	e_quit = false;
 	k = true;
 	er = "";
-	e = SDL_Event();
-
 
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		setError("Error initializing SDL: ");
@@ -42,17 +40,17 @@ bool OFSGui::isOk() { return k; }
 std::string OFSGui::getError() { return er; }
 
 bool OFSGui::loop() {
-	while(!e_quit) {
-		SDL_FillRect(s, nullptr, SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF));
+	SDL_Event e;
 
-		SDL_UpdateWindowSurface(w);
+	SDL_FillRect(s, NULL, SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF));
 
-		while(SDL_PollEvent(&e) != 0) {
-			switch(e.type) {
-			case SDL_QUIT:
-				e_quit = true;
-				break;
-			}
+	SDL_UpdateWindowSurface(w);
+
+	while(SDL_PollEvent(&e) != 0) {
+		switch(e.type) {
+		case SDL_QUIT:
+			e_quit = true;
+			break;
 		}
 	}
 	return !e_quit;
