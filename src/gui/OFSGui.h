@@ -10,13 +10,13 @@
 
 class OFSGui {
   private:
-	SDL_Window *w;
-	SDL_Surface *s;
-	bool k;
-	std::string er;
+	SDL_Window *window;
+	SDL_Surface *surface;
+	bool ok;
+	std::string err{};
 	bool e_quit;
 
-	void setError(std::string err_msg_pre);
+	void setError(const std::string& err_msg_pre);
 
   public:
 	OFSGui();
