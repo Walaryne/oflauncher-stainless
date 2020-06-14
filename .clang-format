@@ -1,0 +1,10 @@
+﻿---
+Language: Cpp
+SortIncludes: true
+SpaceBeforeParens: Never
+SpacesInParentheses: false
+Standard: Auto
+TabWidth: 4
+UseTab: Always
+
+...
