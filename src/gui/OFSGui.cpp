@@ -9,7 +9,8 @@ OFSGui::OFSGui() {
 	e_quit = false;
 	k = true;
 	er = "";
-	e = new SDL_Event();
+	e = SDL_Event();
+
 
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		setError("Error initializing SDL: ");
@@ -17,7 +18,7 @@ OFSGui::OFSGui() {
 		w = SDL_CreateWindow("Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED,
 							 SDL_WINDOWPOS_UNDEFINED, 640, 480,
 							 SDL_WINDOW_SHOWN);
-		if(w == NULL) {
+		if(w == nullptr) {
 			setError("Error initializing SDL window: ");
 		} else {
 			s = SDL_GetWindowSurface(w);
@@ -42,12 +43,12 @@ std::string OFSGui::getError() { return er; }
 
 bool OFSGui::loop() {
 	while(!e_quit) {
-		SDL_FillRect(s, NULL, SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF));
+		SDL_FillRect(s, nullptr, SDL_MapRGB(s->format, 0xFF, 0x00, 0xFF));
 
 		SDL_UpdateWindowSurface(w);
 
-		while(SDL_PollEvent(e) != 0) {
-			switch(e->type) {
+		while(SDL_PollEvent(&e) != 0) {
+			switch(e.type) {
 			case SDL_QUIT:
 				e_quit = true;
 				break;
