@@ -9,16 +9,18 @@
 #include <string>
 
 class OFSGui {
-    private:
-        SDL_Window* w;
-        SDL_Surface* s;
-        bool k;
-    public:
-        OFSGui();
-        bool isOk();
-        std::string getError();
+  private:
+	SDL_Window *w;
+	SDL_Surface *s;
+	bool k;
+	std::string er;
 
+	void setError(std::string err_msg_pre);
+
+  public:
+	OFSGui();
+	bool isOk();
+	std::string getError();
 };
 
-
-#endif //OFLAUNCHER_STAINLESS_OFSGUI_H
+#endif // OFLAUNCHER_STAINLESS_OFSGUI_H
