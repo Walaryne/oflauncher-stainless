@@ -6,13 +6,17 @@
 #define OFLAUNCHER_STAINLESS_OFSGUI_H
 
 #include "SDL2/SDL.h"
+#include <string>
 
 class OFSGui {
     private:
         SDL_Window* w;
         SDL_Surface* s;
+        bool k;
     public:
-        void init();
+        OFSGui();
+        bool isOk();
+        std::string getError();
 
 };
 

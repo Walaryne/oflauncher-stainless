@@ -3,9 +3,8 @@
 //
 
 #include "OFSGui.h"
-#include "SDL2/SDL.h"
 
-void OFSGui::init() {
+OFSGui::OFSGui() {
     int test = SDL_Init( SDL_INIT_VIDEO );
 
     w = SDL_CreateWindow( "Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN );

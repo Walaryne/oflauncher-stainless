@@ -4,6 +4,6 @@
 
 int main() {
     OFSGui g;
-    g.init();
+    
     OFSNet::test();
 }
