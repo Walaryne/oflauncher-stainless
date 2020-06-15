@@ -1,6 +1,5 @@
 #include "gui/OFSGui.h"
 #include "net/OFSNet.h"
-#include <json/json.h>
 #include <iostream>
 
 int main() {
