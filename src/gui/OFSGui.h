@@ -7,11 +7,29 @@
 
 #include "SDL2/SDL.h"
 #include <string>
+#include <vector>
+#include <memory>
+
+class OFSGuiImage {
+	private:
+	SDL_Texture* texture;
+	bool ok;
+
+	public:
+	OFSGuiImage(std::string image_file, SDL_Renderer* renderer);
+	~OFSGuiImage();
+	bool isOk();
+	SDL_Texture* getTexture();
+	void renderCopy(SDL_Renderer* renderer);
+
+};
 
 class OFSGui {
 private:
 	SDL_Window *window;
-	SDL_Surface *surface;
+	SDL_Surface *surface;  //depricated because of renderer.  maybe delete later if its seriously not needed
+	SDL_Renderer *renderer;
+	std::vector<std::unique_ptr<OFSGuiImage>> imgs;
 	bool ok;
 	std::string err{};
 	bool e_quit;
