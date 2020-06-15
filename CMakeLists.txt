@@ -11,7 +11,9 @@ set(SOURCES
         src/gui/OFSGui.cpp
         src/gui/OFSGui.h
         src/net/OFSNet.cpp
-        src/net/OFSNet.h)
+        src/net/OFSNet.h
+        src/db/OFSDatabase.cpp
+        src/db/OFSDatabase.h)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -26,5 +28,5 @@ pkg_search_module(CURL REQUIRED libcurl)
 pkg_search_module(SQLITE REQUIRED sqlite3)
 
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} ${CURL_LIBRARIES} ${SQLITE_LIBRARIES})
-message(${SQLITE_LIBRARIES})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES})
+message(${SDL2_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES})
