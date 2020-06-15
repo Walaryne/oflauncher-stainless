@@ -6,7 +6,14 @@ option(USE_GUI "Whether or not to use SDL2 to compile with GUI support" ON)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(${PROJECT_NAME} src/main.cpp src/gui/OFSGui.cpp src/gui/OFSGui.h src/net/OFSNet.cpp src/net/OFSNet.h)
+set(SOURCES
+        src/main.cpp
+        src/gui/OFSGui.cpp
+        src/gui/OFSGui.h
+        src/net/OFSNet.cpp
+        src/net/OFSNet.h)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 INCLUDE(FindPkgConfig)
 
@@ -16,5 +23,8 @@ if(USE_GUI)
 endif()
 
 pkg_search_module(CURL REQUIRED libcurl)
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} ${CURL_LIBRARIES})
+pkg_search_module(SQLITE REQUIRED sqlite3)
+
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARIES} ${CURL_LIBRARIES} ${SQLITE_LIBRARIES})
+message(${SQLITE_LIBRARIES})
