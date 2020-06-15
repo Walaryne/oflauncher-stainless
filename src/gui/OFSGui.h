@@ -16,7 +16,7 @@ private:
 	bool ok;
 
 public:
-	OFSGuiImage(std::string image_file, SDL_Renderer *renderer);
+	OFSGuiImage(const std::string& image_file, SDL_Renderer *renderer);
 	~OFSGuiImage();
 	bool isOk();
 	SDL_Texture *getTexture();

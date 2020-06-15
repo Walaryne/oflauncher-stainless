@@ -4,7 +4,7 @@
 
 #include "OFSGui.h"
 
-OFSGuiImage::OFSGuiImage(std::string image_file, SDL_Renderer *renderer) {
+OFSGuiImage::OFSGuiImage(const std::string& image_file, SDL_Renderer *renderer) {
 	ok = true;
 	SDL_Surface *textureSurface = SDL_LoadBMP(image_file.c_str());
 	if(textureSurface == nullptr) {
@@ -24,7 +24,7 @@ bool OFSGuiImage::isOk() { return ok; }
 
 void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
 	// TODO: Later edit the null params to scale and position the texture.
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_RenderCopy(renderer, texture, nullptr, nullptr);
 }
 
 OFSGui::OFSGui() {
