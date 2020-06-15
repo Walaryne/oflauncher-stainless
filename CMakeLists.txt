@@ -13,7 +13,8 @@ set(SOURCES
         src/net/OFSNet.cpp
         src/net/OFSNet.h
         src/db/OFSDatabase.cpp
-        src/db/OFSDatabase.h)
+        src/db/OFSDatabase.h
+        src/main.h)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
