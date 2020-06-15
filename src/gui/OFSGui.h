@@ -13,14 +13,19 @@
 class OFSGuiImage {
 private:
 	SDL_Texture *texture;
+	SDL_Rect src;
+	SDL_Rect size;
 	bool ok;
+	int subImages;
 
 public:
-	OFSGuiImage(const std::string& image_file, SDL_Renderer *renderer);
+	OFSGuiImage(const std::string &image_file, SDL_Renderer *renderer,
+				const int &x, const int &y, const int &NumOfSubImages);
 	~OFSGuiImage();
 	bool isOk();
 	SDL_Texture *getTexture();
 	void renderCopy(SDL_Renderer *renderer);
+	void setIndex(const int &i);
 };
 
 class OFSGui {

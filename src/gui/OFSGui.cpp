@@ -4,8 +4,12 @@
 
 #include "OFSGui.h"
 
-OFSGuiImage::OFSGuiImage(const std::string& image_file, SDL_Renderer *renderer) {
+OFSGuiImage::OFSGuiImage(const std::string &image_file, SDL_Renderer *renderer,
+						 const int &x = 0, const int &y = 0,
+						 const int &NumOfSubImages = 0) {
 	ok = true;
+	subImages = NumOfSubImages;
+	int w, h;
 	SDL_Surface *textureSurface = SDL_LoadBMP(image_file.c_str());
 	if(textureSurface == nullptr) {
 		ok = false;
@@ -13,6 +17,17 @@ OFSGuiImage::OFSGuiImage(const std::string& image_file, SDL_Renderer *renderer) 
 		texture = SDL_CreateTextureFromSurface(renderer, textureSurface);
 		if(texture == nullptr) {
 			ok = false;
+		} else {
+			SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+			size.h = h / (subImages + 1);
+			size.w = w;
+			size.x = x;
+			size.y = y;
+
+			src.h = h / (subImages + 1);
+			src.w = w;
+			src.x = 0;
+			src.y = 0;
 		}
 		SDL_FreeSurface(textureSurface);
 	}
@@ -22,9 +37,14 @@ OFSGuiImage::~OFSGuiImage() { SDL_DestroyTexture(texture); }
 
 bool OFSGuiImage::isOk() { return ok; }
 
+void OFSGuiImage::setIndex(const int &i) {
+	if(i >= 0 && i <= subImages)
+		src.y = size.h * i;
+}
+
 void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
 	// TODO: Later edit the null params to scale and position the texture.
-	SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+	SDL_RenderCopy(renderer, texture, &src, &size);
 }
 
 OFSGui::OFSGui() {
@@ -52,15 +72,22 @@ OFSGui::OFSGui() {
 	}
 	if(isOk()) {
 		// TODO: eventually have a way to automatically load in all needed
-		// images
+		// images.
+		// maybe put this all in like a load_resources method.
 		imgs.push_back(
 			std::make_unique<OFSGuiImage>("../res/bg.bmp", renderer));
+		imgs.push_back(
+			std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
+		imgs.push_back(std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer,
+													 64, 0, 1));
+
+		imgs[2]->setIndex(1);
+		for(auto &x : imgs) {
+			ok &= x->isOk();
+		}
+		if(!isOk())
+			setError("Error loading resources: ");
 	}
-	for(auto &x : imgs) {
-		ok &= x->isOk();
-	}
-	if(!isOk())
-		setError("Error loading resources: ");
 }
 
 OFSGui::~OFSGui() {
