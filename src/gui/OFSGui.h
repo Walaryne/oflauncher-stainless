@@ -9,16 +9,16 @@
 #include <string>
 
 class OFSGui {
-  private:
+private:
 	SDL_Window *window;
 	SDL_Surface *surface;
 	bool ok;
 	std::string err{};
 	bool e_quit;
 
-	void setError(const std::string& err_msg_pre);
+	void setError(const std::string &err_msg_pre);
 
-  public:
+public:
 	OFSGui();
 	~OFSGui();
 	bool isOk();
