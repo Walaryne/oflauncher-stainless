@@ -32,11 +32,14 @@ void OFSDatabase::verifyIntegrity() {
 }
 
 void OFSDatabase::compareRevisions() {
-
+	//sqlite3_exec(p_dbFileRemote, "select * from table files;", )
 }
 
 void OFSDatabase::compareIntegrity() {
 }
 
 void OFSDatabase::downloadNewFiles() {
+}
+
+void OFSDatabase::databaseQueryConsumer() {
 }

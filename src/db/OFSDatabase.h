@@ -22,6 +22,7 @@ private:
 	sqlite3 *p_dbFileLocal;
 	sqlite3 *p_dbFileRemote;
 	std::deque<std::string> p_downloadQueue;
+	void databaseQueryConsumer();
 	void compareRevisions();
 	void compareIntegrity();
 	void downloadNewFiles();
