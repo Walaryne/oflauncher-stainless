@@ -6,9 +6,9 @@
 #define OFLAUNCHER_STAINLESS_OFSDATABASE_H
 
 #include "../net/OFSNet.h"
-#include <sqlite3.h>
-#include <vector>
+#include <deque>
 #include <filesystem>
+#include <sqlite3.h>
 
 class OFSDatabase {
 public:
@@ -21,7 +21,7 @@ private:
 	OFSNet *p_net;
 	sqlite3 *p_dbFileLocal;
 	sqlite3 *p_dbFileRemote;
-	std::vector<std::string> p_newFiles;
+	std::deque<std::string> p_downloadQueue;
 	void compareRevisions();
 	void compareIntegrity();
 	void downloadNewFiles();
