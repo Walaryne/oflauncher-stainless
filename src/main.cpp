@@ -21,6 +21,10 @@ int main() {
 	//To Fenteale: This should be called the moment that the "Update" button is pressed.
 	net.fetchDatabase();
 
+	//To Fenteale: Later on you'll have direct access to two automated functions.
+	//These will be updateGame and verifyIntegrity respectively.
+	//I'll try to add some callbacks and stuff so you can use progress bars!
+
 	OFSGui g;
 
 	if(!g.isOk()) {
