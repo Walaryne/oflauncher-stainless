@@ -1,5 +1,14 @@
 #include "main.h"
 
+void checkDirsExist() {
+	if(!fs::exists("remote")) {
+		fs::create_directory("remote");
+	}
+	if(!fs::exists("local")) {
+		fs::create_directory("local");
+	}
+}
+
 int main() {
 
     //Initialize cURL for usage program wide
@@ -7,13 +16,9 @@ int main() {
 
 	OFSNet net("http://127.0.0.1");
 
-	if(!fs::exists("remote")) {
-		fs::create_directory("remote");
-	}
-	if(!fs::exists("local")) {
-		fs::create_directory("local");
-	}
+	checkDirsExist();
 
+	//To Fenteale: This should be called the moment that the "Update" button is pressed.
 	net.fetchDatabase();
 
 	OFSGui g;
