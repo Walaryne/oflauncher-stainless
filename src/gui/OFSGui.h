@@ -8,10 +8,18 @@
 #include "SDL2/SDL.h"
 #include <memory>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
+typedef void (*GuiButtonFunction)(void);
+
+enum GuiActs { // Add an activity name here
+	NOT_CLICKED,
+	BUT_CLICKED_PLAY
+};
+
 class OFSGuiImage {
-private:
+protected:
 	SDL_Texture *texture;
 	SDL_Rect src;
 	SDL_Rect size;
@@ -26,6 +34,20 @@ public:
 	SDL_Texture *getTexture();
 	void renderCopy(SDL_Renderer *renderer);
 	void setIndex(const int &i);
+	virtual GuiActs getClicked();
+};
+
+class OFSGuiButton : public OFSGuiImage {
+private:
+	GuiActs act;
+	bool canBeClicked;
+
+public:
+	OFSGuiButton(const std::string &image_file, SDL_Renderer *renderer,
+				 GuiActs actToLink, const int &x, const int &y,
+				 const int &NumOfSubImages);
+	~OFSGuiButton();
+	GuiActs getClicked();
 };
 
 class OFSGui {
@@ -39,6 +61,8 @@ private:
 	std::string err{};
 	bool e_quit;
 
+	std::unordered_map<int, GuiButtonFunction> bindFuncs;
+
 	void setError(const std::string &err_msg_pre);
 
 public:
@@ -46,6 +70,8 @@ public:
 	~OFSGui();
 	bool isOk();
 	std::string getError();
+
+	void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
 
 	bool loop();
 };
