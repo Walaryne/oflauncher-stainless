@@ -77,13 +77,21 @@ GuiActs OFSGuiButton::getClicked() {
 		if(canBeClicked) {
 			if(x > size.x && x < size.x + size.w) {
 				if(y > size.y && y < size.y + size.h) {
+
 					ret = act;
 					canBeClicked = false;
+					setIndex(2); // Mouse was pressed down on button
 				}
 			}
 		}
+
 	} else {
 		canBeClicked = true;
+		if(x > size.x && x < size.x + size.w && y > size.y &&
+		   y < size.y + size.h)
+			setIndex(1); // Hovering over
+		else
+			setIndex(0); // normal state
 	}
 	return ret;
 }
@@ -125,7 +133,7 @@ OFSGui::OFSGui() {
 		// imgs.push_back(std::make_unique<OFSGuiButton>(
 		//	"../res/tab.bmp", renderer, BUT_CLICKED_UPDATE, 64, 0, 1));
 		imgs.push_back(std::make_unique<OFSGuiButton>(
-			"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100));
+			"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100, 2));
 
 		// imgs[2]->setIndex(1);
 		for(auto &x : imgs) {
