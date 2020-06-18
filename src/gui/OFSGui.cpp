@@ -52,8 +52,14 @@ void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
 	SDL_RenderCopy(renderer, texture, &src, &size);
 }
 
-GuiActs OFSGuiImage::getClicked() {
+void OFSGuiImage::getClickedDown() {
+}
+
+GuiActs OFSGuiImage::getClickedUp() {
 	return NOT_CLICKED;
+}
+
+void OFSGuiImage::getHover() {
 }
 
 //###### OFSGuiButton ###########
@@ -63,37 +69,53 @@ OFSGuiButton::OFSGuiButton(const std::string &image_file,
 						   const int &NumOfSubImages = 0)
 	: OFSGuiImage(image_file, renderer, x, y, NumOfSubImages) {
 	act = actToLink;
-	canBeClicked = true;
+	isClicked = false;
 }
 
 OFSGuiButton::~OFSGuiButton() {
 }
 
-GuiActs OFSGuiButton::getClicked() {
-	GuiActs ret = NOT_CLICKED;
+void OFSGuiButton::getClickedDown() {
+
 	int x, y, mouseState;
 	mouseState = SDL_GetMouseState(&x, &y);
 	if(mouseState == SDL_BUTTON(SDL_BUTTON_LEFT)) {
-		if(canBeClicked) {
-			if(x > size.x && x < size.x + size.w) {
-				if(y > size.y && y < size.y + size.h) {
 
-					ret = act;
-					canBeClicked = false;
-					setIndex(2); // Mouse was pressed down on button
-				}
+		if(x > size.x && x < size.x + size.w) {
+			if(y > size.y && y < size.y + size.h) {
+				isClicked = true;
+				setIndex(2); // Mouse was pressed down on button
 			}
 		}
+	}
+}
 
-	} else {
-		canBeClicked = true;
+GuiActs OFSGuiButton::getClickedUp() {
+	GuiActs ret = NOT_CLICKED;
+	if(isClicked) {
+		setIndex(0);
+		isClicked = false;
+		int x, y, mouseState;
+		mouseState = SDL_GetMouseState(&x, &y);
+		if(x > size.x && x < size.x + size.w && y > size.y &&
+		   y < size.y + size.h) {
+			setIndex(1);
+			ret = act;
+		}
+	}
+	return ret;
+}
+
+void OFSGuiButton::getHover() {
+	if(!isClicked) {
+		int x, y, mouseState;
+		mouseState = SDL_GetMouseState(&x, &y);
 		if(x > size.x && x < size.x + size.w && y > size.y &&
 		   y < size.y + size.h)
 			setIndex(1); // Hovering over
 		else
 			setIndex(0); // normal state
 	}
-	return ret;
 }
 
 //########### OFSGui ############
@@ -122,20 +144,9 @@ OFSGui::OFSGui() {
 		}
 	}
 	if(isOk()) {
-		// TODO: eventually have a way to automatically load in all needed
-		// images.
-		// maybe put this all in like a load_resources method.
-		imgs.push_back(
-			std::make_unique<OFSGuiImage>("../res/bg.bmp", renderer));
-		// Temp Art, will maybe be added back later.
-		// imgs.push_back(
-		//	std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
-		// imgs.push_back(std::make_unique<OFSGuiButton>(
-		//	"../res/tab.bmp", renderer, BUT_CLICKED_UPDATE, 64, 0, 1));
-		imgs.push_back(std::make_unique<OFSGuiButton>(
-			"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100, 2));
 
-		// imgs[2]->setIndex(1);
+		setupLayout();
+
 		for(auto &x : imgs) {
 			ok &= x->isOk();
 		}
@@ -185,15 +196,46 @@ bool OFSGui::loop() {
 		case SDL_QUIT:
 			e_quit = true;
 			break;
+		case SDL_MOUSEBUTTONDOWN:
+			for(auto &i : imgs) {
+				i->getClickedDown();
+			}
+			break;
+		case SDL_MOUSEBUTTONUP:
+			for(auto &i : imgs) {
+				GuiActs a = i->getClickedUp();
+
+				if(bindFuncs[a])
+					bindFuncs[a]();
+			}
+			break;
+		default:
+			for(auto &i : imgs) {
+				i->getHover();
+			}
+			break;
 		}
 	}
 	SDL_PumpEvents();
-	for(auto &i : imgs) {
-		GuiActs a = i->getClicked();
-
-		if(bindFuncs[a])
-			bindFuncs[a]();
-	}
 
 	return !e_quit;
+}
+
+void OFSGui::setupLayout() {
+	// Keep in mind, the order they are added to the vector are the order they
+	// are rendered to the screen.
+
+	// Background image
+	imgs.push_back(std::make_unique<OFSGuiImage>("../res/bg.bmp", renderer));
+
+	imgs.push_back(std::make_unique<OFSGuiButton>(
+		"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100, 2));
+
+	// Temp Art for tabs, will maybe be added back later.
+	// imgs.push_back(
+	//	std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
+	// imgs.push_back(std::make_unique<OFSGuiButton>(
+	//	"../res/tab.bmp", renderer, BUT_CLICKED_UPDATE, 64, 0, 1));
+
+	// imgs[2]->setIndex(1);
 }

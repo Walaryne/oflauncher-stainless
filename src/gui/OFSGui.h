@@ -34,20 +34,24 @@ public:
 	SDL_Texture *getTexture();
 	void renderCopy(SDL_Renderer *renderer);
 	void setIndex(const int &i);
-	virtual GuiActs getClicked();
+	virtual void getClickedDown();
+	virtual GuiActs getClickedUp();
+	virtual void getHover();
 };
 
 class OFSGuiButton : public OFSGuiImage {
 private:
 	GuiActs act;
-	bool canBeClicked;
+	bool isClicked;
 
 public:
 	OFSGuiButton(const std::string &image_file, SDL_Renderer *renderer,
 				 GuiActs actToLink, const int &x, const int &y,
 				 const int &NumOfSubImages);
 	~OFSGuiButton();
-	GuiActs getClicked();
+	void getClickedDown();
+	GuiActs getClickedUp();
+	void getHover();
 };
 
 class OFSGui {
@@ -64,6 +68,7 @@ private:
 	std::unordered_map<int, GuiButtonFunction> bindFuncs;
 
 	void setError(const std::string &err_msg_pre);
+	void setupLayout();
 
 public:
 	OFSGui();
