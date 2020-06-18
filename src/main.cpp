@@ -27,8 +27,8 @@ int main() {
 	net.fetchDatabase();
 
 	// To Fenteale: Later on you'll have direct access to two automated
-	// functions. These will be updateGame and verifyIntegrity respectively. I'll
-	// try to add some callbacks and stuff so you can use progress bars!
+	// functions. These will be updateGame and verifyIntegrity respectively.
+	// I'll try to add some callbacks and stuff so you can use progress bars!
 
 	OFSGui g;
 
@@ -36,7 +36,7 @@ int main() {
 		std::cout << g.getError() << std::endl;
 		return 1;
 	}
-	g.bindActivity(BUT_CLICKED_PLAY, testFunc);
+	g.bindActivity(BUT_CLICKED_UPDATE, testFunc);
 	while(g.loop()) {
 	}
 }

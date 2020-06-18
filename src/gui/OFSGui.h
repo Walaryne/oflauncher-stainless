@@ -15,7 +15,7 @@ typedef void (*GuiButtonFunction)(void);
 
 enum GuiActs { // Add an activity name here
 	NOT_CLICKED,
-	BUT_CLICKED_PLAY
+	BUT_CLICKED_UPDATE
 };
 
 class OFSGuiImage {

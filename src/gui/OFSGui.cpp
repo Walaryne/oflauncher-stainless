@@ -119,12 +119,15 @@ OFSGui::OFSGui() {
 		// maybe put this all in like a load_resources method.
 		imgs.push_back(
 			std::make_unique<OFSGuiImage>("../res/bg.bmp", renderer));
-		imgs.push_back(
-			std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
+		// Temp Art, will maybe be added back later.
+		// imgs.push_back(
+		//	std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
+		// imgs.push_back(std::make_unique<OFSGuiButton>(
+		//	"../res/tab.bmp", renderer, BUT_CLICKED_UPDATE, 64, 0, 1));
 		imgs.push_back(std::make_unique<OFSGuiButton>(
-			"../res/tab.bmp", renderer, BUT_CLICKED_PLAY, 64, 0, 1));
+			"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100));
 
-		imgs[2]->setIndex(1);
+		// imgs[2]->setIndex(1);
 		for(auto &x : imgs) {
 			ok &= x->isOk();
 		}
