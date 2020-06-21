@@ -57,8 +57,8 @@ public:
 class OFSGui {
 private:
 	SDL_Window *window;
-	SDL_Surface *surface; // depricated because of renderer.  maybe delete later
-						  // if its seriously not needed
+	// SDL_Surface *surface; // depricated because of renderer.  maybe delete
+	// later if its seriously not needed
 	SDL_Renderer *renderer;
 	std::vector<std::unique_ptr<OFSGuiImage>> imgs;
 	bool ok;

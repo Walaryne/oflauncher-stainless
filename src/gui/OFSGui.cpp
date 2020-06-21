@@ -127,13 +127,19 @@ OFSGui::OFSGui() {
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 		setError("Error initializing SDL: ");
 	} else {
-		window = SDL_CreateWindow(
-			"Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED, 640, 360, SDL_WINDOW_SHOWN);
+		window =
+			SDL_CreateWindow("Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED,
+							 SDL_WINDOWPOS_UNDEFINED, 640, 360,
+							 SDL_WINDOW_SHOWN | SDL_WINDOW_UTILITY);
+		// On my computer, I have "unredir-if-possible" enabled in my picom
+		// config, and this program causes that to trigger unless you have the
+		// SDL_WINDOW_UTILIY flag lol
 		if(!window) {
 			setError("Error initializing SDL window: ");
 		} else {
-			surface = SDL_GetWindowSurface(window); // depricated
+			// surface = SDL_GetWindowSurface(window); // keeping this here to
+			// say that this breaks on ubuntu for some reason.  We arent using
+			// it anyways.
 			renderer = SDL_CreateRenderer(window, -1,
 										  SDL_RENDERER_ACCELERATED |
 											  SDL_RENDERER_PRESENTVSYNC);
@@ -176,14 +182,13 @@ std::string OFSGui::getError() {
 }
 
 void OFSGui::bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint) {
-	// void * ptr = reinterpret_cast<void *>(funcPoint);
 	bindFuncs.emplace(actToBind, funcPoint);
 }
 
 bool OFSGui::loop() {
 	SDL_Event e;
 
-	SDL_UpdateWindowSurface(window); // depricated.  delete later if need to
+	// SDL_UpdateWindowSurface(window); // depricated.  delete later if need to
 
 	SDL_RenderClear(renderer);
 	for(auto &i : imgs) {
