@@ -226,7 +226,8 @@ bool OFSGui::loop() {
 	return !e_quit;
 }
 
-void OFSGui::setupLayout() {
+void OFSGui::setupLayout() { // main menu
+	imgs.clear();
 	// Keep in mind, the order they are added to the vector are the order they
 	// are rendered to the screen.
 
@@ -236,6 +237,15 @@ void OFSGui::setupLayout() {
 	imgs.push_back(std::make_unique<OFSGuiButton>(
 		"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100, 2));
 
+	imgs.push_back(
+		std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
+	imgs.push_back(std::make_unique<OFSGuiButton>(
+		"../res/tab.bmp", renderer, TAB_CLICKED_OPTIONS, 64, 0, 1));
+	imgs[2]->setIndex(1);
+
+	// bindActivity(TAB_CLICKED_OPTIONS, setupLayoutOptions); not implemented
+	// yet
+
 	// Temp Art for tabs, will maybe be added back later.
 	// imgs.push_back(
 	//	std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
@@ -243,4 +253,20 @@ void OFSGui::setupLayout() {
 	//	"../res/tab.bmp", renderer, BUT_CLICKED_UPDATE, 64, 0, 1));
 
 	// imgs[2]->setIndex(1);
+}
+
+void OFSGui::setupLayoutOptions() {
+	imgs.clear();
+
+	// Background image
+	imgs.push_back(std::make_unique<OFSGuiImage>("../res/bg.bmp", renderer));
+
+	// imgs.push_back(std::make_unique<OFSGuiButton>(
+	//	"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100, 2));
+
+	imgs.push_back(std::make_unique<OFSGuiButton>(
+		"../res/tab.bmp", renderer, TAB_CLICKED_OPTIONS, 0, 0, 1));
+	imgs[2]->setIndex(1);
+	imgs.push_back(
+		std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 64, 0, 1));
 }

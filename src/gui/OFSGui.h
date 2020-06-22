@@ -15,7 +15,8 @@ typedef void (*GuiButtonFunction)(void);
 
 enum GuiActs { // Add an activity name here
 	NOT_CLICKED,
-	BUT_CLICKED_UPDATE
+	BUT_CLICKED_UPDATE,
+	TAB_CLICKED_OPTIONS
 };
 
 class OFSGuiImage {
@@ -68,7 +69,10 @@ private:
 	std::unordered_map<int, GuiButtonFunction> bindFuncs;
 
 	void setError(const std::string &err_msg_pre);
+
+	// layouts
 	void setupLayout();
+	void setupLayoutOptions();
 
 public:
 	OFSGui();
