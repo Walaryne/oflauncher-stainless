@@ -184,6 +184,9 @@ std::string OFSGui::getError() {
 void OFSGui::bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint) {
 	bindFuncs.emplace(actToBind, funcPoint);
 }
+void OFSGui::bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint) {
+	bindMeths.emplace(actToBind, funcPoint);
+}
 
 bool OFSGui::loop() {
 	SDL_Event e;
@@ -212,6 +215,8 @@ bool OFSGui::loop() {
 
 				if(bindFuncs[a])
 					bindFuncs[a]();
+				else if(bindMeths[a])
+					bindMeths[a](this);
 			}
 			break;
 		default:
@@ -226,47 +231,63 @@ bool OFSGui::loop() {
 	return !e_quit;
 }
 
-void OFSGui::setupLayout() { // main menu
+void OFSGui::addImage(const std::string &image_file, const int &x = 0,
+					  const int &y = 0, const int &NumOfSubImages = 0) {
+	imgs.push_back(std::make_unique<OFSGuiImage>(image_file, renderer, x, y,
+												 NumOfSubImages));
+}
+void OFSGui::addButton(const std::string &image_file, GuiActs actToLink,
+					   const int &x = 0, const int &y = 0,
+					   const int &NumOfSubImages = 0) {
+	imgs.push_back(std::make_unique<OFSGuiButton>(
+		image_file, renderer, actToLink, x, y, NumOfSubImages));
+}
+void OFSGui::setLastIndex(const int &i) {
+	imgs.back()->setIndex(i);
+}
+
+void OFSGui::clearLayout() {
 	imgs.clear();
+	// bindFuncs.clear();
+	bindMeths.clear();
+}
+
+void OFSGui::setupLayout(OFSGui *o) { // this is annoying to have to do but I
+									  // cant find another work around
+	o->setupLayout();
+}
+void OFSGui::setupLayout() { // main menu
+	clearLayout();
 	// Keep in mind, the order they are added to the vector are the order they
 	// are rendered to the screen.
 
 	// Background image
-	imgs.push_back(std::make_unique<OFSGuiImage>("../res/bg.bmp", renderer));
+	addImage("../res/bg.bmp");
 
-	imgs.push_back(std::make_unique<OFSGuiButton>(
-		"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100, 2));
+	addButton("../res/update.bmp", BUT_CLICKED_UPDATE, 100, 100, 2);
 
-	imgs.push_back(
-		std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
-	imgs.push_back(std::make_unique<OFSGuiButton>(
-		"../res/tab.bmp", renderer, TAB_CLICKED_OPTIONS, 64, 0, 1));
-	imgs[2]->setIndex(1);
+	addImage("../res/tab.bmp", 0, 0, 1);
+	setLastIndex(1);
+	addButton("../res/tab.bmp", TAB_CLICKED_OPTIONS, 64, 0, 1);
 
-	// bindActivity(TAB_CLICKED_OPTIONS, setupLayoutOptions); not implemented
-	// yet
-
-	// Temp Art for tabs, will maybe be added back later.
-	// imgs.push_back(
-	//	std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 0, 0, 1));
-	// imgs.push_back(std::make_unique<OFSGuiButton>(
-	//	"../res/tab.bmp", renderer, BUT_CLICKED_UPDATE, 64, 0, 1));
-
-	// imgs[2]->setIndex(1);
+	bindActivity(TAB_CLICKED_OPTIONS,
+				 OFSGui::setupLayoutOptions); // not implemented
+											  // yet
 }
 
+void OFSGui::setupLayoutOptions(OFSGui *o) {
+	o->setupLayoutOptions();
+}
 void OFSGui::setupLayoutOptions() {
-	imgs.clear();
+	clearLayout();
 
 	// Background image
-	imgs.push_back(std::make_unique<OFSGuiImage>("../res/bg.bmp", renderer));
+	addImage("../res/bg.bmp");
 
-	// imgs.push_back(std::make_unique<OFSGuiButton>(
-	//	"../res/update.bmp", renderer, BUT_CLICKED_UPDATE, 100, 100, 2));
+	addButton("../res/tab.bmp", TAB_CLICKED_MAIN, 0, 0, 1);
 
-	imgs.push_back(std::make_unique<OFSGuiButton>(
-		"../res/tab.bmp", renderer, TAB_CLICKED_OPTIONS, 0, 0, 1));
-	imgs[2]->setIndex(1);
-	imgs.push_back(
-		std::make_unique<OFSGuiImage>("../res/tab.bmp", renderer, 64, 0, 1));
+	addImage("../res/tab.bmp", 64, 0, 1);
+	setLastIndex(1);
+
+	bindActivity(TAB_CLICKED_MAIN, OFSGui::setupLayout);
 }

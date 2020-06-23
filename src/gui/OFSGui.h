@@ -11,12 +11,16 @@
 #include <unordered_map>
 #include <vector>
 
+class OFSGui;
+
 typedef void (*GuiButtonFunction)(void);
+typedef void (*GuiButtonMethod)(OFSGui *);
 
 enum GuiActs { // Add an activity name here
 	NOT_CLICKED,
 	BUT_CLICKED_UPDATE,
-	TAB_CLICKED_OPTIONS
+	TAB_CLICKED_OPTIONS,
+	TAB_CLICKED_MAIN
 };
 
 class OFSGuiImage {
@@ -67,11 +71,22 @@ private:
 	bool e_quit;
 
 	std::unordered_map<int, GuiButtonFunction> bindFuncs;
+	std::unordered_map<int, GuiButtonMethod> bindMeths;
 
 	void setError(const std::string &err_msg_pre);
 
+	// layout construction helper methods
+	void addImage(const std::string &image_file, const int &x, const int &y,
+				  const int &NumOfSubImages);
+	void addButton(const std::string &image_file, GuiActs actToLink,
+				   const int &x, const int &y, const int &NumOfSubImages);
+	void setLastIndex(const int &i);
+	void clearLayout();
+
 	// layouts
+	static void setupLayout(OFSGui *o);
 	void setupLayout();
+	static void setupLayoutOptions(OFSGui *o);
 	void setupLayoutOptions();
 
 public:
@@ -81,6 +96,7 @@ public:
 	std::string getError();
 
 	void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
+	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
 
 	bool loop();
 };
