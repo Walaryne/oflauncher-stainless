@@ -16,6 +16,10 @@ class OFSGui;
 typedef void (*GuiButtonFunction)(void);
 typedef void (*GuiButtonMethod)(OFSGui *);
 
+#define DEFINE_LAYOUT_H(fname)                                                 \
+	static void fname(OFSGui *o);                                              \
+	void fname()
+
 enum GuiActs { // Add an activity name here
 	NOT_CLICKED,
 	BUT_CLICKED_UPDATE,
@@ -76,18 +80,16 @@ private:
 	void setError(const std::string &err_msg_pre);
 
 	// layout construction helper methods
-	void addImage(const std::string &image_file, const int &x, const int &y,
-				  const int &NumOfSubImages);
+	void addImage(const std::string &image_file, const int &x = 0,
+				  const int &y = 0, const int &NumOfSubImages = 0);
 	void addButton(const std::string &image_file, GuiActs actToLink,
 				   const int &x, const int &y, const int &NumOfSubImages);
 	void setLastIndex(const int &i);
 	void clearLayout();
 
 	// layouts
-	static void setupLayout(OFSGui *o);
-	void setupLayout();
-	static void setupLayoutOptions(OFSGui *o);
-	void setupLayoutOptions();
+	DEFINE_LAYOUT_H(setupLayout);
+	DEFINE_LAYOUT_H(setupLayoutOptions);
 
 public:
 	OFSGui();

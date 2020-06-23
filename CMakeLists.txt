@@ -12,6 +12,8 @@ set(SOURCES
         src/main.h
         src/gui/OFSGui.cpp
         src/gui/OFSGui.h
+        src/gui/OFSLayout.cpp
+        src/gui/OFSLayout.h
         src/net/OFSNet.cpp
         src/net/OFSNet.h
         src/db/OFSDatabase.cpp
