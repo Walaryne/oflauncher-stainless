@@ -11,6 +11,11 @@
 #include <unordered_map>
 #include <vector>
 
+#include "OFSGuiActs.h"
+
+#include "OFSGuiButton.h"
+#include "OFSGuiImage.h"
+
 class OFSGui;
 
 typedef void (*GuiButtonFunction)(void);
@@ -19,49 +24,6 @@ typedef void (*GuiButtonMethod)(OFSGui *);
 #define DEFINE_LAYOUT_H(fname)                                                 \
 	static void fname(OFSGui *o);                                              \
 	void fname()
-
-enum GuiActs { // Add an activity name here
-	NOT_CLICKED,
-	BUT_CLICKED_UPDATE,
-	TAB_CLICKED_OPTIONS,
-	TAB_CLICKED_MAIN
-};
-
-class OFSGuiImage {
-protected:
-	SDL_Texture *texture;
-	SDL_Rect src;
-	SDL_Rect size;
-	bool ok;
-	int subImages;
-
-public:
-	OFSGuiImage(const std::string &image_file, SDL_Renderer *renderer,
-				const int &x, const int &y, const int &NumOfSubImages);
-	~OFSGuiImage();
-	bool isOk();
-	SDL_Texture *getTexture();
-	void renderCopy(SDL_Renderer *renderer);
-	void setIndex(const int &i);
-	virtual void getClickedDown();
-	virtual GuiActs getClickedUp();
-	virtual void getHover();
-};
-
-class OFSGuiButton : public OFSGuiImage {
-private:
-	GuiActs act;
-	bool isClicked;
-
-public:
-	OFSGuiButton(const std::string &image_file, SDL_Renderer *renderer,
-				 GuiActs actToLink, const int &x, const int &y,
-				 const int &NumOfSubImages);
-	~OFSGuiButton();
-	void getClickedDown();
-	GuiActs getClickedUp();
-	void getHover();
-};
 
 class OFSGui {
 private:
