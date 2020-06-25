@@ -62,9 +62,9 @@ void OFSDatabase::downloadNewFiles() {
 }
 
 int OFSDatabase::databaseQueryConsumer(void *param, int argc, char **argv, char **column) {
-	auto veclist = static_cast<std::vector<std::string>*>(param);
+	auto strvec = static_cast<std::vector<std::string>*>(param);
 	for(int i = 0; i < argc; ++i) {
-		veclist->push_back(std::string(argv[i]));
+		strvec->push_back(std::string(argv[i]));
 	}
 	return 0;
 }
