@@ -30,5 +30,8 @@ DEFINE_LAYOUT(setupLayoutOptions) {
 	addImage("../res/tab.bmp", 64, 0, 1);
 	setLastIndex(1);
 
+	addText("Test Option", 5, 80);
+	addTextEntry("Text here", 200, 80, 300);
+
 	bindActivity(TAB_CLICKED_MAIN, OFSGui::setupLayout);
 }

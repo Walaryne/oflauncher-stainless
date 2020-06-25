@@ -32,8 +32,11 @@ OFSGui::OFSGui() {
 											  SDL_RENDERER_PRESENTVSYNC);
 			if(renderer == nullptr) {
 				setError("Could not initialize Renderer: ");
-			} else
+			} else {
 				SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0xFF, 0xFF);
+				if(TTF_Init() == -1)
+					setError("TTF error: ", true);
+			}
 		}
 	}
 	if(isOk()) {
@@ -55,9 +58,13 @@ OFSGui::~OFSGui() {
 	SDL_Quit();
 }
 
-void OFSGui::setError(const std::string &err_msg_pre) {
+void OFSGui::setError(const std::string &err_msg_pre, const bool &isTTFError) {
 	ok = false;
-	err = err_msg_pre + std::string(SDL_GetError());
+	err = err_msg_pre;
+	if(isTTFError)
+		err += std::string(TTF_GetError());
+	else
+		err += std::string(SDL_GetError());
 }
 
 bool OFSGui::isOk() {
@@ -102,8 +109,10 @@ bool OFSGui::loop() {
 
 				if(bindFuncs[a])
 					bindFuncs[a]();
-				else if(bindMeths[a])
+				else if(bindMeths[a]) {
 					bindMeths[a](this);
+					break;
+				}
 			}
 			break;
 		default:
@@ -128,6 +137,14 @@ void OFSGui::addButton(const std::string &image_file, GuiActs actToLink,
 					   const int &NumOfSubImages = 0) {
 	imgs.push_back(std::make_unique<OFSGuiButton>(
 		image_file, renderer, actToLink, x, y, NumOfSubImages));
+}
+void OFSGui::addText(const std::string &text, const int &x, const int &y) {
+	imgs.push_back(std::make_unique<OFSGuiText>(renderer, text, x, y));
+}
+void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
+						  const int &width) {
+	imgs.push_back(
+		std::make_unique<OFSGuiTextEntry>(renderer, text, x, y, width));
 }
 void OFSGui::setLastIndex(const int &i) {
 	imgs.back()->setIndex(i);

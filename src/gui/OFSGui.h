@@ -6,6 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSGUI_H
 
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -15,6 +16,8 @@
 
 #include "OFSGuiButton.h"
 #include "OFSGuiImage.h"
+#include "OFSGuiText.h"
+#include "OFSGuiTextEntry.h"
 
 class OFSGui;
 
@@ -39,13 +42,18 @@ private:
 	std::unordered_map<int, GuiButtonFunction> bindFuncs;
 	std::unordered_map<int, GuiButtonMethod> bindMeths;
 
-	void setError(const std::string &err_msg_pre);
+	void setError(const std::string &err_msg_pre,
+				  const bool &isTTFError = false);
 
 	// layout construction helper methods
 	void addImage(const std::string &image_file, const int &x = 0,
 				  const int &y = 0, const int &NumOfSubImages = 0);
 	void addButton(const std::string &image_file, GuiActs actToLink,
 				   const int &x, const int &y, const int &NumOfSubImages);
+	void addText(const std::string &text = "", const int &x = 0,
+				 const int &y = 0);
+	void addTextEntry(const std::string &text = "", const int &x = 0,
+					  const int &y = 0, const int &width = 100);
 	void setLastIndex(const int &i);
 	void clearLayout();
 

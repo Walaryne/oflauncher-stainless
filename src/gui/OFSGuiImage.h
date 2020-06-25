@@ -2,6 +2,7 @@
 #define OFLAUNCHER_STAINLESS_OFSGUIIMAGE_H
 
 #include "SDL2/SDL.h"
+#include "SDL2/SDL_ttf.h"
 #include <string>
 
 #include "OFSGuiActs.h"
@@ -15,12 +16,13 @@ protected:
 	int subImages;
 
 public:
+	OFSGuiImage(){};
 	OFSGuiImage(const std::string &image_file, SDL_Renderer *renderer,
 				const int &x, const int &y, const int &NumOfSubImages);
 	~OFSGuiImage();
 	bool isOk();
 	SDL_Texture *getTexture();
-	void renderCopy(SDL_Renderer *renderer);
+	virtual void renderCopy(SDL_Renderer *renderer);
 	void setIndex(const int &i);
 	virtual void getClickedDown();
 	virtual GuiActs getClickedUp();
