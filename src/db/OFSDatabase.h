@@ -6,7 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSDATABASE_H
 
 //From the SQLite manual:
-#define ERRCHECK {if (err!=NULL) {printf("%s\n",err); sqlite3_free(err);}}
+#define ERRCHECK {if (err!=NULL) {std::cerr << err << std::endl; sqlite3_free(err);}}
 
 #include "../net/OFSNet.h"
 #include <deque>
