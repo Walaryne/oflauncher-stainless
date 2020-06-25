@@ -15,10 +15,12 @@ namespace fs = std::filesystem;
 
 class OFSNet {
 public:
-    explicit OFSNet(std::string serverURL);
+    explicit OFSNet(std::string serverURL, std::string gameFolderName);
     OFSNet() =delete;
 	std::string getServerURL();
 	void setServerURL(std::string URL);
+	std::string getFolderName();
+	void setFolderName(std::string name);
 	void fetchDatabase();
 	void downloadFile(const std::string &path, const fs::path &to);
 
@@ -27,6 +29,7 @@ private:
 	static inline void convertURL(std::string &s);
     std::string p_serverURL;
     std::string p_dbFileName;
+    std::string p_gameFolderName;
 	CURL *p_curlh;
 };
 

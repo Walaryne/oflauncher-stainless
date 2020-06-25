@@ -7,6 +7,7 @@
 
 #include "gui/OFSGui.h"
 #include "net/OFSNet.h"
+#include "db/OFSDatabase.h"
 #include <iostream>
 #include <filesystem>
 

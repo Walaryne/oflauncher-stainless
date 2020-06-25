@@ -4,10 +4,13 @@
 
 #include "OFSNet.h"
 
-OFSNet::OFSNet(std::string serverURL) {
+#include <utility>
+
+OFSNet::OFSNet(std::string serverURL, std::string gameFolderName) {
 	convertURL(serverURL);
 	p_serverURL = std::move(serverURL);
-	p_dbFileName = "ofsmanifest.db";
+	p_dbFileName = "ofmanifest.db";
+	p_gameFolderName = std::move(gameFolderName);
 	p_curlh = curl_easy_init();
 }
 
@@ -35,4 +38,12 @@ void OFSNet::convertURL(std::string &URL) {
 	if(URL.back() == '/') {
 		URL.pop_back();
 	}
+}
+
+std::string OFSNet::getFolderName() {
+	return p_gameFolderName;
+}
+
+void OFSNet::setFolderName(std::string name) {
+	p_gameFolderName = std::move(name);
 }

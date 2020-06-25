@@ -7,6 +7,9 @@ void checkDirsExist() {
 	if(!fs::exists("local")) {
 		fs::create_directory("local");
 	}
+	if(!fs::exists("open_fortress")) {
+		fs::create_directories("open_fortress");
+	}
 }
 
 void testFunc() {
@@ -18,13 +21,15 @@ int main() {
 	// Initialize cURL for usage program wide
 	curl_global_init(CURL_GLOBAL_ALL);
 
-	OFSNet net("http://127.0.0.1");
+	OFSNet net("http://127.0.0.1", "open_fortress");
+	OFSDatabase db(&net);
 
 	checkDirsExist();
 
 	// To Fenteale: This should be called the moment that the "Update" button is
 	// pressed.
 	net.fetchDatabase();
+	db.updateGame();
 
 	// To Fenteale: Later on you'll have direct access to two automated
 	// functions. These will be updateGame and verifyIntegrity respectively.
