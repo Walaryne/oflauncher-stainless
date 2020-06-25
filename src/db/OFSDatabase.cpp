@@ -11,9 +11,10 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 
 	fs::path localdb("local/ofmanifest.db");
 	fs::path remotedb("remote/ofmanifest.db");
+
 	if(fs::exists(localdb)) {
 		//We already have a local db file, go ahead and load it
-		sqlite3_open(("file:" + localdb.string()).c_str(), &p_dbFileLocal);
+		sqlite3_open(localdb.string().c_str(), &p_dbFileLocal);
 	}
 	if(!fs::exists(remotedb)) {
 		//Something failed miserably, we couldn't pull the new database from the server
