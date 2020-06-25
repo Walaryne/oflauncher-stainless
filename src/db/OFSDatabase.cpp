@@ -14,13 +14,13 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 
 	if(fs::exists(localdb)) {
 		//We already have a local db file, go ahead and load it
-		sqlite3_open(localdb.string().c_str(), &p_dbFileLocal);
+		sqlite3_open(localdb.make_preferred().string().c_str(), &p_dbFileLocal);
 	}
 	if(!fs::exists(remotedb)) {
 		//Something failed miserably, we couldn't pull the new database from the server
 		throw std::runtime_error("RemoteDB file was not found!");
 	} else {
-		int rc = sqlite3_open(remotedb.string().c_str(), &p_dbFileRemote);
+		int rc = sqlite3_open(remotedb.make_preferred().string().c_str(), &p_dbFileRemote);
 		if(rc != SQLITE_OK) {
 			throw std::runtime_error("SQLite database didn't open!");
 		}
