@@ -37,6 +37,9 @@ if(USE_GUI)
 
     if(SDL2_LIBRARY)
         message("-- Found SDL2")
+    else()
+        message("-- SDL2 not found, terminating")
+        return()
     endif()
 
     find_path(SDL2TTF_INCLUDE_DIR SDL2/SDL_ttf.h)
@@ -44,6 +47,9 @@ if(USE_GUI)
 
     if(SDL2TTF_LIBRARY)
         message("-- Found SDL2_ttf")
+    else()
+        message("-- SDL2_tff not found, terminating")
+        return()
     endif()
 
     add_compile_definitions(USE_GUI)
