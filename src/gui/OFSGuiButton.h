@@ -9,8 +9,8 @@
 
 class OFSGuiButton : public OFSGuiImage {
 private:
-	GuiActs act;
-	bool isClicked;
+	GuiActs _act;
+	bool _isClicked;
 
 public:
 	OFSGuiButton(const std::string &image_file, SDL_Renderer *renderer,

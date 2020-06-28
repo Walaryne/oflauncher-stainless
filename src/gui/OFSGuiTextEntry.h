@@ -9,12 +9,12 @@
 
 class OFSGuiTextEntry : public OFSGuiText {
 private:
-	SDL_Texture *backing;
-	SDL_Rect backSrc;
-	SDL_Rect backSize;
+	SDL_Texture *_backing;
+	SDL_Rect _backSrc;
+	SDL_Rect _backSize;
 
-	std::string text;
-	bool focused;
+	std::string _text;
+	bool _focused;
 
 public:
 	OFSGuiTextEntry(SDL_Renderer *renderer, const std::string &text,

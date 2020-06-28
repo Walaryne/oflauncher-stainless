@@ -39,10 +39,6 @@ int main() {
 
 	OFSGui g;
 
-	if(!g.isOk()) {
-		std::cout << g.getError() << std::endl;
-		return 1;
-	}
 	g.bindActivity(BUT_CLICKED_UPDATE, testFunc);
 	while(g.loop()) {
 	}

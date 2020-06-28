@@ -3,83 +3,48 @@
 //
 
 #include "OFSGui.h"
-#include <iostream>
 
 //########### OFSGui ############
 OFSGui::OFSGui() {
-	e_quit = false;
-	ok = true;
-	bindFuncs.emplace(NOT_CLICKED, nullptr);
+	_quit = false;
+	_bindFuncs.emplace(NOT_CLICKED, nullptr);
 
-	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-		setError("Error initializing SDL: ");
-	} else {
-		window =
-			SDL_CreateWindow("Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED,
-							 SDL_WINDOWPOS_UNDEFINED, 640, 360,
-							 SDL_WINDOW_SHOWN | SDL_WINDOW_UTILITY);
-		// On my computer, I have "unredir-if-possible" enabled in my picom
-		// config, and this program causes that to trigger unless you have the
-		// SDL_WINDOW_UTILIY flag lol
-		if(!window) {
-			setError("Error initializing SDL window: ");
-		} else {
-			// surface = SDL_GetWindowSurface(window); // keeping this here to
-			// say that this breaks on ubuntu for some reason.  We arent using
-			// it anyways.
-			renderer = SDL_CreateRenderer(window, -1,
-										  SDL_RENDERER_ACCELERATED |
-											  SDL_RENDERER_PRESENTVSYNC);
-			if(renderer == nullptr) {
-				setError("Could not initialize Renderer: ");
-			} else {
-				SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0xFF, 0xFF);
-				if(TTF_Init() == -1)
-					setError("TTF error: ", true);
-			}
-		}
-	}
-	if(isOk()) {
+	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
+		throw SDLException("Can't Init SDL");
 
-		setupLayout();
+	_window = SDL_CreateWindow("Open Fortress Launcher",
+							   SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+							   640, 360, SDL_WINDOW_SHOWN | SDL_WINDOW_UTILITY);
+	// On my computer, I have "unredir-if-possible" enabled in my picom
+	// config, and this program causes that to trigger unless you have the
+	// SDL_WINDOW_UTILIY flag lol
+	if(!_window)
+		throw SDLException("Cannot create window");
 
-		for(auto &x : imgs) {
-			ok &= x->isOk();
-		}
-		if(!isOk())
-			setError("Error loading resources: ");
-	}
+	_renderer = SDL_CreateRenderer(
+		_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if(_renderer == nullptr)
+		throw SDLException("Can't create renderer");
+
+	SDL_SetRenderDrawColor(_renderer, 0xFF, 0x00, 0xFF, 0xFF);
+	if(TTF_Init() == -1)
+		throw SDLTTFException("Can't Init SDL_ttf");
+
+	setupLayout();
 }
 
 OFSGui::~OFSGui() {
-	imgs.clear();
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
+	_imgs.clear();
+	SDL_DestroyRenderer(_renderer);
+	SDL_DestroyWindow(_window);
 	SDL_Quit();
 }
 
-void OFSGui::setError(const std::string &err_msg_pre, const bool &isTTFError) {
-	ok = false;
-	err = err_msg_pre;
-	if(isTTFError)
-		err += std::string(TTF_GetError());
-	else
-		err += std::string(SDL_GetError());
-}
-
-bool OFSGui::isOk() {
-	return ok;
-}
-
-std::string OFSGui::getError() {
-	return err;
-}
-
 void OFSGui::bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint) {
-	bindFuncs.emplace(actToBind, funcPoint);
+	_bindFuncs.emplace(actToBind, funcPoint);
 }
 void OFSGui::bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint) {
-	bindMeths.emplace(actToBind, funcPoint);
+	_bindMeths.emplace(actToBind, funcPoint);
 }
 
 bool OFSGui::loop() {
@@ -87,36 +52,36 @@ bool OFSGui::loop() {
 
 	// SDL_UpdateWindowSurface(window); // depricated.  delete later if need to
 
-	SDL_RenderClear(renderer);
-	for(auto &i : imgs) {
-		i->renderCopy(renderer);
+	SDL_RenderClear(_renderer);
+	for(auto &i : _imgs) {
+		i->renderCopy(_renderer);
 	}
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(_renderer);
 
 	while(SDL_PollEvent(&e)) {
 		switch(e.type) {
 		case SDL_QUIT:
-			e_quit = true;
+			_quit = true;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			for(auto &i : imgs) {
+			for(auto &i : _imgs) {
 				i->getClickedDown();
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			for(auto &i : imgs) {
+			for(auto &i : _imgs) {
 				GuiActs a = i->getClickedUp();
 
-				if(bindFuncs[a])
-					bindFuncs[a]();
-				else if(bindMeths[a]) {
-					bindMeths[a](this);
+				if(_bindFuncs[a])
+					_bindFuncs[a]();
+				else if(_bindMeths[a]) {
+					_bindMeths[a](this);
 					break;
 				}
 			}
 			break;
 		default:
-			for(auto &i : imgs) {
+			for(auto &i : _imgs) {
 				i->getHover();
 			}
 			break;
@@ -124,34 +89,34 @@ bool OFSGui::loop() {
 	}
 	SDL_PumpEvents();
 
-	return !e_quit;
+	return !_quit;
 }
 
 void OFSGui::addImage(const std::string &image_file, const int &x, const int &y,
 					  const int &NumOfSubImages) {
-	imgs.push_back(std::make_unique<OFSGuiImage>(image_file, renderer, x, y,
-												 NumOfSubImages));
+	_imgs.push_back(std::make_unique<OFSGuiImage>(image_file, _renderer, x, y,
+												  NumOfSubImages));
 }
 void OFSGui::addButton(const std::string &image_file, GuiActs actToLink,
 					   const int &x = 0, const int &y = 0,
 					   const int &NumOfSubImages = 0) {
-	imgs.push_back(std::make_unique<OFSGuiButton>(
-		image_file, renderer, actToLink, x, y, NumOfSubImages));
+	_imgs.push_back(std::make_unique<OFSGuiButton>(
+		image_file, _renderer, actToLink, x, y, NumOfSubImages));
 }
 void OFSGui::addText(const std::string &text, const int &x, const int &y) {
-	imgs.push_back(std::make_unique<OFSGuiText>(renderer, text, x, y));
+	_imgs.push_back(std::make_unique<OFSGuiText>(_renderer, text, x, y));
 }
 void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
 						  const int &width) {
-	imgs.push_back(
-		std::make_unique<OFSGuiTextEntry>(renderer, text, x, y, width));
+	_imgs.push_back(
+		std::make_unique<OFSGuiTextEntry>(_renderer, text, x, y, width));
 }
 void OFSGui::setLastIndex(const int &i) {
-	imgs.back()->setIndex(i);
+	_imgs.back()->setIndex(i);
 }
 
 void OFSGui::clearLayout() {
-	imgs.clear();
+	_imgs.clear();
 	// bindFuncs.clear();
-	bindMeths.clear();
+	_bindMeths.clear();
 }

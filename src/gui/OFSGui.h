@@ -7,12 +7,14 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_ttf.h"
+#include <iostream>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 #include "OFSGuiActs.h"
+#include "OFSGuiError.h"
 
 #include "OFSGuiButton.h"
 #include "OFSGuiImage.h"
@@ -30,20 +32,13 @@ typedef void (*GuiButtonMethod)(OFSGui *);
 
 class OFSGui {
 private:
-	SDL_Window *window;
-	// SDL_Surface *surface; // depricated because of renderer.  maybe delete
-	// later if its seriously not needed
-	SDL_Renderer *renderer;
-	std::vector<std::unique_ptr<OFSGuiImage>> imgs;
-	bool ok;
-	std::string err{};
-	bool e_quit;
+	SDL_Window *_window;
+	SDL_Renderer *_renderer;
+	std::vector<std::unique_ptr<OFSGuiImage>> _imgs;
+	bool _quit;
 
-	std::unordered_map<int, GuiButtonFunction> bindFuncs;
-	std::unordered_map<int, GuiButtonMethod> bindMeths;
-
-	void setError(const std::string &err_msg_pre,
-				  const bool &isTTFError = false);
+	std::unordered_map<int, GuiButtonFunction> _bindFuncs;
+	std::unordered_map<int, GuiButtonMethod> _bindMeths;
 
 	// layout construction helper methods
 	void addImage(const std::string &image_file, const int &x = 0,
@@ -64,8 +59,6 @@ private:
 public:
 	OFSGui();
 	~OFSGui();
-	bool isOk();
-	std::string getError();
 
 	void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
 	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);

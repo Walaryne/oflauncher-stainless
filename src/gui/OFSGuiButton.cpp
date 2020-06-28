@@ -6,8 +6,8 @@ OFSGuiButton::OFSGuiButton(const std::string &image_file,
 						   const int &x = 0, const int &y = 0,
 						   const int &NumOfSubImages = 0)
 	: OFSGuiImage(image_file, renderer, x, y, NumOfSubImages) {
-	act = actToLink;
-	isClicked = false;
+	_act = actToLink;
+	_isClicked = false;
 }
 
 OFSGuiButton::~OFSGuiButton() {
@@ -19,9 +19,9 @@ void OFSGuiButton::getClickedDown() {
 	mouseState = SDL_GetMouseState(&x, &y);
 	if(mouseState == SDL_BUTTON(SDL_BUTTON_LEFT)) {
 
-		if(x > size.x && x < size.x + size.w) {
-			if(y > size.y && y < size.y + size.h) {
-				isClicked = true;
+		if(x > _size.x && x < _size.x + _size.w) {
+			if(y > _size.y && y < _size.y + _size.h) {
+				_isClicked = true;
 				setIndex(2); // Mouse was pressed down on button
 			}
 		}
@@ -30,26 +30,26 @@ void OFSGuiButton::getClickedDown() {
 
 GuiActs OFSGuiButton::getClickedUp() {
 	GuiActs ret = NOT_CLICKED;
-	if(isClicked) {
+	if(_isClicked) {
 		setIndex(0);
-		isClicked = false;
+		_isClicked = false;
 		int x, y, mouseState;
 		mouseState = SDL_GetMouseState(&x, &y);
-		if(x > size.x && x < size.x + size.w && y > size.y &&
-		   y < size.y + size.h) {
+		if(x > _size.x && x < _size.x + _size.w && y > _size.y &&
+		   y < _size.y + _size.h) {
 			setIndex(1);
-			ret = act;
+			ret = _act;
 		}
 	}
 	return ret;
 }
 
 void OFSGuiButton::getHover() {
-	if(!isClicked) {
+	if(!_isClicked) {
 		int x, y, mouseState;
 		mouseState = SDL_GetMouseState(&x, &y);
-		if(x > size.x && x < size.x + size.w && y > size.y &&
-		   y < size.y + size.h)
+		if(x > _size.x && x < _size.x + _size.w && y > _size.y &&
+		   y < _size.y + _size.h)
 			setIndex(1); // Hovering over
 		else
 			setIndex(0); // normal state
