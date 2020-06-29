@@ -10,11 +10,6 @@ void testFunc() {
 }
 
 void *CreateInterface(char const *name, int *err) {
-	OFSGui g;
-
-	g.bindActivity(BUT_CLICKED_UPDATE, testFunc);
-	while(g.loop()) {
-	}
 	std::cout << "LOL IT WORKS FAM" << std::endl;
 	return nullptr;
 }
