@@ -18,7 +18,7 @@ OFSGuiText::OFSGuiText(SDL_Renderer *renderer, const std::string &text,
 	_subImages = 0;
 	int w, h;
 	SDL_Surface *textureSurface =
-		TTF_RenderText_Solid(font, text.c_str(), fontcolor);
+		TTF_RenderText_Blended(font, text.c_str(), fontcolor);
 	if(textureSurface == nullptr)
 		throw SDLTTFException("OFSGuiText");
 	_texture = SDL_CreateTextureFromSurface(renderer, textureSurface);

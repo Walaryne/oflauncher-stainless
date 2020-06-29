@@ -23,15 +23,23 @@ int main() {
 
 	checkDirsExist();
 
-	OFSNet net("http://127.0.0.1", "open_fortress");
+	try {
+		OFSNet net("http://127.0.0.1", "open_fortress");
 
-	// To Fenteale: This should be called the moment that the "Update" button is
-	// pressed.
-	net.fetchDatabase();
+		// To Fenteale: This should be called the moment that the "Update"
+		// button is pressed.
+		net.fetchDatabase();
 
-	OFSDatabase db(&net);
+		OFSDatabase db(&net);
 
-	db.updateGame();
+		db.updateGame();
+	} catch(std::exception &e) {
+		std::string error_msg =
+			"Cannot connect to Update Server. Please check internet.\n";
+		error_msg.append(e.what());
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cannot Connect",
+								 error_msg.c_str(), nullptr);
+	}
 
 	// To Fenteale: Later on you'll have direct access to two automated
 	// functions. These will be updateGame and verifyIntegrity respectively.
