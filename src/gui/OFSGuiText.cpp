@@ -1,9 +1,11 @@
 #include "OFSGuiText.h"
 
 OFSGuiText::OFSGuiText(SDL_Renderer *renderer, const std::string &text,
-					   const int &x, const int &y, const bool &white)
+					   const int &text_size, const int &x, const int &y,
+					   const bool &white)
 	: OFSGuiImage() {
-	TTF_Font *font = TTF_OpenFont("../res/fonts/SourceSansPro-Regular.ttf", 20);
+	TTF_Font *font =
+		TTF_OpenFont("../res/fonts/SourceSansPro-Regular.ttf", text_size);
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiText");
 

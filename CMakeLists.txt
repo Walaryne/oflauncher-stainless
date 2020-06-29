@@ -18,6 +18,8 @@ set(SOURCES_LAUNCHER
         src/gui/OFSGuiText.h
         src/gui/OFSGuiTextEntry.cpp
         src/gui/OFSGuiTextEntry.h
+        src/gui/OFSGuiSpinny.cpp
+        src/gui/OFSGuiSpinny.h
         src/gui/OFSGuiError.cpp
         src/gui/OFSGuiError.h
         src/gui/OFSGui.cpp
