@@ -18,6 +18,7 @@
 
 #include "OFSGuiButton.h"
 #include "OFSGuiImage.h"
+#include "OFSGuiSpinny.h"
 #include "OFSGuiText.h"
 #include "OFSGuiTextEntry.h"
 
@@ -45,16 +46,22 @@ private:
 				  const int &y = 0, const int &NumOfSubImages = 0);
 	void addButton(const std::string &image_file, GuiActs actToLink,
 				   const int &x, const int &y, const int &NumOfSubImages);
-	void addText(const std::string &text = "", const int &x = 0,
-				 const int &y = 0);
+	void addText(const std::string &text = "", const int &text_size = 20,
+				 const int &x = 0, const int &y = 0);
 	void addTextEntry(const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100);
+	void addSpinny(const std::string &image_file, const int &x = 0,
+				   const int &y = 0);
 	void setLastIndex(const int &i);
 	void clearLayout();
 
 	// layouts
+	/*
 	DEFINE_LAYOUT_H(setupLayout);
 	DEFINE_LAYOUT_H(setupLayoutOptions);
+	*/
+	DEFINE_LAYOUT_H(preInstallLayout);
+	DEFINE_LAYOUT_H(installLayout);
 
 public:
 	OFSGui();

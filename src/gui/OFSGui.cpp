@@ -30,7 +30,7 @@ OFSGui::OFSGui() {
 	if(TTF_Init() == -1)
 		throw SDLTTFException("Can't Init SDL_ttf");
 
-	setupLayout();
+	preInstallLayout();
 }
 
 OFSGui::~OFSGui() {
@@ -103,14 +103,22 @@ void OFSGui::addButton(const std::string &image_file, GuiActs actToLink,
 	_imgs.push_back(std::make_unique<OFSGuiButton>(
 		image_file, _renderer, actToLink, x, y, NumOfSubImages));
 }
-void OFSGui::addText(const std::string &text, const int &x, const int &y) {
-	_imgs.push_back(std::make_unique<OFSGuiText>(_renderer, text, x, y));
+void OFSGui::addText(const std::string &text, const int &text_size,
+					 const int &x, const int &y) {
+	_imgs.push_back(
+		std::make_unique<OFSGuiText>(_renderer, text, text_size, x, y));
 }
 void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
 						  const int &width) {
 	_imgs.push_back(
 		std::make_unique<OFSGuiTextEntry>(_renderer, text, x, y, width));
 }
+void OFSGui::addSpinny(const std::string &image_file, const int &x,
+					   const int &y) {
+	_imgs.push_back(
+		std::make_unique<OFSGuiSpinny>(image_file, _renderer, x, y));
+}
+
 void OFSGui::setLastIndex(const int &i) {
 	_imgs.back()->setIndex(i);
 }
