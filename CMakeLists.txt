@@ -7,7 +7,7 @@ option(STATIC_LINK "Static link the libraries included" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCES
+set(SOURCES_LAUNCHER
         src/main.cpp
         src/main.h
         src/gui/OFSGuiImage.cpp
@@ -29,7 +29,14 @@ set(SOURCES
         src/db/OFSDatabase.cpp
         src/db/OFSDatabase.h)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set(SOURCES_FACADE
+        src/facade/OFSFacade.cpp
+        src/facade/OFSFacade.h)
+
+add_library(client SHARED ${SOURCES_FACADE})
+set_target_properties(client PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" PREFIX "")
+
+add_executable(${PROJECT_NAME} ${SOURCES_LAUNCHER})
 
 if(USE_GUI)
     find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
