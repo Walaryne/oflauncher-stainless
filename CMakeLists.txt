@@ -4,6 +4,7 @@ project(oflauncher_stainless)
 
 option(USE_GUI "Whether or not to use SDL2 to compile with GUI support" ON)
 option(STATIC_LINK "Static link the libraries included" OFF)
+option(DRAW_WINDOW "Have the client.so try to draw on the engine window" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -71,6 +72,12 @@ find_package(CURL REQUIRED)
 find_package(SQLite3 REQUIRED)
 
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS})
+
+if(DRAW_WINDOW)
+    add_compile_definitions(DRAW_WINDOW)
+    TARGET_LINK_LIBRARIES(client PUBLIC ${LIB32SDL2_LIBRARY})
+endif()
+
 if(STATIC_LINK)
     if(USE_GUI)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES})
