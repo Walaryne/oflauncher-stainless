@@ -29,7 +29,9 @@ set(SOURCES
         src/net/OFSNet.cpp
         src/net/OFSNet.h
         src/db/OFSDatabase.cpp
-        src/db/OFSDatabase.h)
+        src/db/OFSDatabase.h
+        src/steam/OFSPathDiscover.h
+        src/steam/OFSPathDiscover.cpp)
 
 set(SOURCES_FACADE
         src/facade/OFSFacade.cpp
