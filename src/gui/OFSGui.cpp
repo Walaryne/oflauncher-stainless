@@ -12,9 +12,10 @@ OFSGui::OFSGui() {
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
 		throw SDLException("Can't Init SDL");
 
-	_window = SDL_CreateWindow("Open Fortress Launcher",
-							   SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-							   640, 360, SDL_WINDOW_SHOWN | SDL_WINDOW_UTILITY);
+	_window =
+		SDL_CreateWindow("Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED,
+						 SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
+						 SDL_WINDOW_SHOWN | SDL_WINDOW_UTILITY);
 	// On my computer, I have "unredir-if-possible" enabled in my picom
 	// config, and this program causes that to trigger unless you have the
 	// SDL_WINDOW_UTILIY flag lol
@@ -47,6 +48,19 @@ void OFSGui::bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint) {
 	_bindMeths.emplace(actToBind, funcPoint);
 }
 
+bool OFSGui::simulateButton(GuiActs actToSim) {
+	bool ret = false;
+	if(_bindFuncs[actToSim]) {
+		_bindFuncs[actToSim]();
+		// ret = true;
+	}
+	if(_bindMeths[actToSim]) {
+		_bindMeths[actToSim](this);
+		ret = true;
+	}
+	return ret;
+}
+
 bool OFSGui::loop() {
 	SDL_Event e;
 
@@ -72,12 +86,8 @@ bool OFSGui::loop() {
 			for(auto &i : _imgs) {
 				GuiActs a = i->getClickedUp();
 
-				if(_bindFuncs[a])
-					_bindFuncs[a]();
-				else if(_bindMeths[a]) {
-					_bindMeths[a](this);
+				if(simulateButton(a))
 					break;
-				}
 			}
 			break;
 		default:

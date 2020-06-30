@@ -16,7 +16,10 @@ OFSGuiImage::OFSGuiImage(const std::string &image_file, SDL_Renderer *renderer,
 	SDL_QueryTexture(_texture, nullptr, nullptr, &w, &h);
 	_size.h = h / (_subImages + 1);
 	_size.w = w;
-	_size.x = x;
+	if(x >= 0)
+		_size.x = x;
+	else
+		_size.x = (WINDOW_WIDTH / 2) - (w / 2);
 	_size.y = y;
 
 	_src.h = h / (_subImages + 1);

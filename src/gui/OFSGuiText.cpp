@@ -28,7 +28,10 @@ OFSGuiText::OFSGuiText(SDL_Renderer *renderer, const std::string &text,
 	SDL_QueryTexture(_texture, nullptr, nullptr, &w, &h);
 	_size.h = h;
 	_size.w = w;
-	_size.x = x;
+	if(x >= 0)
+		_size.x = x;
+	else
+		_size.x = (WINDOW_WIDTH / 2) - (w / 2);
 	_size.y = y;
 
 	_src.h = h;

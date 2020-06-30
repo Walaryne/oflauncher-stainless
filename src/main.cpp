@@ -16,7 +16,11 @@ void testFunc() {
 	std::cout << "The button is pressed" << std::endl;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+	bool runFromGame = false;
+	for(int i = 0; i < argc; i++)
+		if(strcmp(argv[i], "-check-for-updates") == 0)
+			runFromGame = true;
 
 	// Initialize cURL for usage program wide
 	curl_global_init(CURL_GLOBAL_ALL);
@@ -34,11 +38,13 @@ int main() {
 
 		db.updateGame();
 	} catch(std::exception &e) {
-		std::string error_msg =
-			"Cannot connect to Update Server. Please check internet.\n";
-		error_msg.append(e.what());
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cannot Connect",
-								 error_msg.c_str(), nullptr);
+		if(!runFromGame) {
+			std::string error_msg =
+				"Cannot connect to Update Server. Please check internet.\n";
+			error_msg.append(e.what());
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cannot Connect",
+									 error_msg.c_str(), nullptr);
+		}
 	}
 
 	// To Fenteale: Later on you'll have direct access to two automated
@@ -46,8 +52,10 @@ int main() {
 	// I'll try to add some callbacks and stuff so you can use progress bars!
 
 	OFSGui g;
+	g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
 
-	g.bindActivity(BUT_CLICKED_UPDATE, testFunc);
+	if(runFromGame)
+		g.simulateButton(BUT_CLICKED_INSTALL);
 	while(g.loop()) {
 	}
 }

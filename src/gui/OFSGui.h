@@ -41,6 +41,8 @@ private:
 	std::unordered_map<int, GuiButtonFunction> _bindFuncs;
 	std::unordered_map<int, GuiButtonMethod> _bindMeths;
 
+	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
+
 	// layout construction helper methods
 	void addImage(const std::string &image_file, const int &x = 0,
 				  const int &y = 0, const int &NumOfSubImages = 0);
@@ -68,7 +70,8 @@ public:
 	~OFSGui();
 
 	void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
-	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
+
+	bool simulateButton(GuiActs actToSim);
 
 	bool loop();
 };
