@@ -6,6 +6,7 @@
 
 #include "OFSGuiActs.h"
 #include "OFSGuiError.h"
+#include "res/EmbedData.h"
 
 class OFSGuiImage {
 protected:
@@ -16,7 +17,7 @@ protected:
 
 public:
 	OFSGuiImage(){};
-	OFSGuiImage(const void* buf, unsigned int len, SDL_Renderer *renderer,
+	OFSGuiImage(const EmbedData data, SDL_Renderer *renderer,
 				const int &x, const int &y, const int &NumOfSubImages);
 	~OFSGuiImage();
 	SDL_Texture *getTexture();

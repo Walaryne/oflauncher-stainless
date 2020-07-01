@@ -5,6 +5,7 @@
 #include <string>
 
 #include "OFSGuiImage.h"
+#include "res/EmbedData.h"
 
 class OFSGuiSpinny : public OFSGuiImage {
 private:
@@ -12,7 +13,7 @@ private:
 	double _angle;
 
 public:
-	OFSGuiSpinny(const void* buf, unsigned int len, SDL_Renderer *renderer,
+	OFSGuiSpinny(const EmbedData data, SDL_Renderer *renderer,
 				 const int &x = 0, const int &y = 0);
 	~OFSGuiSpinny();
 	void renderCopy(SDL_Renderer *renderer);

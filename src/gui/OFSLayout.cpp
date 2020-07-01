@@ -9,9 +9,9 @@ DEFINE_LAYOUT(preInstallLayout) {
 	clearLayout();
 
 	// Background image
-	addImage((const void*)bg_bmp, bg_bmp_len);
+	addImage(bg_bmp_data);
 
-	addButton((const void*)install_bmp, install_bmp_len, BUT_CLICKED_INSTALL, -1, 100, 2);
+	addButton(install_bmp_data, BUT_CLICKED_INSTALL, -1, 100, 2);
 
 	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
 }
@@ -19,13 +19,13 @@ DEFINE_LAYOUT(installLayout) {
 	clearLayout();
 
 	// Background image
-	addImage((const void*)bg_bmp, bg_bmp_len);
+	addImage(bg_bmp_data);
 
 	addText("Installing", 70, -1, 100);
 
-	addSpinny(spinny_bmp, spinny_bmp_len, -1, 200);
+	addSpinny(spinny_bmp_data, -1, 200);
 
-	addButton(cancel_bmp, cancel_bmp_len, BUT_CLICKED_CANCEL, -1, 310, 2);
+	addButton(cancel_bmp_data, BUT_CLICKED_CANCEL, -1, 310, 2);
 
 	bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
 }

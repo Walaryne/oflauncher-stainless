@@ -6,6 +6,7 @@
 
 #include "OFSGuiActs.h"
 #include "OFSGuiImage.h"
+#include "res/EmbedData.h"
 
 class OFSGuiButton : public OFSGuiImage {
 private:
@@ -13,7 +14,7 @@ private:
 	bool _isClicked;
 
 public:
-	OFSGuiButton(const void* buf, unsigned int len, SDL_Renderer *renderer,
+	OFSGuiButton(const EmbedData data, SDL_Renderer *renderer,
 				 GuiActs actToLink, const int &x, const int &y,
 				 const int &NumOfSubImages);
 	~OFSGuiButton();

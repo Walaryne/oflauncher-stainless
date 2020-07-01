@@ -21,6 +21,7 @@
 #include "OFSGuiSpinny.h"
 #include "OFSGuiText.h"
 #include "OFSGuiTextEntry.h"
+#include "res/EmbedData.h"
 
 class OFSGui;
 
@@ -44,15 +45,15 @@ private:
 	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
 
 	// layout construction helper methods
-	void addImage(const void* buf, unsigned int len, const int &x = 0,
+	void addImage(const EmbedData data, const int &x = 0,
 				  const int &y = 0, const int &NumOfSubImages = 0);
-	void addButton(const void* buf, unsigned int len, GuiActs actToLink,
+	void addButton(const EmbedData data, GuiActs actToLink,
 				   const int &x, const int &y, const int &NumOfSubImages);
 	void addText(const std::string &text = "", const int &text_size = 20,
 				 const int &x = 0, const int &y = 0);
 	void addTextEntry(const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100);
-	void addSpinny(const void* buf, unsigned int len, const int &x = 0,
+	void addSpinny(const EmbedData data, const int &x = 0,
 				   const int &y = 0);
 	void setLastIndex(const int &i);
 	void clearLayout();
