@@ -16,7 +16,7 @@ protected:
 
 public:
 	OFSGuiImage(){};
-	OFSGuiImage(const std::string &image_file, SDL_Renderer *renderer,
+	OFSGuiImage(const void* buf, unsigned int len, SDL_Renderer *renderer,
 				const int &x, const int &y, const int &NumOfSubImages);
 	~OFSGuiImage();
 	SDL_Texture *getTexture();

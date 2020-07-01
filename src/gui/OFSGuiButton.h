@@ -13,7 +13,7 @@ private:
 	bool _isClicked;
 
 public:
-	OFSGuiButton(const std::string &image_file, SDL_Renderer *renderer,
+	OFSGuiButton(const void* buf, unsigned int len, SDL_Renderer *renderer,
 				 GuiActs actToLink, const int &x, const int &y,
 				 const int &NumOfSubImages);
 	~OFSGuiButton();

@@ -12,7 +12,7 @@ private:
 	double _angle;
 
 public:
-	OFSGuiSpinny(const std::string &image_file, SDL_Renderer *renderer,
+	OFSGuiSpinny(const void* buf, unsigned int len, SDL_Renderer *renderer,
 				 const int &x = 0, const int &y = 0);
 	~OFSGuiSpinny();
 	void renderCopy(SDL_Renderer *renderer);

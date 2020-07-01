@@ -44,15 +44,15 @@ private:
 	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
 
 	// layout construction helper methods
-	void addImage(const std::string &image_file, const int &x = 0,
+	void addImage(const void* buf, unsigned int len, const int &x = 0,
 				  const int &y = 0, const int &NumOfSubImages = 0);
-	void addButton(const std::string &image_file, GuiActs actToLink,
+	void addButton(const void* buf, unsigned int len, GuiActs actToLink,
 				   const int &x, const int &y, const int &NumOfSubImages);
 	void addText(const std::string &text = "", const int &text_size = 20,
 				 const int &x = 0, const int &y = 0);
 	void addTextEntry(const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100);
-	void addSpinny(const std::string &image_file, const int &x = 0,
+	void addSpinny(const void* buf, unsigned int len, const int &x = 0,
 				   const int &y = 0);
 	void setLastIndex(const int &i);
 	void clearLayout();

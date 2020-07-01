@@ -1,12 +1,14 @@
 #include "OFSGuiImage.h"
 
 //####### OFSGuiImage ############
-OFSGuiImage::OFSGuiImage(const std::string &image_file, SDL_Renderer *renderer,
+OFSGuiImage::OFSGuiImage(const void* buf, unsigned int len, SDL_Renderer *renderer,
 						 const int &x = 0, const int &y = 0,
 						 const int &NumOfSubImages = 0) {
 	_subImages = NumOfSubImages;
 	int w, h;
-	SDL_Surface *textureSurface = SDL_LoadBMP(image_file.c_str());
+
+    SDL_RWops* data = SDL_RWFromMem((void*)buf, len);
+    SDL_Surface *textureSurface = SDL_LoadBMP_RW(data, 1);
 	if(textureSurface == nullptr)
 		throw SDLException("OFSGuiImage");
 	_texture = SDL_CreateTextureFromSurface(renderer, textureSurface);

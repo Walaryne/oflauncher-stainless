@@ -102,16 +102,16 @@ bool OFSGui::loop() {
 	return !_quit;
 }
 
-void OFSGui::addImage(const std::string &image_file, const int &x, const int &y,
+void OFSGui::addImage(const void* buf, unsigned int len, const int &x, const int &y,
 					  const int &NumOfSubImages) {
-	_imgs.push_back(std::make_unique<OFSGuiImage>(image_file, _renderer, x, y,
+	_imgs.push_back(std::make_unique<OFSGuiImage>(buf,len,  _renderer, x, y,
 												  NumOfSubImages));
 }
-void OFSGui::addButton(const std::string &image_file, GuiActs actToLink,
+void OFSGui::addButton(const void* buf, unsigned int len, GuiActs actToLink,
 					   const int &x = 0, const int &y = 0,
 					   const int &NumOfSubImages = 0) {
 	_imgs.push_back(std::make_unique<OFSGuiButton>(
-		image_file, _renderer, actToLink, x, y, NumOfSubImages));
+		buf, len, _renderer, actToLink, x, y, NumOfSubImages));
 }
 void OFSGui::addText(const std::string &text, const int &text_size,
 					 const int &x, const int &y) {
@@ -123,10 +123,10 @@ void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
 	_imgs.push_back(
 		std::make_unique<OFSGuiTextEntry>(_renderer, text, x, y, width));
 }
-void OFSGui::addSpinny(const std::string &image_file, const int &x,
+void OFSGui::addSpinny(const void* buf, unsigned int len, const int &x,
 					   const int &y) {
 	_imgs.push_back(
-		std::make_unique<OFSGuiSpinny>(image_file, _renderer, x, y));
+		std::make_unique<OFSGuiSpinny>(buf, len, _renderer, x, y));
 }
 
 void OFSGui::setLastIndex(const int &i) {
