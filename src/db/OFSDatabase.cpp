@@ -39,8 +39,7 @@ void OFSDatabase::verifyIntegrity() {
 
 void OFSDatabase::compareRevisions() {
 	char *err = nullptr;
-	int rc =
-		sqlite3_exec(p_dbFileRemote, "select path from files;",
+	int rc = sqlite3_exec(p_dbFileRemote, "select path from files;",
 					 OFSDatabase::databasePathConsumer, &p_remotePaths, &err);
 
 	if(rc != SQLITE_OK) {
@@ -67,7 +66,17 @@ void OFSDatabase::compareRevisions() {
 
 			//We found something!
 			if(result != p_localPaths.end()) {
+				std::string remoteStmtRes;
+				std::string localStmtRes;
 
+				rc = sqlite3_exec(p_dbFileRemote, "select path from files;",
+								  OFSDatabase::databaseSingleResultConsumer, &remoteStmtRes,
+								  &err);
+
+				if(rc != SQLITE_OK) {
+					ERRCHECK
+					throw std::runtime_error("SQLite statement didn't execute!");
+				}
 			}
 		}
 	}
@@ -91,5 +100,6 @@ int OFSDatabase::databasePathConsumer(void *param, int argc, char **argv, char *
 }
 
 int OFSDatabase::databaseSingleResultConsumer(void *param, int argc, char **argv, char **column) {
+
 	return 0;
 }
