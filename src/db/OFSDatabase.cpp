@@ -9,8 +9,8 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 	p_dbFileRemote = nullptr;
 	p_dbFileLocal = nullptr;
 
-	fs::path localdb("local/ofmanifest.db");
-	fs::path remotedb("remote/ofmanifest.db");
+	fs::path localdb("launcher/local/ofmanifest.db");
+	fs::path remotedb("launcher/remote/ofmanifest.db");
 
 	if(fs::exists(localdb)) {
 		//We already have a local db file, go ahead and load it
@@ -39,15 +39,36 @@ void OFSDatabase::verifyIntegrity() {
 
 void OFSDatabase::compareRevisions() {
 	char *err = nullptr;
-	int rc = sqlite3_exec(p_dbFileRemote, "select path from files;", OFSDatabase::databaseQueryConsumer, &p_remotePaths, &err);
+	int rc =
+		sqlite3_exec(p_dbFileRemote, "select path from files;",
+					 OFSDatabase::databasePathConsumer, &p_remotePaths, &err);
+
 	if(rc != SQLITE_OK) {
 		ERRCHECK
 		throw std::runtime_error("SQLite statement didn't execute!");
 	}
 
 	if(!p_dbFileLocal) {
-		for(const auto& v : p_remotePaths) {
+		for(const auto &v : p_remotePaths) {
 			p_downloadQueue.push_back(v);
+		}
+	} else {
+		rc = sqlite3_exec(p_dbFileLocal, "select path from files;",
+						  OFSDatabase::databasePathConsumer, &p_localPaths,
+						  &err);
+
+		if(rc != SQLITE_OK) {
+			ERRCHECK
+			throw std::runtime_error("SQLite statement didn't execute!");
+		}
+
+		for(const auto &v : p_remotePaths) {
+			auto result = std::find(p_localPaths.begin(), p_localPaths.end(), v);
+
+			//We found something!
+			if(result != p_localPaths.end()) {
+
+			}
 		}
 	}
 }
@@ -61,10 +82,14 @@ void OFSDatabase::downloadNewFiles() {
 	}
 }
 
-int OFSDatabase::databaseQueryConsumer(void *param, int argc, char **argv, char **column) {
+int OFSDatabase::databasePathConsumer(void *param, int argc, char **argv, char **column) {
 	auto strvec = static_cast<std::vector<std::string>*>(param);
 	for(int i = 0; i < argc; ++i) {
 		strvec->push_back(std::string(argv[i]));
 	}
+	return 0;
+}
+
+int OFSDatabase::databaseSingleResultConsumer(void *param, int argc, char **argv, char **column) {
 	return 0;
 }

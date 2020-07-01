@@ -24,7 +24,8 @@ void OFSNet::setServerURL(std::string URL) {
 }
 
 void OFSNet::fetchDatabase() {
-	downloadFile("/" + p_dbFileName, fs::path("remote") / p_dbFileName);
+	downloadFile("/" + p_dbFileName,
+		fs::path("open_fortress/launcher/remote").make_preferred() / p_dbFileName);
 }
 
 void OFSNet::downloadFile(const std::string &path, const fs::path &to) {

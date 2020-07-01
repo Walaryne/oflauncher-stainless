@@ -15,6 +15,7 @@
 #include <vector>
 #include <cstring>
 #include <iostream>
+#include <algorithm>
 
 class OFSDatabase {
 public:
@@ -30,7 +31,8 @@ private:
 	std::deque<std::string> p_downloadQueue;
 	std::vector<std::string> p_remotePaths;
 	std::vector<std::string> p_localPaths;
-	static int databaseQueryConsumer(void *param, int argc, char **argv, char **column);
+	static int databasePathConsumer(void *param, int argc, char **argv, char **column);
+	static int databaseSingleResultConsumer(void *param, int argc, char **argv, char **column);
 	void compareRevisions();
 	void compareIntegrity();
 	void downloadNewFiles();
