@@ -32,7 +32,9 @@ set(SOURCES
         src/db/OFSDatabase.cpp
         src/db/OFSDatabase.h
         src/steam/OFSPathDiscover.h
-        src/steam/OFSPathDiscover.cpp)
+        src/steam/OFSPathDiscover.cpp
+        src/util/OFSUtil.h
+        src/util/OFSUtil.cpp)
 
 set(SOURCES_FACADE
         src/facade/OFSFacade.cpp
