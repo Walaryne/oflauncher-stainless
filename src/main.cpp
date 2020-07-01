@@ -1,14 +1,17 @@
 #include "main.h"
 
 void checkDirsExist() {
-	if(!fs::exists("remote")) {
-		fs::create_directory("remote");
+	fs::path gameDir = fs::path("open_fortress");
+	fs::path remote = fs::path("open_fortress/launcher/remote").make_preferred();
+	fs::path local = fs::path("open_fortress/launcher/local").make_preferred();
+	if(!fs::exists(gameDir)) {
+		fs::create_directory(gameDir);
 	}
-	if(!fs::exists("local")) {
-		fs::create_directory("local");
+	if(!fs::exists(remote)) {
+		fs::create_directory(remote);
 	}
-	if(!fs::exists("open_fortress")) {
-		fs::create_directory("open_fortress");
+	if(!fs::exists(local)) {
+		fs::create_directory(local);
 	}
 }
 
@@ -24,6 +27,10 @@ int main(int argc, char *argv[]) {
 
 	// Initialize cURL for usage program wide
 	curl_global_init(CURL_GLOBAL_ALL);
+
+	OFSPathDiscover opd;
+
+	chdir(opd.getSourcemodsPath().c_str());
 
 	checkDirsExist();
 
