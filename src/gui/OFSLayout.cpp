@@ -1,17 +1,19 @@
 #include "OFSLayout.h"
 
+#ifdef INCLUDE_RESOURCES
 #include "res/bg.bmp.h"
+#include "res/cancel.bmp.h"
 #include "res/install.bmp.h"
 #include "res/spinny.bmp.h"
-#include "res/cancel.bmp.h"
+#endif
 
 DEFINE_LAYOUT(preInstallLayout) {
 	clearLayout();
 
 	// Background image
-	addImage(bg_bmp_data);
+	addImage(DATA(bg));
 
-	addButton(install_bmp_data, BUT_CLICKED_INSTALL, -1, 100, 2);
+	addButton(DATA(install), BUT_CLICKED_INSTALL, -1, 100, 2);
 
 	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
 }
@@ -19,13 +21,13 @@ DEFINE_LAYOUT(installLayout) {
 	clearLayout();
 
 	// Background image
-	addImage(bg_bmp_data);
+	addImage(DATA(bg));
 
 	addText("Installing", 70, -1, 100);
 
-	addSpinny(spinny_bmp_data, -1, 200);
+	addSpinny(DATA(spinny), -1, 200);
 
-	addButton(cancel_bmp_data, BUT_CLICKED_CANCEL, -1, 310, 2);
+	addButton(DATA(cancel), BUT_CLICKED_CANCEL, -1, 310, 2);
 
 	bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
 }

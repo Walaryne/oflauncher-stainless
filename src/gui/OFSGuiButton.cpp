@@ -1,10 +1,9 @@
 #include "OFSGuiButton.h"
 
 //###### OFSGuiButton ###########
-OFSGuiButton::OFSGuiButton(const EmbedData data,
-						   SDL_Renderer *renderer, GuiActs actToLink,
-						   const int &x = 0, const int &y = 0,
-						   const int &NumOfSubImages = 0)
+OFSGuiButton::OFSGuiButton(resData data, SDL_Renderer *renderer,
+						   GuiActs actToLink, const int &x = 0,
+						   const int &y = 0, const int &NumOfSubImages = 0)
 	: OFSGuiImage(data, renderer, x, y, NumOfSubImages) {
 	_act = actToLink;
 	_isClicked = false;

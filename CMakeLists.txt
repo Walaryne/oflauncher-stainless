@@ -5,6 +5,7 @@ project(oflauncher_stainless)
 option(USE_GUI "Whether or not to use SDL2 to compile with GUI support" ON)
 option(STATIC_LINK "Static link the libraries included" OFF)
 option(DRAW_WINDOW "Have the client.so try to draw on the engine window" OFF)
+option(INCLUDE_RESOURCES "Use the resource header files instead of loading directly from the resource folder" ON)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -45,6 +46,10 @@ set_target_properties(client PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" P
 
 
 add_executable(${PROJECT_NAME} ${SOURCES})
+
+if(INCLUDE_RESOURCES)
+    add_compile_definitions(INCLUDE_RESOURCES)
+endif()
 
 if(USE_GUI)
     find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)

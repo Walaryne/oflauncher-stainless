@@ -6,6 +6,9 @@
 
 //########### OFSGui ############
 OFSGui::OFSGui() {
+#ifndef INCLUDE_RESOURCES
+	_orig_path = fs::current_path();
+#endif
 	_quit = false;
 	_bindFuncs.emplace(NOT_CLICKED, nullptr);
 
@@ -55,13 +58,22 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 		// ret = true;
 	}
 	if(_bindMeths[actToSim]) {
+#ifndef INCLUDE_RESOURCES
+		fs::current_path(_orig_path);
+#endif
 		_bindMeths[actToSim](this);
 		ret = true;
+#ifndef INCLUDE_RESOURCES
+		fs::current_path(_new_path);
+#endif
 	}
 	return ret;
 }
 
 bool OFSGui::loop() {
+#ifndef INCLUDE_RESOURCES
+	_new_path = fs::current_path();
+#endif
 	SDL_Event e;
 
 	// SDL_UpdateWindowSurface(window); // depricated.  delete later if need to
@@ -102,16 +114,15 @@ bool OFSGui::loop() {
 	return !_quit;
 }
 
-void OFSGui::addImage(const EmbedData data, const int &x, const int &y,
+void OFSGui::addImage(resData data, const int &x, const int &y,
 					  const int &NumOfSubImages) {
-	_imgs.push_back(std::make_unique<OFSGuiImage>(data,  _renderer, x, y,
-												  NumOfSubImages));
+	_imgs.push_back(
+		std::make_unique<OFSGuiImage>(data, _renderer, x, y, NumOfSubImages));
 }
-void OFSGui::addButton(const EmbedData data, GuiActs actToLink,
-					   const int &x = 0, const int &y = 0,
-					   const int &NumOfSubImages = 0) {
-	_imgs.push_back(std::make_unique<OFSGuiButton>(
-	    data, _renderer, actToLink, x, y, NumOfSubImages));
+void OFSGui::addButton(resData data, GuiActs actToLink, const int &x = 0,
+					   const int &y = 0, const int &NumOfSubImages = 0) {
+	_imgs.push_back(std::make_unique<OFSGuiButton>(data, _renderer, actToLink,
+												   x, y, NumOfSubImages));
 }
 void OFSGui::addText(const std::string &text, const int &text_size,
 					 const int &x, const int &y) {
@@ -123,10 +134,8 @@ void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
 	_imgs.push_back(
 		std::make_unique<OFSGuiTextEntry>(_renderer, text, x, y, width));
 }
-void OFSGui::addSpinny(const EmbedData data, const int &x,
-					   const int &y) {
-	_imgs.push_back(
-		std::make_unique<OFSGuiSpinny>(data, _renderer, x, y));
+void OFSGui::addSpinny(resData data, const int &x, const int &y) {
+	_imgs.push_back(std::make_unique<OFSGuiSpinny>(data, _renderer, x, y));
 }
 
 void OFSGui::setLastIndex(const int &i) {

@@ -13,6 +13,11 @@
 #include <unordered_map>
 #include <vector>
 
+#ifndef INCLUDE_RESOURCES
+#include <filesystem>
+namespace fs = std::filesystem;
+#endif
+
 #include "OFSGuiActs.h"
 #include "OFSGuiError.h"
 
@@ -42,19 +47,23 @@ private:
 	std::unordered_map<int, GuiButtonFunction> _bindFuncs;
 	std::unordered_map<int, GuiButtonMethod> _bindMeths;
 
+#ifndef INCLUDE_RESOURCES
+	fs::path _orig_path;
+	fs::path _new_path;
+#endif
+
 	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
 
 	// layout construction helper methods
-	void addImage(const EmbedData data, const int &x = 0,
-				  const int &y = 0, const int &NumOfSubImages = 0);
-	void addButton(const EmbedData data, GuiActs actToLink,
-				   const int &x, const int &y, const int &NumOfSubImages);
+	void addImage(resData data, const int &x = 0, const int &y = 0,
+				  const int &NumOfSubImages = 0);
+	void addButton(resData data, GuiActs actToLink, const int &x, const int &y,
+				   const int &NumOfSubImages);
 	void addText(const std::string &text = "", const int &text_size = 20,
 				 const int &x = 0, const int &y = 0);
 	void addTextEntry(const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100);
-	void addSpinny(const EmbedData data, const int &x = 0,
-				   const int &y = 0);
+	void addSpinny(resData data, const int &x = 0, const int &y = 0);
 	void setLastIndex(const int &i);
 	void clearLayout();
 

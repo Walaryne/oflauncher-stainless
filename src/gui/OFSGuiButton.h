@@ -12,11 +12,11 @@ class OFSGuiButton : public OFSGuiImage {
 private:
 	GuiActs _act;
 	bool _isClicked;
+	void _finishLoading();
 
 public:
-	OFSGuiButton(const EmbedData data, SDL_Renderer *renderer,
-				 GuiActs actToLink, const int &x, const int &y,
-				 const int &NumOfSubImages);
+	OFSGuiButton(resData data, SDL_Renderer *renderer, GuiActs actToLink,
+				 const int &x, const int &y, const int &NumOfSubImages);
 	~OFSGuiButton();
 	void getClickedDown();
 	GuiActs getClickedUp();

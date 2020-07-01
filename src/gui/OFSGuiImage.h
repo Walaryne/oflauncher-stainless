@@ -8,6 +8,12 @@
 #include "OFSGuiError.h"
 #include "res/EmbedData.h"
 
+#ifdef INCLUDE_RESOURCES
+#define resData const EmbedData
+#else
+#define resData const std::string &
+#endif
+
 class OFSGuiImage {
 protected:
 	SDL_Texture *_texture;
@@ -17,8 +23,8 @@ protected:
 
 public:
 	OFSGuiImage(){};
-	OFSGuiImage(const EmbedData data, SDL_Renderer *renderer,
-				const int &x, const int &y, const int &NumOfSubImages);
+	OFSGuiImage(resData data, SDL_Renderer *renderer, const int &x,
+				const int &y, const int &NumOfSubImages);
 	~OFSGuiImage();
 	SDL_Texture *getTexture();
 	virtual void renderCopy(SDL_Renderer *renderer);

@@ -13,8 +13,8 @@ private:
 	double _angle;
 
 public:
-	OFSGuiSpinny(const EmbedData data, SDL_Renderer *renderer,
-				 const int &x = 0, const int &y = 0);
+	OFSGuiSpinny(resData data, SDL_Renderer *renderer, const int &x = 0,
+				 const int &y = 0);
 	~OFSGuiSpinny();
 	void renderCopy(SDL_Renderer *renderer);
 };

@@ -1,7 +1,8 @@
 #include "main.h"
 
 void checkDirsExist() {
-	fs::path remote = fs::path("open_fortress/launcher/remote").make_preferred();
+	fs::path remote =
+		fs::path("open_fortress/launcher/remote").make_preferred();
 	fs::path local = fs::path("open_fortress/launcher/local").make_preferred();
 
 	if(!fs::exists(remote)) {
@@ -24,14 +25,6 @@ int main(int argc, char *argv[]) {
 
 	// Initialize cURL for usage program wide
 	curl_global_init(CURL_GLOBAL_ALL);
-
-	OFSPathDiscover opd;
-
-	fs::current_path(opd.getSourcemodsPath());
-
-	std::cout << "CURRENT PATH: " << fs::current_path() << std::endl;
-
-	checkDirsExist();
 
 	try {
 		OFSNet net("http://127.0.0.1", "open_fortress");
@@ -62,6 +55,16 @@ int main(int argc, char *argv[]) {
 
 	if(runFromGame)
 		g.simulateButton(BUT_CLICKED_INSTALL);
+
+	// gui is setup.  run all installer stuff
+	OFSPathDiscover opd;
+
+	fs::current_path(opd.getSourcemodsPath());
+
+	std::cout << "CURRENT PATH: " << fs::current_path() << std::endl;
+
+	checkDirsExist();
+
 	while(g.loop()) {
 	}
 }
