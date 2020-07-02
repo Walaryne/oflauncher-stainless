@@ -39,10 +39,14 @@ set(SOURCES
 
 set(SOURCES_FACADE
         src/facade/OFSFacade.cpp
-        src/facade/OFSFacade.h)
+        src/facade/OFSFacade.h
+        src/steam/OFSPathDiscover.cpp
+        src/steam/OFSPathDiscover.h
+        src/util/OFSUtil.cpp
+        src/util/OFSUtil.h)
 
 add_library(client SHARED ${SOURCES_FACADE})
-set_target_properties(client PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" PREFIX "")
+set_target_properties(client PROPERTIES COMPILE_FLAGS "-m32 -fPIC" LINK_FLAGS "-m32 -fPIC" PREFIX "")
 
 
 add_executable(${PROJECT_NAME} ${SOURCES})
