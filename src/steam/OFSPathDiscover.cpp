@@ -40,13 +40,13 @@ OFSPathDiscover::OFSPathDiscover() {
 }
 
 std::string OFSPathDiscover::getSourcemodsPath() {
-	return p_sourcemodsPath;
+	return p_sourcemodsPath.string();
 }
 
 std::string OFSPathDiscover::getSteamPath() {
-	return p_steamPath;
+	return p_steamPath.string();
 }
 
 std::string OFSPathDiscover::getSourcePath() {
-	return p_sourcePath;
+	return p_sourcePath.string();
 }

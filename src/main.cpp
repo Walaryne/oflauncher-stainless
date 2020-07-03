@@ -67,4 +67,5 @@ int main(int argc, char *argv[]) {
 
 	while(g.loop()) {
 	}
+	return 0;
 }

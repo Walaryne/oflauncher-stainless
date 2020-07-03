@@ -8,6 +8,10 @@ option(DRAW_WINDOW "Have the client.so try to draw on the engine window" OFF)
 option(INCLUDE_RESOURCES "Use the resource header files instead of loading directly from the resource folder" ON)
 
 set(CMAKE_CXX_STANDARD 17)
+if(MSVC_VERSION GREATER_EQUAL "1900")
+    add_compile_options("/std:c++17")
+endif()
+
 
 set(SOURCES
         src/main.cpp
@@ -45,11 +49,18 @@ set(SOURCES_FACADE
         src/util/OFSUtil.cpp
         src/util/OFSUtil.h)
 
-add_library(client SHARED ${SOURCES_FACADE})
-set_target_properties(client PROPERTIES COMPILE_FLAGS "-m32 -fPIC" LINK_FLAGS "-m32 -fPIC" PREFIX "")
 
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+if(WIN32)
+    add_library(client SHARED ${SOURCES_FACADE})
+    #set_target_properties(client PROPERTIES COMPILE_FLAGS "/MACHINE:X86" LINK_FLAGS "/MACHINE:X86" PREFIX "")
+    add_executable(${PROJECT_NAME} ${SOURCES})
+    #set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/subsystem:console")
+else()
+    add_library(client SHARED ${SOURCES_FACADE})
+    #set_target_properties(client PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32" PREFIX "")
+    add_executable(${PROJECT_NAME} ${SOURCES})
+endif()
 
 if(INCLUDE_RESOURCES)
     add_compile_definitions(INCLUDE_RESOURCES)
@@ -86,7 +97,7 @@ INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_D
 
 if(DRAW_WINDOW)
     add_compile_definitions(DRAW_WINDOW)
-    TARGET_LINK_LIBRARIES(client PUBLIC ${LIB32SDL2_LIBRARY})
+    TARGET_LINK_LIBRARIES(client PUBLIC ${SDL2_LIBRARY})
 endif()
 
 if(STATIC_LINK)

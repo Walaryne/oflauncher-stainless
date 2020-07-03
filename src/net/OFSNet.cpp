@@ -29,7 +29,7 @@ void OFSNet::fetchDatabase() {
 }
 
 void OFSNet::downloadFile(const std::string &path, const fs::path &to) {
-	FILE *file = std::fopen(to.c_str(), "wb");
+	FILE *file = std::fopen(to.string().c_str(), "wb");
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, file);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	curl_easy_perform(p_curlh);

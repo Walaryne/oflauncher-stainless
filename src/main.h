@@ -13,10 +13,12 @@
 #include <filesystem>
 #include <iostream>
 
-#ifdef __linux__
-#include <unistd.h>
-#else
+#ifdef _WIN32
 #include <direct.h>
+#include <Windows.h>
+#undef main
+#else
+#include <unistd.h>
 #endif
 
 namespace fs = std::filesystem;
