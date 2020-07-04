@@ -8,7 +8,7 @@
 #include "db/OFSDatabase.h"
 #include "gui/OFSGui.h"
 #include "net/OFSNet.h"
-#include "steam/OFSPathDiscover.h"
+#include "../shared/steam/OFSPathDiscover.h"
 #include <exception>
 #include <filesystem>
 #include <iostream>
