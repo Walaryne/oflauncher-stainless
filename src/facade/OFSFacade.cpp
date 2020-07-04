@@ -4,7 +4,6 @@
 
 #include "OFSFacade.h"
 
-
 void *CreateInterface(char const *name, int *err) {
 	static bool hasExec = false;
 	static fs::path steamPath;
@@ -14,13 +13,16 @@ void *CreateInterface(char const *name, int *err) {
 
 		OFSPathDiscover sPath;
 		std::string steamPathStr = sPath.getSourcemodsPath();
-		steamPathStr += "/open_fortress/bin/client_real.so";
+		steamPathStr += "/open_fortress/bin";
 		steamPath = steamPathStr;
 		steamPath = steamPath.make_preferred();
 
 		std::cout << "OF path: " << steamPath << std::endl;
+
+		runLauncher(steamPath);
+
 		hasExec = true;
 	}
 
-	return realClientInterface(name, err);
+	return realClientInterface(name, err, steamPath);
 }

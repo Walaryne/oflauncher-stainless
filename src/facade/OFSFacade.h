@@ -5,7 +5,6 @@
 #ifndef OFLAUNCHER_STAINLESS_OFSFACADE_H
 #define OFLAUNCHER_STAINLESS_OFSFACADE_H
 
-
 #include <iostream>
 #include <string>
 
