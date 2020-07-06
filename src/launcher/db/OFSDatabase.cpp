@@ -68,15 +68,32 @@ void OFSDatabase::compareRevisions() {
 			if(result != p_localPaths.end()) {
 				std::string remoteStmtRes;
 				std::string localStmtRes;
+				std::string stmt = (std::string("select revision from files where path='") + v + "';");
 
-				rc = sqlite3_exec(p_dbFileRemote, "select path from files;",
+				rc = sqlite3_exec(p_dbFileRemote, stmt.c_str(),
 								  OFSDatabase::databaseSingleResultConsumer, &remoteStmtRes,
+								  &err);
+
+				rc = sqlite3_exec(p_dbFileLocal, stmt.c_str(),
+								  OFSDatabase::databaseSingleResultConsumer, &localStmtRes,
 								  &err);
 
 				if(rc != SQLITE_OK) {
 					ERRCHECK
 					throw std::runtime_error("SQLite statement didn't execute!");
 				}
+
+				std::cout << "Filename: " << v << std::endl;
+				std::cout << "Remote: " << remoteStmtRes << std::endl;
+				std::cout << "Local: " << localStmtRes << std::endl;
+
+				if(localStmtRes != remoteStmtRes) {
+					std::cout << "Revisions don't match, adding to download queue" << std::endl;
+					p_downloadQueue.push_back(v);
+				}
+
+			} else {
+				p_downloadQueue.push_back(v);
 			}
 		}
 	}
@@ -87,7 +104,9 @@ void OFSDatabase::compareIntegrity() {
 
 void OFSDatabase::downloadNewFiles() {
 	for(const auto& s : p_downloadQueue) {
-		p_net->downloadFile(s, (fs::path(p_net->getFolderName() + s)).make_preferred());
+		fs::path fileDownloading = (fs::current_path() / fs::path(s)).make_preferred();
+		std::cout << "Downloading file: " << fileDownloading << std::endl;
+		p_net->downloadFile(s, fileDownloading);
 	}
 }
 
@@ -100,6 +119,7 @@ int OFSDatabase::databasePathConsumer(void *param, int argc, char **argv, char *
 }
 
 int OFSDatabase::databaseSingleResultConsumer(void *param, int argc, char **argv, char **column) {
-
+	auto retstring = static_cast<std::string *>(param);
+	*retstring = std::string(argv[0]);
 	return 0;
 }

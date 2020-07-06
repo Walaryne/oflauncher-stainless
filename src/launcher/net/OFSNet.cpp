@@ -25,14 +25,12 @@ void OFSNet::setServerURL(std::string URL) {
 
 void OFSNet::fetchDatabase() {
 	downloadFile("/" + p_dbFileName,
-				 fs::path("open_fortress/launcher/remote").make_preferred() /
+				 fs::path("launcher/remote").make_preferred() /
 					 p_dbFileName);
 }
 
 void OFSNet::downloadFile(const std::string &path, const fs::path &to) {
 	FILE *file = std::fopen(to.string().c_str(), "wb");
-	if(!fs::exists(to) || !file)
-		throw std::runtime_error("Cannot create downloaded file.");
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, file);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	curl_easy_perform(p_curlh);

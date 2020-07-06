@@ -2,8 +2,8 @@
 
 void checkDirsExist() {
 	fs::path remote =
-		fs::path("open_fortress/launcher/remote").make_preferred();
-	fs::path local = fs::path("open_fortress/launcher/local").make_preferred();
+		fs::path("launcher/remote").make_preferred();
+	fs::path local = fs::path("launcher/local").make_preferred();
 
 	if(!fs::exists(remote)) {
 		fs::create_directories(remote);
@@ -26,8 +26,22 @@ int main(int argc, char *argv[]) {
 	// Initialize cURL for usage program wide
 	curl_global_init(CURL_GLOBAL_ALL);
 
+	OFSGui g;
+	OFSPathDiscover opd;
+
+	g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
+
+	if(runFromGame)
+		g.simulateButton(BUT_CLICKED_INSTALL);
+
+	std::string gameFolderName = "open_fortress";
+
+	fs::current_path((opd.getSourcemodsPath() + "/" + gameFolderName));
+
+	checkDirsExist();
+
 	try {
-		OFSNet net("http://127.0.0.1", "open_fortress");
+		OFSNet net("http://127.0.0.1", gameFolderName);
 
 		// To Fenteale: This should be called the moment that the "Update"
 		// button is pressed.
@@ -50,20 +64,7 @@ int main(int argc, char *argv[]) {
 	// functions. These will be updateGame and verifyIntegrity respectively.
 	// I'll try to add some callbacks and stuff so you can use progress bars!
 
-	OFSGui g;
-	g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
-
-	if(runFromGame)
-		g.simulateButton(BUT_CLICKED_INSTALL);
-
 	// gui is setup.  run all installer stuff
-	OFSPathDiscover opd;
-
-	fs::current_path(opd.getSourcemodsPath());
-
-	std::cout << "CURRENT PATH: " << fs::current_path() << std::endl;
-
-	checkDirsExist();
 
 	while(g.loop()) {
 	}
