@@ -23,6 +23,7 @@ namespace fs = std::filesystem;
 
 #include "OFSGuiButton.h"
 #include "OFSGuiImage.h"
+#include "OFSGuiProgBar.h"
 #include "OFSGuiSpinny.h"
 #include "OFSGuiText.h"
 #include "OFSGuiTextEntry.h"
@@ -64,6 +65,8 @@ private:
 	void addTextEntry(const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100);
 	void addSpinny(resData data, const int &x = 0, const int &y = 0);
+	void addProgressBar(resData data, const int &x = 0, const int &y = 0,
+						const int &width = 50);
 	void setLastIndex(const int &i);
 	void clearLayout();
 
@@ -82,6 +85,8 @@ public:
 	void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
 
 	bool simulateButton(GuiActs actToSim);
+
+	void setProgress(const float &progress);
 
 	bool loop();
 };

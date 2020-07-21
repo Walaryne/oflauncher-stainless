@@ -32,6 +32,7 @@ public:
 	virtual void getClickedDown();
 	virtual GuiActs getClickedUp();
 	virtual void getHover();
+	virtual void setProgress(const float &progress);
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIIMAGE_H

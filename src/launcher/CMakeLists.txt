@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(SOURCES
         main.cpp
         main.h
+        gui/OFSGuiProgBar.cpp
+        gui/OFSGuiProgBar.h
         gui/OFSGuiImage.cpp
         gui/OFSGuiImage.h
         gui/OFSGuiButton.cpp

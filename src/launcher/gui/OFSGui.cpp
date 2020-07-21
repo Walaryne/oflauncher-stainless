@@ -70,6 +70,11 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 	return ret;
 }
 
+void OFSGui::setProgress(const float &progress) {
+	for(auto &i : _imgs)
+		i->setProgress(progress);
+}
+
 bool OFSGui::loop() {
 #ifndef INCLUDE_RESOURCES
 	_new_path = fs::current_path();
@@ -136,6 +141,12 @@ void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
 }
 void OFSGui::addSpinny(resData data, const int &x, const int &y) {
 	_imgs.push_back(std::make_unique<OFSGuiSpinny>(data, _renderer, x, y));
+}
+
+void OFSGui::addProgressBar(resData data, const int &x, const int &y,
+							const int &width) {
+	_imgs.push_back(
+		std::make_unique<OFSGuiProgBar>(data, _renderer, x, y, width));
 }
 
 void OFSGui::setLastIndex(const int &i) {

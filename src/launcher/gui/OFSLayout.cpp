@@ -4,7 +4,8 @@
 #include "res/bg.bmp.h"
 #include "res/cancel.bmp.h"
 #include "res/install.bmp.h"
-#include "res/spinny.bmp.h"
+//#include "res/spinny.bmp.h"
+#include "res/barM.bmp.h"
 #endif
 
 DEFINE_LAYOUT(preInstallLayout) {
@@ -25,7 +26,8 @@ DEFINE_LAYOUT(installLayout) {
 
 	addText("Installing", 70, -1, 100);
 
-	addSpinny(DATA(spinny), -1, 200);
+	// addSpinny(DATA(spinny), -1, 200);
+	addProgressBar(DATA(barM), -1, 250, 300);
 
 	addButton(DATA(cancel), BUT_CLICKED_CANCEL, -1, 310, 2);
 

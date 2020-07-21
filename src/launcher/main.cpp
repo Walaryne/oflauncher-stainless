@@ -1,8 +1,7 @@
 #include "main.h"
 
 void checkDirsExist() {
-	fs::path remote =
-		fs::path("launcher/remote").make_preferred();
+	fs::path remote = fs::path("launcher/remote").make_preferred();
 	fs::path local = fs::path("launcher/local").make_preferred();
 
 	if(!fs::exists(remote)) {
@@ -36,11 +35,11 @@ int main(int argc, char *argv[]) {
 
 	std::string gameFolderName = "open_fortress";
 
-	fs::current_path((opd.getSourcemodsPath() + "/" + gameFolderName));
-
-	checkDirsExist();
-
 	try {
+		fs::current_path((opd.getSourcemodsPath() + "/" + gameFolderName));
+
+		checkDirsExist();
+
 		OFSNet net("http://127.0.0.1", gameFolderName);
 
 		// To Fenteale: This should be called the moment that the "Update"
@@ -67,6 +66,7 @@ int main(int argc, char *argv[]) {
 	// gui is setup.  run all installer stuff
 
 	while(g.loop()) {
+		g.setProgress(0.5f);
 	}
 	return 0;
 }

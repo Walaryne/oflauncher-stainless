@@ -56,3 +56,6 @@ GuiActs OFSGuiImage::getClickedUp() {
 
 void OFSGuiImage::getHover() {
 }
+
+void OFSGuiImage::setProgress(const float &progress) {
+}
