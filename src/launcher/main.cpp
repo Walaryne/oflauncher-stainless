@@ -1,5 +1,7 @@
 #include "main.h"
 
+OFSDatabase* db;
+
 void checkDirsExist() {
 	fs::path remote = fs::path("launcher/remote").make_preferred();
 	fs::path local = fs::path("launcher/local").make_preferred();
@@ -12,8 +14,8 @@ void checkDirsExist() {
 	}
 }
 
-void testFunc() {
-	std::cout << "The button is pressed" << std::endl;
+void updateFunc() {
+	db->updateGame();
 }
 
 int main(int argc, char *argv[]) {
@@ -28,7 +30,7 @@ int main(int argc, char *argv[]) {
 	OFSGui g;
 	OFSPathDiscover opd;
 
-	g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
+	//g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
 
 	if(runFromGame)
 		g.simulateButton(BUT_CLICKED_INSTALL);
@@ -52,9 +54,9 @@ int main(int argc, char *argv[]) {
 		// button is pressed.
 		net.fetchDatabase();
 
-		OFSDatabase db(&net);
+		db = new OFSDatabase(&net);
 
-		db.updateGame();
+		g.bindActivity(BUT_CLICKED_INSTALL, updateFunc);
 	} catch(std::exception &e) {
 		if(!runFromGame) {
 			std::string error_msg =
