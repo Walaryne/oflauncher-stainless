@@ -46,6 +46,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	curl_easy_perform(p_curlh);
 	std::fflush(file);
+	std::fclose(file);
 }
 
 void OFSNet::convertURL(std::string &URL) {

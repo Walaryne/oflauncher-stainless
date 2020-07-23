@@ -106,7 +106,7 @@ void OFSDatabase::downloadNewFiles() {
 	for(const auto& s : p_downloadQueue) {
 		fs::path fileDownloading = (fs::current_path() / fs::path(s)).make_preferred();
 		std::cout << "Downloading file: " << fileDownloading << std::endl;
-		p_net->downloadFile(s, fileDownloading);
+		p_net->downloadFile("/" + s, fileDownloading);
 	}
 }
 
