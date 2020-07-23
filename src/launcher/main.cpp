@@ -36,11 +36,17 @@ int main(int argc, char *argv[]) {
 	std::string gameFolderName = "open_fortress";
 
 	try {
-		fs::current_path((opd.getSourcemodsPath() + "/" + gameFolderName));
+		fs::path of = fs::path(opd.getSourcemodsPath() + "/" + gameFolderName).make_preferred();
+
+		if(!fs::exists(of)) {
+			fs::create_directories(of);
+		}
+
+		fs::current_path(of);
 
 		checkDirsExist();
 
-		OFSNet net("http://127.0.0.1", gameFolderName);
+		OFSNet net("http://svn.openfortress.fun/files", gameFolderName);
 
 		// To Fenteale: This should be called the moment that the "Update"
 		// button is pressed.
