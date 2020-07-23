@@ -1,6 +1,5 @@
 #include "main.h"
 
-OFSDatabase* db;
 
 void checkDirsExist() {
 	fs::path remote = fs::path("launcher/remote").make_preferred();
@@ -15,7 +14,7 @@ void checkDirsExist() {
 }
 
 void updateFunc() {
-	db->updateGame();
+	//db->updateGame();
 }
 
 int main(int argc, char *argv[]) {
@@ -54,9 +53,11 @@ int main(int argc, char *argv[]) {
 		// button is pressed.
 		net.fetchDatabase();
 
-		db = new OFSDatabase(&net);
+		OFSDatabase db(&net);
 
-		g.bindActivity(BUT_CLICKED_INSTALL, updateFunc);
+		db.updateGame();
+
+		//g.bindActivity(BUT_CLICKED_INSTALL, updateFunc);
 	} catch(std::exception &e) {
 		if(!runFromGame) {
 			std::string error_msg =
