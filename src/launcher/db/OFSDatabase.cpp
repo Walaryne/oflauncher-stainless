@@ -30,11 +30,13 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 void OFSDatabase::updateGame() {
 	compareRevisions();
 	downloadNewFiles();
+	fs::copy("launcher/remote/ofmanifest.db", "launcher/local/ofmanifest.db");
 }
 
 void OFSDatabase::verifyIntegrity() {
 	compareIntegrity();
 	downloadNewFiles();
+	fs::copy("launcher/remote/ofmanifest.db", "launcher/local/ofmanifest.db");
 }
 
 void OFSDatabase::compareRevisions() {
