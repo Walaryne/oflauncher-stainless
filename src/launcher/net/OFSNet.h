@@ -31,6 +31,7 @@ private:
     std::string p_serverURL;
     std::string p_dbFileName;
     std::string p_gameFolderName;
+    fs::path p_cwd;
 	CURL *p_curlh;
 };
 
