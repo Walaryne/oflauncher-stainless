@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <cstdio>
 #include <utility>
+#include <iostream>
 
 namespace fs = std::filesystem;
 

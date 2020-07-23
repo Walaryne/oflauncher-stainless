@@ -27,6 +27,7 @@ void OFSNet::fetchDatabase() {
 	downloadFile("/" + p_dbFileName,
 				 fs::path("launcher/remote").make_preferred() /
 					 p_dbFileName);
+	std::cout << "Database was fetched successfully!" << std::endl;
 }
 
 void OFSNet::downloadFile(const std::string &path, const fs::path &to) {
@@ -34,6 +35,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path &to) {
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, file);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	curl_easy_perform(p_curlh);
+	std::fflush(file);
 }
 
 void OFSNet::convertURL(std::string &URL) {
