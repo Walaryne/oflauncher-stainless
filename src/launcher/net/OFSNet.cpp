@@ -30,9 +30,18 @@ void OFSNet::fetchDatabase() {
 	std::cout << "Database was fetched successfully!" << std::endl;
 }
 
-void OFSNet::downloadFile(const std::string &path, const fs::path &to) {
+void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
+	fs::path dir = to;
+	dir.remove_filename();
+	std::cout << "Dir is: " + dir.string() << std::endl;
+	if(!fs::exists(dir)) {
+		fs::create_directories(dir);
+	}
+
 	FILE *file = std::fopen(to.c_str(), "wb");
-	std::perror("FOPEN: ");
+	if(!file) {
+		std::perror("FOPEN: ");
+	}
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, file);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	curl_easy_perform(p_curlh);
