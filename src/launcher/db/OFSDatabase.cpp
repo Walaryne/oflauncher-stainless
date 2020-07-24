@@ -12,15 +12,15 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 	p_localDBPath = "launcher/local/ofmanifest.db";
 	p_remoteDBPath = "launcher/remote/ofmanifest.db";
 
-	if(fs::exists(localdb)) {
+	if(fs::exists(p_localDBPath)) {
 		//We already have a local db file, go ahead and load it
-		sqlite3_open(localdb.make_preferred().string().c_str(), &p_dbFileLocal);
+		sqlite3_open(p_localDBPath.make_preferred().string().c_str(), &p_dbFileLocal);
 	}
-	if(!fs::exists(remotedb)) {
+	if(!fs::exists(p_remoteDBPath)) {
 		//Something failed miserably, we couldn't pull the new database from the server
 		throw std::runtime_error("RemoteDB file was not found!");
 	} else {
-		int rc = sqlite3_open(remotedb.make_preferred().string().c_str(), &p_dbFileRemote);
+		int rc = sqlite3_open(p_remoteDBPath.make_preferred().string().c_str(), &p_dbFileRemote);
 		if(rc != SQLITE_OK) {
 			throw std::runtime_error("SQLite database didn't open!");
 		}
