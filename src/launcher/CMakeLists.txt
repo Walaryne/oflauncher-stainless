@@ -35,7 +35,9 @@ set(SOURCES
         ../shared/steam/OFSPathDiscover.h
         ../shared/steam/OFSPathDiscover.cpp
         ../shared/util/OFSUtil.h
-        ../shared/util/OFSUtil.cpp)
+        ../shared/util/OFSUtil.cpp
+        ../shared/util/md5.h
+        ../shared/util/md5.cpp)
 
 
 add_executable(${PROJECT_NAME} ${SOURCES})
