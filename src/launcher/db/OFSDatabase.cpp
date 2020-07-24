@@ -9,8 +9,8 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 	p_dbFileRemote = nullptr;
 	p_dbFileLocal = nullptr;
 
-	fs::path localdb("launcher/local/ofmanifest.db");
-	fs::path remotedb("launcher/remote/ofmanifest.db");
+	p_localDBPath = "launcher/local/ofmanifest.db";
+	p_remoteDBPath = "launcher/remote/ofmanifest.db";
 
 	if(fs::exists(localdb)) {
 		//We already have a local db file, go ahead and load it
@@ -30,13 +30,23 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 void OFSDatabase::updateGame() {
 	compareRevisions();
 	downloadNewFiles();
-	fs::copy("launcher/remote/ofmanifest.db", "launcher/local/ofmanifest.db");
+
+	if(fs::exists(p_localDBPath)) {
+		fs::remove(p_localDBPath);
+	}
+
+	fs::copy(p_remoteDBPath, p_localDBPath);
 }
 
 void OFSDatabase::verifyIntegrity() {
 	compareIntegrity();
 	downloadNewFiles();
-	fs::copy("launcher/remote/ofmanifest.db", "launcher/local/ofmanifest.db");
+
+	if(fs::exists(p_localDBPath)) {
+		fs::remove(p_localDBPath);
+	}
+
+	fs::copy(p_remoteDBPath, p_localDBPath);
 }
 
 void OFSDatabase::compareRevisions() {
