@@ -28,8 +28,6 @@ private:
 	OFSNet *p_net;
 	sqlite3 *p_dbFileLocal;
 	sqlite3 *p_dbFileRemote;
-	fs::path p_localDBPath;
-	fs::path p_remoteDBPath;
 	std::deque<std::string> p_downloadQueue;
 	std::vector<std::string> p_remotePaths;
 	std::vector<std::string> p_localPaths;
