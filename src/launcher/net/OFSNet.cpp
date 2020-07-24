@@ -47,6 +47,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, file);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
+	curl_easy_setopt(p_curlh, CURLOPT_ACCEPT_ENCODING, "gzip");
 	CURLcode retcode = curl_easy_perform(p_curlh);
 	std::cout << "cURL return code: " << retcode << std::endl;
 	std::fflush(file);
