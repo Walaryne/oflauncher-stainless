@@ -10,7 +10,7 @@ OFSGui::OFSGui() {
 	_orig_path = fs::current_path();
 #endif
 	_quit = false;
-	_bindFuncs.emplace(NOT_CLICKED, nullptr);
+	_actStates.emplace(NOT_CLICKED, false);
 
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
 		throw SDLException("Can't Init SDL");
@@ -44,8 +44,10 @@ OFSGui::~OFSGui() {
 	SDL_Quit();
 }
 
-void OFSGui::bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint) {
-	_bindFuncs.emplace(actToBind, funcPoint);
+bool OFSGui::ifActivity(GuiActs actToCheck) {
+	bool ret = _actStates[actToCheck];
+	_actStates[actToCheck] = false;
+	return ret;
 }
 void OFSGui::bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint) {
 	_bindMeths.emplace(actToBind, funcPoint);
@@ -53,10 +55,10 @@ void OFSGui::bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint) {
 
 bool OFSGui::simulateButton(GuiActs actToSim) {
 	bool ret = false;
-	if(_bindFuncs[actToSim]) {
-		_bindFuncs[actToSim]();
-		// ret = true;
-	}
+	if(_actStates.count(actToSim))
+		_actStates[actToSim] = true;
+	else
+		_actStates.emplace(actToSim, true);
 	if(_bindMeths[actToSim]) {
 #ifndef INCLUDE_RESOURCES
 		fs::current_path(_orig_path);

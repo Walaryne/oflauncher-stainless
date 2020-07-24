@@ -1,6 +1,5 @@
 #include "main.h"
 
-
 void checkDirsExist() {
 	fs::path remote = fs::path("launcher/remote").make_preferred();
 	fs::path local = fs::path("launcher/local").make_preferred();
@@ -14,7 +13,7 @@ void checkDirsExist() {
 }
 
 void updateFunc() {
-	//db->updateGame();
+	// db->updateGame();
 }
 
 int main(int argc, char *argv[]) {
@@ -27,46 +26,37 @@ int main(int argc, char *argv[]) {
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	OFSGui g;
+	g.loop(); // run once to just have it display correctly while init
+			  // everything else
 	OFSPathDiscover opd;
 
-	//g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
+	// g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
 
 	if(runFromGame)
 		g.simulateButton(BUT_CLICKED_INSTALL);
 
 	std::string gameFolderName = "open_fortress";
 
-	try {
-		fs::path of = fs::path(opd.getSourcemodsPath() + "/" + gameFolderName).make_preferred();
+	TRYCATCHERR_START()
+	fs::path of = fs::path(opd.getSourcemodsPath() + "/" + gameFolderName)
+					  .make_preferred();
 
-		if(!fs::exists(of)) {
-			fs::create_directories(of);
-		}
-
-		fs::current_path(of);
-
-		checkDirsExist();
-
-		OFSNet net("http://svn.openfortress.fun/files", gameFolderName);
-
-		// To Fenteale: This should be called the moment that the "Update"
-		// button is pressed.
-		net.fetchDatabase();
-
-		OFSDatabase db(&net);
-
-		db.updateGame();
-
-		//g.bindActivity(BUT_CLICKED_INSTALL, updateFunc);
-	} catch(std::exception &e) {
-		if(!runFromGame) {
-			std::string error_msg =
-				"Cannot connect to Update Server. Please check internet.\n";
-			error_msg.append(e.what());
-			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Cannot Connect",
-									 error_msg.c_str(), nullptr);
-		}
+	if(!fs::exists(of)) {
+		fs::create_directories(of);
 	}
+
+	fs::current_path(of);
+
+	checkDirsExist();
+	TRYCATCHERR_END("Could not find or set directory correctly.")
+
+	OFSNet net("http://svn.openfortress.fun/files", gameFolderName);
+
+	// To Fenteale: This should be called the moment that the "Update"
+	// button is pressed.
+	net.fetchDatabase();
+
+	OFSDatabase db(&net);
 
 	// To Fenteale: Later on you'll have direct access to two automated
 	// functions. These will be updateGame and verifyIntegrity respectively.
@@ -75,6 +65,12 @@ int main(int argc, char *argv[]) {
 	// gui is setup.  run all installer stuff
 
 	while(g.loop()) {
+		if(g.ifActivity(BUT_CLICKED_INSTALL)) {
+			TRYCATCHERR_START()
+			db.updateGame();
+			TRYCATCHERR_END("Failed to update game")
+		}
+
 		g.setProgress(0.5f);
 	}
 	return 0;

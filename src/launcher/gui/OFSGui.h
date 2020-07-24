@@ -45,7 +45,7 @@ private:
 	std::vector<std::unique_ptr<OFSGuiImage>> _imgs;
 	bool _quit;
 
-	std::unordered_map<int, GuiButtonFunction> _bindFuncs;
+	std::unordered_map<GuiActs, bool> _actStates;
 	std::unordered_map<int, GuiButtonMethod> _bindMeths;
 
 #ifndef INCLUDE_RESOURCES
@@ -82,7 +82,8 @@ public:
 	OFSGui();
 	~OFSGui();
 
-	void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
+	// void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
+	bool ifActivity(GuiActs actToCheck);
 
 	bool simulateButton(GuiActs actToSim);
 
