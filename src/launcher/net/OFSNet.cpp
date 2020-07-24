@@ -34,6 +34,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	fs::path dir = to;
 	dir.remove_filename();
 	std::cout << "Dir is: " + dir.string() << std::endl;
+
 	if(!fs::exists(dir)) {
 		fs::create_directories(dir);
 	}
@@ -42,10 +43,12 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	if(!file) {
 		std::perror("FOPEN: ");
 	}
+
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, file);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
-	curl_easy_perform(p_curlh);
+	CURLcode retcode = curl_easy_perform(p_curlh);
+	std::cout << "cURL return code: " << retcode << std::endl;
 	std::fflush(file);
 	std::fclose(file);
 }
