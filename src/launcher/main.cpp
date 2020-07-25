@@ -3,8 +3,10 @@
 // threading stuff
 SDL_sem *butDataLock = nullptr;
 SDL_sem *progDataLock = nullptr;
+SDL_sem *continueDataLock = nullptr;
 int butData = 0;
 float progData = 0;
+bool continueData = true;
 
 void checkDirsExist() {
 	fs::path remote = fs::path("launcher/remote").make_preferred();
@@ -28,6 +30,9 @@ int doGui(void *ptr) {
 			SDL_SemPost(butDataLock);
 		}
 	}
+	SDL_SemWait(continueDataLock);
+	continueData = false;
+	SDL_SemPost(continueDataLock);
 	return 0;
 }
 
@@ -79,7 +84,8 @@ int main(int argc, char *argv[]) {
 	// I'll try to add some callbacks and stuff so you can use progress bars!
 
 	// gui is setup.  run all installer stuff
-	while(true) {
+	bool c = true;
+	while(c) {
 		SDL_SemWait(butDataLock);
 		int ga = butData;
 		SDL_SemPost(butDataLock);
@@ -90,11 +96,12 @@ int main(int argc, char *argv[]) {
 				TRYCATCHERR_END("Failed to update game")
 			}
 		}
+		SDL_SemWait(continueDataLock);
+		c = continueData;
+		SDL_SemPost(continueDataLock);
 		SDL_Delay(100);
 	}
-
-	int retVal;
-	SDL_WaitThread(guiThread, &retVal);
+	SDL_WaitThread(guiThread, nullptr);
 	SDL_DestroySemaphore(butDataLock);
 	SDL_DestroySemaphore(progDataLock);
 	return 0;
