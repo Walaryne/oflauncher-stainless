@@ -49,6 +49,11 @@ bool OFSGui::ifActivity(GuiActs actToCheck) {
 	_actStates[actToCheck] = false;
 	return ret;
 }
+GuiActs OFSGui::getLastAct() {
+	GuiActs ga = _currAct;
+	_currAct = NOT_CLICKED;
+	return ga;
+}
 void OFSGui::bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint) {
 	_bindMeths.emplace(actToBind, funcPoint);
 }
@@ -104,6 +109,8 @@ bool OFSGui::loop() {
 		case SDL_MOUSEBUTTONUP:
 			for(auto &i : _imgs) {
 				GuiActs a = i->getClickedUp();
+				if(a != NOT_CLICKED)
+					_currAct = a;
 
 				if(simulateButton(a))
 					break;

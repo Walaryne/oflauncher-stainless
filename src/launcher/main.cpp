@@ -1,5 +1,11 @@
 #include "main.h"
 
+// threading stuff
+SDL_sem *butDataLock = nullptr;
+SDL_sem *progDataLock = nullptr;
+int butData = 0;
+float progData = 0;
+
 void checkDirsExist() {
 	fs::path remote = fs::path("launcher/remote").make_preferred();
 	fs::path local = fs::path("launcher/local").make_preferred();
@@ -12,8 +18,17 @@ void checkDirsExist() {
 	}
 }
 
-void updateFunc() {
-	// db->updateGame();
+int doGui(void *ptr) {
+	OFSGui g;
+	while(g.loop()) {
+		GuiActs a = g.getLastAct();
+		if(a) {
+			SDL_SemWait(butDataLock);
+			butData = a;
+			SDL_SemPost(butDataLock);
+		}
+	}
+	return 0;
 }
 
 int main(int argc, char *argv[]) {
@@ -25,15 +40,16 @@ int main(int argc, char *argv[]) {
 	// Initialize cURL for usage program wide
 	curl_global_init(CURL_GLOBAL_ALL);
 
-	OFSGui g;
-	g.loop(); // run once to just have it display correctly while init
-			  // everything else
+	// init semaphore for checking button data
+	butDataLock = SDL_CreateSemaphore(1);
+	progDataLock = SDL_CreateSemaphore(1);
+
+	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)nullptr);
+
 	OFSPathDiscover opd;
 
-	// g.bindActivity(BUT_CLICKED_INSTALL, testFunc);
-
-	if(runFromGame)
-		g.simulateButton(BUT_CLICKED_INSTALL);
+	// if(runFromGame)
+	// g.simulateButton(BUT_CLICKED_INSTALL);
 
 	std::string gameFolderName = "open_fortress";
 
@@ -63,15 +79,23 @@ int main(int argc, char *argv[]) {
 	// I'll try to add some callbacks and stuff so you can use progress bars!
 
 	// gui is setup.  run all installer stuff
-
-	while(g.loop()) {
-		if(g.ifActivity(BUT_CLICKED_INSTALL)) {
-			TRYCATCHERR_START()
-			db.updateGame();
-			TRYCATCHERR_END("Failed to update game")
+	while(true) {
+		SDL_SemWait(butDataLock);
+		int ga = butData;
+		SDL_SemPost(butDataLock);
+		if(ga) {
+			if(ga == BUT_CLICKED_INSTALL) {
+				TRYCATCHERR_START()
+				db.updateGame();
+				TRYCATCHERR_END("Failed to update game")
+			}
 		}
-
-		g.setProgress(0.5f);
+		SDL_Delay(100);
 	}
+
+	int retVal;
+	SDL_WaitThread(guiThread, &retVal);
+	SDL_DestroySemaphore(butDataLock);
+	SDL_DestroySemaphore(progDataLock);
 	return 0;
 }

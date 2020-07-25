@@ -46,6 +46,7 @@ private:
 	bool _quit;
 
 	std::unordered_map<GuiActs, bool> _actStates;
+	GuiActs _currAct;
 	std::unordered_map<int, GuiButtonMethod> _bindMeths;
 
 #ifndef INCLUDE_RESOURCES
@@ -84,6 +85,7 @@ public:
 
 	// void bindActivity(GuiActs actToBind, GuiButtonFunction funcPoint);
 	bool ifActivity(GuiActs actToCheck);
+	GuiActs getLastAct();
 
 	bool simulateButton(GuiActs actToSim);
 
