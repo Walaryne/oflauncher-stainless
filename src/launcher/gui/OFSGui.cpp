@@ -174,20 +174,20 @@ bool OFSGui::loop() {
 
 void OFSGui::addImage(resData data, const int &x, const int &y,
 					  const int &NumOfSubImages) {
-	_elements.emplace_back(
-		new OFSGuiImage(data, _renderer, x, y, NumOfSubImages));
+	_elements.emplace_back(std::move(
+		new OFSGuiImage(data, _renderer, x, y, NumOfSubImages)));
 }
 
 void OFSGui::addButton(resData data, GuiActs actToLink, const int &x = 0,
 					   const int &y = 0, const int &NumOfSubImages = 0) {
-	_elements.emplace_back(new OFSGuiButton(data, _renderer, actToLink,
-												   x, y, NumOfSubImages));
+	_elements.emplace_back(std::move(
+		new OFSGuiButton(data, _renderer, actToLink, x, y, NumOfSubImages)));
 }
 
 void OFSGui::addText(const std::string &text, const int &text_size,
 					 const int &x, const int &y) {
-	_elements.emplace_back(
-		new OFSGuiText(_renderer, text, text_size, x, y));
+	_elements.emplace_back(std::move(
+		new OFSGuiText(_renderer, text, text_size, x, y)));
 }
 // void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
 // 						  const int &width) {
