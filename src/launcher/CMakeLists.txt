@@ -28,6 +28,8 @@ set(SOURCES
         gui/OFSGui.h
         gui/OFSLayout.cpp
         gui/OFSLayout.h
+        gui/OFSGuiElement.cpp
+        gui/OFSGuiElement.h
         net/OFSNet.cpp
         net/OFSNet.h
         db/OFSDatabase.cpp

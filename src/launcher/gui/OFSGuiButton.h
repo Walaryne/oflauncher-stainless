@@ -18,9 +18,8 @@ public:
 	OFSGuiButton(resData data, SDL_Renderer *renderer, GuiActs actToLink,
 				 const int &x, const int &y, const int &NumOfSubImages);
 	~OFSGuiButton();
-	void getClickedDown();
-	GuiActs getClickedUp();
-	void getHover();
+
+	void onEvent(std::shared_ptr<GuiEvent> e) override;
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIBUTTON_H

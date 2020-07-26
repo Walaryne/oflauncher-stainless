@@ -20,9 +20,9 @@ OFSGuiText::OFSGuiText(SDL_Renderer *renderer, const std::string &text,
 		throw SDLTTFException("OFSGuiText");
 
 	SDL_Color fontcolor;
-	if(white)
-		fontcolor = {255, 255, 255, 255};
-	else
+	// if(white)
+		// fontcolor = {255, 255, 255, 255};
+	// else
 		fontcolor = {0, 0, 0, 255};
 
 	_subImages = 0;

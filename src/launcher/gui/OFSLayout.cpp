@@ -14,24 +14,26 @@ DEFINE_LAYOUT(preInstallLayout) {
 	// Background image
 	addImage(DATA(bg));
 
+	addText("Testing", 70, 100, 100);
+
 	addButton(DATA(install), BUT_CLICKED_INSTALL, -1, 100, 2);
 
-	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
+	// bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
 }
 DEFINE_LAYOUT(installLayout) {
 	clearLayout();
 
 	// Background image
-	addImage(DATA(bg));
+	// addImage(DATA(bg));
 
-	addText("Installing", 70, -1, 100);
+	// addText("Installing", 70, 100, 100);
 
 	// addSpinny(DATA(spinny), -1, 200);
-	addProgressBar(DATA(barM), -1, 250, 300);
+	// addProgressBar(DATA(barM), -1, 250, 300);
 
-	addButton(DATA(cancel), BUT_CLICKED_CANCEL, -1, 310, 2);
+	// addButton(DATA(cancel), BUT_CLICKED_CANCEL, -1, 310, 2);
 
-	bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
+	// bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
 }
 
 // OLD LAYOUT, DELETE LATER

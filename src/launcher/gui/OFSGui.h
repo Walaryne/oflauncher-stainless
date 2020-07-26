@@ -21,6 +21,7 @@ namespace fs = std::filesystem;
 #include "OFSGuiActs.h"
 #include "OFSGuiError.h"
 
+#include "OFSGuiElement.h"
 #include "OFSGuiButton.h"
 #include "OFSGuiImage.h"
 #include "OFSGuiProgBar.h"
@@ -42,8 +43,9 @@ class OFSGui {
 private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
-	std::vector<std::unique_ptr<OFSGuiImage>> _imgs;
+	std::vector<std::unique_ptr<OFSGuiElement>> _elements;
 	bool _quit;
+	std::unique_ptr<OFSGuiElement> focused;
 
 	std::unordered_map<GuiActs, bool> _actStates;
 	GuiActs _currAct;

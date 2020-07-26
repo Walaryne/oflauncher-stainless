@@ -3,6 +3,7 @@
 //
 
 #include "OFSGui.h"
+#include "OFSGuiActs.h"
 
 //########### OFSGui ############
 OFSGui::OFSGui() {
@@ -38,7 +39,7 @@ OFSGui::OFSGui() {
 }
 
 OFSGui::~OFSGui() {
-	_imgs.clear();
+	_elements.clear();
 	SDL_DestroyRenderer(_renderer);
 	SDL_DestroyWindow(_window);
 	SDL_Quit();
@@ -77,10 +78,10 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 	return ret;
 }
 
-void OFSGui::setProgress(const float &progress) {
-	for(auto &i : _imgs)
-		i->setProgress(progress);
-}
+// void OFSGui::setProgress(const float &progress) {
+// 	for(auto &i : _imgs)
+// 		i->setProgress(progress);
+// }
 
 bool OFSGui::loop() {
 #ifndef INCLUDE_RESOURCES
@@ -91,8 +92,8 @@ bool OFSGui::loop() {
 	// SDL_UpdateWindowSurface(window); // depricated.  delete later if need to
 
 	SDL_RenderClear(_renderer);
-	for(auto &i : _imgs) {
-		i->renderCopy(_renderer);
+	for(auto &i : _elements) {
+		i->render(_renderer);
 	}
 	SDL_RenderPresent(_renderer);
 
@@ -102,24 +103,43 @@ bool OFSGui::loop() {
 			_quit = true;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			for(auto &i : _imgs) {
-				i->getClickedDown();
+			for(auto &i : _elements) {
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
+				ev->type = MOUSE_DOWN;
+				ev->x = x;
+				ev->y = y;
+				i->onEvent(ev);
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			for(auto &i : _imgs) {
-				GuiActs a = i->getClickedUp();
-				if(a != NOT_CLICKED)
-					_currAct = a;
-
-				if(simulateButton(a))
-					break;
+			for(auto &i : _elements) {
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
+				ev->type = MOUSE_UP;
+				ev->x = x;
+				ev->y = y;
+				i->onEvent(ev);
+			}
+			break;
+		case SDL_MOUSEMOTION:
+			for(auto &i : _elements) {
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
+				ev->type = MOUSE_MOVE;
+				ev->x = x;
+				ev->y = y;
+				i->onEvent(ev);
 			}
 			break;
 		default:
-			for(auto &i : _imgs) {
-				i->getHover();
-			}
+			printf("Unhandled Event!\n");
+			// for(auto &i : _elements) {
+			// 	// i->getHover();
+			// }
 			break;
 		}
 	}
@@ -130,40 +150,42 @@ bool OFSGui::loop() {
 
 void OFSGui::addImage(resData data, const int &x, const int &y,
 					  const int &NumOfSubImages) {
-	_imgs.push_back(
-		std::make_unique<OFSGuiImage>(data, _renderer, x, y, NumOfSubImages));
+	_elements.emplace_back(
+		new OFSGuiImage(data, _renderer, x, y, NumOfSubImages));
 }
+
 void OFSGui::addButton(resData data, GuiActs actToLink, const int &x = 0,
 					   const int &y = 0, const int &NumOfSubImages = 0) {
-	_imgs.push_back(std::make_unique<OFSGuiButton>(data, _renderer, actToLink,
+	_elements.emplace_back(new OFSGuiButton(data, _renderer, actToLink,
 												   x, y, NumOfSubImages));
 }
+
 void OFSGui::addText(const std::string &text, const int &text_size,
 					 const int &x, const int &y) {
-	_imgs.push_back(
-		std::make_unique<OFSGuiText>(_renderer, text, text_size, x, y));
+	_elements.emplace_back(
+		new OFSGuiText(_renderer, text, text_size, x, y));
 }
-void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
-						  const int &width) {
-	_imgs.push_back(
-		std::make_unique<OFSGuiTextEntry>(_renderer, text, x, y, width));
-}
-void OFSGui::addSpinny(resData data, const int &x, const int &y) {
-	_imgs.push_back(std::make_unique<OFSGuiSpinny>(data, _renderer, x, y));
-}
+// void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
+// 						  const int &width) {
+// 	_imgs.push_back(
+// 		std::make_unique<OFSGuiTextEntry>(_renderer, text, x, y, width));
+// }
+// void OFSGui::addSpinny(resData data, const int &x, const int &y) {
+// 	_imgs.push_back(std::make_unique<OFSGuiSpinny>(data, _renderer, x, y));
+// }
 
-void OFSGui::addProgressBar(resData data, const int &x, const int &y,
-							const int &width) {
-	_imgs.push_back(
-		std::make_unique<OFSGuiProgBar>(data, _renderer, x, y, width));
-}
+// void OFSGui::addProgressBar(resData data, const int &x, const int &y,
+// 							const int &width) {
+// 	_imgs.push_back(
+// 		std::make_unique<OFSGuiProgBar>(data, _renderer, x, y, width));
+// }
 
-void OFSGui::setLastIndex(const int &i) {
-	_imgs.back()->setIndex(i);
-}
+// void OFSGui::setLastIndex(const int &i) {
+// 	_imgs.back()->setIndex(i);
+// }
 
 void OFSGui::clearLayout() {
-	_imgs.clear();
+	_elements.clear();
 	// bindFuncs.clear();
 	_bindMeths.clear();
 }

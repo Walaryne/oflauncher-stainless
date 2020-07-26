@@ -13,4 +13,20 @@ enum GuiActs { // Add an activity name here
 	BUT_CLICKED_CANCEL
 };
 
+enum GuiEventEnum {
+	MOUSE_DOWN, // FOCUS ONLY
+	MOUSE_UP,	// FOCUS ONLY
+	MOUSE_MOVE	// FOCUS ONLY
+};
+
+struct GuiEvent {
+	GuiEventEnum type;
+	virtual ~GuiEvent() {}
+};
+
+struct MouseGuiEvent : GuiEvent {
+	int x, y;
+	virtual ~MouseGuiEvent() {}
+};
+
 #endif // OFLAUNCHER_STAINLESS_OFSGUIACTS_H

@@ -43,19 +43,24 @@ void OFSGuiImage::setIndex(const int &i) {
 		_src.y = _size.h * i;
 }
 
-void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
+void OFSGuiImage::render(SDL_Renderer *renderer) {
 	SDL_RenderCopy(renderer, _texture, &_src, &_size);
 }
 
-void OFSGuiImage::getClickedDown() {
+void OFSGuiImage::onEvent(std::shared_ptr<GuiEvent> e) {
+	// printf("Recieved GUI event\n");
+	if(e->type == MOUSE_DOWN) {
+		std::shared_ptr<MouseGuiEvent> me = std::dynamic_pointer_cast<MouseGuiEvent>(e);
+    	// printf("Mouse Coords: %i %i\n", me->x, me->y);
+	}
 }
 
-GuiActs OFSGuiImage::getClickedUp() {
-	return NOT_CLICKED;
-}
+// void OFSGuiImage::getClickedDown() {
+// }
 
-void OFSGuiImage::getHover() {
-}
+// GuiActs OFSGuiImage::getClickedUp() {
+// 	return NOT_CLICKED;
+// }
 
-void OFSGuiImage::setProgress(const float &progress) {
-}
+// void OFSGuiImage::getHover() {
+// }
