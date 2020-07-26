@@ -9,5 +9,6 @@ else()
     set(CMAKE_C_COMPILER clang)
     set(CMAKE_CPP_COMPILER clang++)
 
-    add_subdirectory(src/launcher)
 endif()
+
+add_subdirectory(src/launcher)
