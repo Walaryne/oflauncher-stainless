@@ -107,6 +107,7 @@ bool OFSGui::loop() {
 			_quit = true;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
+			_clicked.clear();
 			for(auto &i : _elements) {
 				int x, y;
 				SDL_GetMouseState(&x, &y);
@@ -117,6 +118,7 @@ bool OFSGui::loop() {
 					ev->x = x;
 					ev->y = y;
 					i->onEvent(ev);
+					_clicked.push_back(i);
 				}
 			}
 			break;
@@ -126,12 +128,23 @@ bool OFSGui::loop() {
 				SDL_GetMouseState(&x, &y);
 				if (check_collides(x, y, i->_size)) {
 					std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
-					ev->type = MOUSE_DOWN;
+					ev->type = MOUSE_UP;
 					ev->x = x;
 					ev->y = y;
 					i->onEvent(ev);
 				}
 			}
+
+			for(auto &i : _clicked) {
+				int x, y;
+				SDL_GetMouseState(&x, &y);
+				std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
+				ev->type = MOUSE_UP;
+				ev->x = x;
+				ev->y = y;
+				i->onEvent(ev);
+			}
+
 			break;
 		case SDL_MOUSEMOTION:
 			for(auto &i : _elements) {
@@ -139,7 +152,7 @@ bool OFSGui::loop() {
 				SDL_GetMouseState(&x, &y);
 				if (check_collides(x, y, i->_size)) {
 					std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
-					ev->type = MOUSE_DOWN;
+					ev->type = MOUSE_MOVE;
 					ev->x = x;
 					ev->y = y;
 					i->onEvent(ev);

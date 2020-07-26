@@ -43,9 +43,10 @@ class OFSGui {
 private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
-	std::vector<std::unique_ptr<OFSGuiElement>> _elements;
+	std::vector<std::shared_ptr<OFSGuiElement>> _elements;
 	bool _quit;
-	std::unique_ptr<OFSGuiElement> focused;
+	std::shared_ptr<OFSGuiElement> focused;
+	std::vector<std::shared_ptr<OFSGuiElement>> _clicked;
 
 	std::unordered_map<GuiActs, bool> _actStates;
 	GuiActs _currAct;
