@@ -26,8 +26,6 @@ public:
 
 	void render(SDL_Renderer *renderer);
 	void onEvent(std::shared_ptr<GuiEvent> e);
-
-	SDL_Rect _size;
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIIMAGE_H

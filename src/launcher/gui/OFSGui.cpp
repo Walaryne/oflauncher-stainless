@@ -83,6 +83,10 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 // 		i->setProgress(progress);
 // }
 
+bool check_collides(int x, int y, SDL_Rect _size) {
+	return (x > _size.x && x < _size.x + _size.w) && (y > _size.y && y < _size.y + _size.h);
+}
+
 bool OFSGui::loop() {
 #ifndef INCLUDE_RESOURCES
 	_new_path = fs::current_path();
@@ -106,33 +110,40 @@ bool OFSGui::loop() {
 			for(auto &i : _elements) {
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
-				ev->type = MOUSE_DOWN;
-				ev->x = x;
-				ev->y = y;
-				i->onEvent(ev);
+
+				if (check_collides(x, y, i->_size)) {
+					std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
+					ev->type = MOUSE_DOWN;
+					ev->x = x;
+					ev->y = y;
+					i->onEvent(ev);
+				}
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			for(auto &i : _elements) {
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
-				ev->type = MOUSE_UP;
-				ev->x = x;
-				ev->y = y;
-				i->onEvent(ev);
+				if (check_collides(x, y, i->_size)) {
+					std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
+					ev->type = MOUSE_DOWN;
+					ev->x = x;
+					ev->y = y;
+					i->onEvent(ev);
+				}
 			}
 			break;
 		case SDL_MOUSEMOTION:
 			for(auto &i : _elements) {
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
-				ev->type = MOUSE_MOVE;
-				ev->x = x;
-				ev->y = y;
-				i->onEvent(ev);
+				if (check_collides(x, y, i->_size)) {
+					std::shared_ptr<MouseGuiEvent> ev = std::make_shared<MouseGuiEvent>();
+					ev->type = MOUSE_DOWN;
+					ev->x = x;
+					ev->y = y;
+					i->onEvent(ev);
+				}
 			}
 			break;
 		default:
