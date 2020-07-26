@@ -1,10 +1,72 @@
 #include "OFSGuiButton.h"
 
+#ifdef INCLUDE_RESOURCES
+#define DATA(res_name) res_name##_bmp_data
+#include "res/button_d.bmp.h"
+#else
+#define DATA(res_name) "../res/" #res_name ".bmp"
+#endif
+
+
 //###### OFSGuiButton ###########
-OFSGuiButton::OFSGuiButton(resData data, SDL_Renderer *renderer,
-						   GuiActs actToLink, const int &x = 0,
-						   const int &y = 0, const int &NumOfSubImages = 0)
-	: OFSGuiImage(data, renderer, x, y, NumOfSubImages) {
+OFSGuiButton::OFSGuiButton(SDL_Renderer *renderer, GuiActs actToLink,
+						   const int &x, const int &y, const std::string &text, const ButtonTypes& buttonType)
+	: OFSGuiImage() {
+	bool white;
+	int textSize;
+	resData *spriteMapData;
+	switch(buttonType){
+		default:
+			spriteMapData = &DATA(button_d);
+		white = true;
+		textSize = 80;
+			break;
+	}
+#ifdef INCLUDE_RESOURCES
+	SDL_RWops *data = SDL_RWFromMem((void *)SourceSansPro_Regular_ttf,
+									SourceSansPro_Regular_ttf_len);
+	TTF_Font *font = TTF_OpenFontRW(data, 1, text_size);
+#else
+	TTF_Font *font =
+		TTF_OpenFont("../res/SourceSansPro-Regular.ttf", text_size);
+#endif
+	if(font == nullptr)
+		throw SDLTTFException("OFSGuiText");
+
+	SDL_Color fontcolor;
+	if(white)
+		fontcolor = {255, 255, 255, 255};
+	else
+		fontcolor = {0, 0, 0, 255};
+
+	_subImages = 0;
+	int w, h;
+	SDL_Surface *textureSurface =
+		TTF_RenderText_Blended(font, text.c_str(), fontcolor);
+	if(textureSurface == nullptr)
+		throw SDLTTFException("OFSGuiText");
+	_text.tex = SDL_CreateTextureFromSurface(renderer, textureSurface);
+	if(_text.tex == nullptr)
+		throw SDLException("OFSGuiText");
+
+	SDL_QueryTexture(_text.tex, nullptr, nullptr, &w, &h);
+	_text.size.h = h;
+	_text.size.w = w;
+	if(x >= 0)
+		_text.size.x = x;
+	else
+		_text.size.x = (WINDOW_WIDTH / 2) - (w / 2);
+	_text.size.y = y;
+
+	_text.src.h = h;
+	_text.src.w = w;
+	_text.src.x = 0;
+	_text.src.y = 0;
+
+#ifndef _WIN32
+	SDL_FreeSurface(textureSurface); //WTF crashes on windows????
+#endif
+
 	_act = actToLink;
 	_isClicked = false;
 }

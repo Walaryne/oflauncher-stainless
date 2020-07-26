@@ -14,38 +14,7 @@
 	2 // how many pixels to start drawing the loading bar progress into the end
 	  // caps
 
-SDL_Texture *OFSGuiProgBar::_loadSecondImg(resData dataToLoad,
-										   SDL_Rect *srcRect,
-										   SDL_Rect *sizeRect) {
-#ifdef INCLUDE_RESOURCES
-	SDL_RWops *rw = SDL_RWFromMem((void *)dataToLoad.buf, dataToLoad.len);
-	SDL_Surface *textureSurface = SDL_LoadBMP_RW(rw, 1);
-#else
-	SDL_Surface *textureSurface = SDL_LoadBMP(dataToLoad.c_str());
-#endif
-	int w, h;
-	if(textureSurface == nullptr)
-		throw SDLException("OFSGuiImage");
-	SDL_Texture *textureToLoad =
-		SDL_CreateTextureFromSurface(_renderer, textureSurface);
-	if(textureToLoad == nullptr)
-		throw SDLException("OFSGuiImage");
 
-	SDL_QueryTexture(textureToLoad, nullptr, nullptr, &w, &h);
-	sizeRect->h = h;
-	sizeRect->w = w;
-	sizeRect->x = 0; // this is the x and y pos of the image
-	sizeRect->y = 0;
-
-	srcRect->h = h;
-	srcRect->w = w;
-	srcRect->x = 0;
-	srcRect->y = 0;
-
-	SDL_FreeSurface(textureSurface);
-
-	return textureToLoad;
-}
 
 OFSGuiProgBar::OFSGuiProgBar(resData data, SDL_Renderer *renderer, const int &x,
 							 const int &y, const int &width)
