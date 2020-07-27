@@ -14,12 +14,22 @@
 #define resData const std::string &
 #endif
 
+struct OFSImageData {
+	SDL_Texture* tex;
+	SDL_Rect src;
+	SDL_Rect size;
+};
+
 class OFSGuiImage {
 protected:
 	SDL_Texture *_texture;
 	SDL_Rect _src;
 	SDL_Rect _size;
 	int _subImages;
+
+	SDL_Texture* _loadSecondImg(resData dataToLoad,
+											 SDL_Rect *srcRect,
+											 SDL_Rect *sizeRect);
 
 public:
 	OFSGuiImage(){};

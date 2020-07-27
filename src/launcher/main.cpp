@@ -88,6 +88,7 @@ int main(int argc, char *argv[]) {
 	while(c) {
 		SDL_SemWait(butDataLock);
 		int ga = butData;
+		butData = NOT_CLICKED;
 		SDL_SemPost(butDataLock);
 		if(ga) {
 			if(ga == BUT_CLICKED_INSTALL) {

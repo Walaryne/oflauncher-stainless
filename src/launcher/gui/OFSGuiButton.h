@@ -8,15 +8,24 @@
 #include "OFSGuiImage.h"
 #include "res/EmbedData.h"
 
+enum ButtonTypes {
+	DEFAULT_BUTTON,
+	BIG_BOY_BUTTON
+};
+
 class OFSGuiButton : public OFSGuiImage {
 private:
+	OFSImageData _left;
+	OFSImageData _mid;
+	OFSImageData _right;
+	OFSImageData _text;
 	GuiActs _act;
 	bool _isClicked;
 	void _finishLoading();
 
 public:
-	OFSGuiButton(resData data, SDL_Renderer *renderer, GuiActs actToLink,
-				 const int &x, const int &y, const int &NumOfSubImages);
+	OFSGuiButton(SDL_Renderer *renderer, GuiActs actToLink = NOT_CLICKED,
+				 const int &x = 0, const int &y = 0, const std::string &text = "", const ButtonTypes& buttonType = DEFAULT_BUTTON);
 	~OFSGuiButton();
 	void getClickedDown();
 	GuiActs getClickedUp();

@@ -24,9 +24,6 @@ private:
 
 	SDL_Renderer *_renderer;
 
-	SDL_Texture *_loadSecondImg(resData dataToLoad, SDL_Rect *srcRect,
-								SDL_Rect *sizeRect);
-
 public:
 	OFSGuiProgBar(resData data, SDL_Renderer *renderer, const int &x,
 				  const int &y, const int &width);
