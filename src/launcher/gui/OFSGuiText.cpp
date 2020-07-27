@@ -49,9 +49,7 @@ OFSGuiText::OFSGuiText(SDL_Renderer *renderer, const std::string &text,
 	_src.x = 0;
 	_src.y = 0;
 
-#ifndef _WIN32
-	SDL_FreeSurface(textureSurface); //WTF crashes on windows????
-#endif
+	SDL_FreeSurface(textureSurface);
 }
 
 OFSGuiText::~OFSGuiText() {
