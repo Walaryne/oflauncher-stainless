@@ -39,7 +39,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 		fs::create_directories(dir);
 	}
 
-	FILE *file = std::fopen(to.c_str(), "wb");
+	FILE *file = std::fopen(to.string().c_str(), "wb");
 	if(!file) {
 		std::perror("FOPEN: ");
 	}
