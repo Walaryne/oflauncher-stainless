@@ -248,45 +248,41 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 OFSGuiButton::~OFSGuiButton() {
 }
 
-void OFSGuiButton::getClickedDown() {
-
-	int x, y, mouseState;
-	mouseState = SDL_GetMouseState(&x, &y);
-	if(mouseState == SDL_BUTTON(SDL_BUTTON_LEFT)) {
-
-		if(x > _size.x && x < _size.x + _size.w) {
-			if(y > _size.y && y < _size.y + _size.h) {
-				_isClicked = true;
-				setIndex(2); // Mouse was pressed down on button
+GuiActs OFSGuiButton::parseEvents(const SDL_Event &ev) {
+	GuiActs ret = NOT_CLICKED;
+	switch(ev.type) {
+	case SDL_MOUSEBUTTONDOWN:
+		if(ev.button.state == SDL_BUTTON(SDL_BUTTON_LEFT))
+		{
+			if(ev.button.x > _size.x && ev.button.x < _size.x + _size.w) {
+				if(ev.button.y > _size.y && ev.button.y < _size.y + _size.h) {
+					_isClicked = true;
+					setIndex(2); // Mouse was pressed down on button
+				}
 			}
 		}
-	}
-}
-
-GuiActs OFSGuiButton::getClickedUp() {
-	GuiActs ret = NOT_CLICKED;
-	if(_isClicked) {
-		setIndex(0);
-		_isClicked = false;
-		int x, y, mouseState;
-		mouseState = SDL_GetMouseState(&x, &y);
-		if(x > _size.x && x < _size.x + _size.w && y > _size.y &&
-		   y < _size.y + _size.h) {
-			setIndex(1);
-			ret = _act;
+		break;
+	case SDL_MOUSEBUTTONUP:
+		if(_isClicked) {
+			setIndex(0);
+			_isClicked = false;
+			if(ev.button.x > _size.x && ev.button.x < _size.x + _size.w && ev.button.y > _size.y &&
+				ev.button.y < _size.y + _size.h) {
+				setIndex(1);
+				ret = _act;
+			}
 		}
+		break;
+	case SDL_MOUSEMOTION:
+
+		if(!_isClicked) {
+			if(ev.motion.x > _size.x && ev.motion.x < _size.x + _size.w && ev.motion.y > _size.y &&
+				ev.motion.y < _size.y + _size.h)
+				setIndex(1); // Hovering over
+			else
+				setIndex(0); // normal state
+		}
+		break;
 	}
 	return ret;
-}
-
-void OFSGuiButton::getHover() {
-	if(!_isClicked) {
-		int x, y, mouseState;
-		mouseState = SDL_GetMouseState(&x, &y);
-		if(x > _size.x && x < _size.x + _size.w && y > _size.y &&
-		   y < _size.y + _size.h)
-			setIndex(1); // Hovering over
-		else
-			setIndex(0); // normal state
-	}
 }

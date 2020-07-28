@@ -81,14 +81,7 @@ void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
 	SDL_RenderCopy(renderer, _texture, &_src, &_size);
 }
 
-void OFSGuiImage::getClickedDown() {
-}
-
-GuiActs OFSGuiImage::getClickedUp() {
-	return NOT_CLICKED;
-}
-
-void OFSGuiImage::getHover() {
+GuiActs OFSGuiImage::parseEvents(const SDL_Event &ev) {
 }
 
 void OFSGuiImage::setProgress(const float &progress) {

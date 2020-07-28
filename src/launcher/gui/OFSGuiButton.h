@@ -28,9 +28,7 @@ public:
 	OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs actToLink = NOT_CLICKED,
 				 const int &x = 0, const int &y = 0, const std::string &text = "", const ButtonTypes& buttonType = DEFAULT_BUTTON);
 	~OFSGuiButton();
-	void getClickedDown();
-	GuiActs getClickedUp();
-	void getHover();
+	GuiActs parseEvents(const SDL_Event &ev);
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIBUTTON_H

@@ -88,42 +88,34 @@ bool OFSGui::loop() {
 #endif
 	SDL_Event e;
 
-	// SDL_UpdateWindowSurface(window); // depricated.  delete later if need to
-
 	SDL_RenderClear(_renderer);
 	for(auto &i : _imgs) {
 		i->renderCopy(_renderer);
 	}
 	SDL_RenderPresent(_renderer);
+	std::vector<GuiActs> actStack;
 
 	while(SDL_PollEvent(&e)) {
-		switch(e.type) {
-		case SDL_QUIT:
-			_quit = true;
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			for(auto &i : _imgs) {
-				i->getClickedDown();
-			}
-			break;
-		case SDL_MOUSEBUTTONUP:
-			for(auto &i : _imgs) {
-				GuiActs a = i->getClickedUp();
+		if(e.type == SDL_QUIT)
+			_quit=true;
+		else
+		{
+			for(auto &i : _imgs)
+			{
+				GuiActs a = i->parseEvents(e);
 				if(a != NOT_CLICKED)
-					_currAct = a;
-
-				if(simulateButton(a))
-					break;
+					actStack.push_back(a);
 			}
-			break;
-		default:
-			for(auto &i : _imgs) {
-				i->getHover();
-			}
-			break;
 		}
 	}
 	SDL_PumpEvents();
+
+	for(auto act : actStack)
+	{
+		_currAct = act;
+		simulateButton(act);
+	}
+	actStack.clear();
 
 	return !_quit;
 }

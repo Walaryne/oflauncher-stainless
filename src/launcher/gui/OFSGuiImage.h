@@ -40,9 +40,7 @@ public:
 	SDL_Texture *getTexture();
 	virtual void renderCopy(SDL_Renderer *renderer);
 	void setIndex(const int &i);
-	virtual void getClickedDown();
-	virtual GuiActs getClickedUp();
-	virtual void getHover();
+	virtual GuiActs parseEvents(const SDL_Event &ev);
 	virtual void setProgress(const float &progress);
 };
 
