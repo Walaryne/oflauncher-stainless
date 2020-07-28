@@ -10,7 +10,8 @@
 
 enum ButtonTypes {
 	DEFAULT_BUTTON,
-	BIG_BOY_BUTTON
+	BIG_BOY_BUTTON,
+	SMALL_BUTTON
 };
 
 class OFSGuiButton : public OFSGuiImage {
@@ -24,7 +25,7 @@ private:
 	void _finishLoading();
 
 public:
-	OFSGuiButton(SDL_Renderer *renderer, GuiActs actToLink = NOT_CLICKED,
+	OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs actToLink = NOT_CLICKED,
 				 const int &x = 0, const int &y = 0, const std::string &text = "", const ButtonTypes& buttonType = DEFAULT_BUTTON);
 	~OFSGuiButton();
 	void getClickedDown();

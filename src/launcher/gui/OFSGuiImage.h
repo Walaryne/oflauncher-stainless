@@ -23,6 +23,7 @@ struct OFSImageData {
 class OFSGuiImage {
 protected:
 	SDL_Texture *_texture;
+	SDL_Renderer * _renderer;
 	SDL_Rect _src;
 	SDL_Rect _size;
 	int _subImages;

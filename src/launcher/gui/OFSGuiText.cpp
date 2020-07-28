@@ -1,20 +1,17 @@
 #include "OFSGuiText.h"
 
-#ifdef INCLUDE_RESOURCES
-#include "res/SourceSansPro-Regular.ttf.h"
-#endif
 
-OFSGuiText::OFSGuiText(SDL_Renderer *renderer, const std::string &text,
+OFSGuiText::OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::string &text,
 					   const int &text_size, const int &x, const int &y,
 					   const bool &white)
 	: OFSGuiImage() {
 #ifdef INCLUDE_RESOURCES
-	SDL_RWops *data = SDL_RWFromMem((void *)SourceSansPro_Regular_ttf,
-									SourceSansPro_Regular_ttf_len);
+	SDL_RWops *data = SDL_RWFromMem((void *)fontData.buf,
+									fontData.len);
 	TTF_Font *font = TTF_OpenFontRW(data, 1, text_size);
 #else
 	TTF_Font *font =
-		TTF_OpenFont("../res/SourceSansPro-Regular.ttf", text_size);
+		TTF_OpenFont(fontData.c_str(), text_size);
 #endif
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiText");

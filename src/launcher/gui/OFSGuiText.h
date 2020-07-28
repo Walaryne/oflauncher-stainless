@@ -9,7 +9,7 @@
 
 class OFSGuiText : public OFSGuiImage {
 public:
-	OFSGuiText(SDL_Renderer *renderer, const std::string &text,
+	OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::string &text,
 			   const int &text_size = 20, const int &x = 0, const int &y = 0,
 			   const bool &white = true);
 	~OFSGuiText();

@@ -3,6 +3,7 @@
 //####### OFSGuiImage ############
 OFSGuiImage::OFSGuiImage(resData data, SDL_Renderer *renderer, const int &x = 0,
 						 const int &y = 0, const int &NumOfSubImages = 0) {
+	_renderer = renderer;
 	_subImages = NumOfSubImages;
 #ifdef INCLUDE_RESOURCES
 	SDL_RWops *rw = SDL_RWFromMem((void *)data.buf, data.len);

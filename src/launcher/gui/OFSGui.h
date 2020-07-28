@@ -59,11 +59,11 @@ private:
 	// layout construction helper methods
 	void addImage(resData data, const int &x = 0, const int &y = 0,
 				  const int &NumOfSubImages = 0);
-	void addButton(resData data, GuiActs actToLink, const int &x, const int &y,
-				   const int &NumOfSubImages);
-	void addText(const std::string &text = "", const int &text_size = 20,
+	void addButton(resData fontData, GuiActs actToLink, const std::string& text, const int &x,
+				   const int &y, const ButtonTypes& bType);
+	void addText(resData fontData, const std::string &text = "", const int &text_size = 20,
 				 const int &x = 0, const int &y = 0);
-	void addTextEntry(const std::string &text = "", const int &x = 0,
+	void addTextEntry(resData fontData, const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100);
 	void addSpinny(resData data, const int &x = 0, const int &y = 0);
 	void addProgressBar(resData data, const int &x = 0, const int &y = 0,

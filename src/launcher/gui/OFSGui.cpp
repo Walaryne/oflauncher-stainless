@@ -133,20 +133,20 @@ void OFSGui::addImage(resData data, const int &x, const int &y,
 	_imgs.push_back(
 		std::make_unique<OFSGuiImage>(data, _renderer, x, y, NumOfSubImages));
 }
-void OFSGui::addButton(resData data, GuiActs actToLink, const int &x = 0,
-					   const int &y = 0, const int &NumOfSubImages = 0) {
-	_imgs.push_back(std::make_unique<OFSGuiButton>(data, _renderer, actToLink,
-												   x, y, NumOfSubImages));
+void OFSGui::addButton(resData fontData, GuiActs actToLink, const std::string& text, const int &x = 0,
+					   const int &y = 0, const ButtonTypes& bType = DEFAULT_BUTTON) {
+	_imgs.push_back(std::make_unique<OFSGuiButton>(fontData, _renderer, actToLink,
+												   x, y, text, bType));
 }
-void OFSGui::addText(const std::string &text, const int &text_size,
+void OFSGui::addText(resData fontData, const std::string &text, const int &text_size,
 					 const int &x, const int &y) {
 	_imgs.push_back(
-		std::make_unique<OFSGuiText>(_renderer, text, text_size, x, y));
+		std::make_unique<OFSGuiText>(fontData, _renderer, text, text_size, x, y));
 }
-void OFSGui::addTextEntry(const std::string &text, const int &x, const int &y,
+void OFSGui::addTextEntry(resData fontData, const std::string &text, const int &x, const int &y,
 						  const int &width) {
 	_imgs.push_back(
-		std::make_unique<OFSGuiTextEntry>(_renderer, text, x, y, width));
+		std::make_unique<OFSGuiTextEntry>(fontData, _renderer, text, x, y, width));
 }
 void OFSGui::addSpinny(resData data, const int &x, const int &y) {
 	_imgs.push_back(std::make_unique<OFSGuiSpinny>(data, _renderer, x, y));

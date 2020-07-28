@@ -1,9 +1,9 @@
 #include "OFSGuiTextEntry.h"
 
-OFSGuiTextEntry::OFSGuiTextEntry(SDL_Renderer *renderer,
+OFSGuiTextEntry::OFSGuiTextEntry(resData fontData, SDL_Renderer *renderer,
 								 const std::string &text, const int &x,
 								 const int &y, const int &width)
-	: OFSGuiText(renderer, text, x + 5, y, false), _text(text) {
+	: OFSGuiText(fontData, renderer, text, x + 5, y, false), _text(text) {
 	int w, h;
 	Uint32 rmask, gmask, bmask, amask;
 

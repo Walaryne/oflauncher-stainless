@@ -17,7 +17,7 @@ private:
 	bool _focused;
 
 public:
-	OFSGuiTextEntry(SDL_Renderer *renderer, const std::string &text,
+	OFSGuiTextEntry(resData fontData, SDL_Renderer *renderer, const std::string &text,
 					const int &x, const int &y, const int &width);
 	~OFSGuiTextEntry();
 
