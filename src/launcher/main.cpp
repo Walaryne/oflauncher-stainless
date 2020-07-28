@@ -25,6 +25,7 @@ int doGui(void *ptr) {
 	while(g.loop()) {
 		GuiActs a = g.getLastAct();
 		if(a) {
+			g.setProgress(0.7f);
 			SDL_SemWait(butDataLock);
 			butData = a;
 			SDL_SemPost(butDataLock);
@@ -93,7 +94,7 @@ int main(int argc, char *argv[]) {
 		if(ga) {
 			if(ga == BUT_CLICKED_INSTALL) {
 				TRYCATCHERR_START()
-				db.updateGame();
+				//db.updateGame();
 				TRYCATCHERR_END("Failed to update game")
 			}
 		}

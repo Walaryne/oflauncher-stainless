@@ -13,4 +13,20 @@ enum GuiActs { // Add an activity name here
 	BUT_CLICKED_CANCEL
 };
 
+enum GuiEvents {
+	NO_EVENT,
+	EVENT_SDL,
+	EVENT_PROGBAR_UPDATE
+};
+
+class OFSGuiEvent {
+public:
+	OFSGuiEvent();
+	OFSGuiEvent(SDL_Event *sdl) : sdl(*sdl), eventType(EVENT_SDL), data(nullptr) {}
+	OFSGuiEvent(GuiEvents eventType, void* data) : eventType(eventType), data(data) {}
+	SDL_Event sdl;
+	GuiEvents eventType;
+	void * data;
+};
+
 #endif // OFLAUNCHER_STAINLESS_OFSGUIACTS_H

@@ -81,7 +81,7 @@ void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
 	SDL_RenderCopy(renderer, _texture, &_src, &_size);
 }
 
-GuiActs OFSGuiImage::parseEvents(const SDL_Event &ev) {
+GuiActs OFSGuiImage::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 }
 
 void OFSGuiImage::setProgress(const float &progress) {

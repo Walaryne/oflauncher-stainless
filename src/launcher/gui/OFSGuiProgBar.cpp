@@ -64,6 +64,14 @@ void OFSGuiProgBar::renderCopy(SDL_Renderer *renderer) {
 	SDL_RenderCopy(renderer, _rightcap, &_rightSrc, &_rightSize);
 }
 
+GuiActs OFSGuiProgBar::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
+{
+	if(ev->eventType == EVENT_PROGBAR_UPDATE) {
+		_progress = _barWidth * *((float *)ev->data);
+	}
+	return NOT_CLICKED;
+}
+
 void OFSGuiProgBar::setProgress(const float &progress) {
 	_progress = _barWidth * progress;
 }

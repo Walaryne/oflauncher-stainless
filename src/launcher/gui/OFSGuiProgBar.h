@@ -31,6 +31,8 @@ public:
 
 	void renderCopy(SDL_Renderer *renderer);
 
+	GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
+
 	void setProgress(const float &progress);
 };
 

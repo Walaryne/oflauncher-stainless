@@ -43,6 +43,7 @@ private:
 	SDL_Window *_window;
 	SDL_Renderer *_renderer;
 	std::vector<std::unique_ptr<OFSGuiImage>> _imgs;
+	std::vector<std::shared_ptr<OFSGuiEvent>> _evs;
 	bool _quit;
 
 	std::unordered_map<GuiActs, bool> _actStates;

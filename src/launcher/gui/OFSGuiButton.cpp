@@ -248,41 +248,43 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 OFSGuiButton::~OFSGuiButton() {
 }
 
-GuiActs OFSGuiButton::parseEvents(const SDL_Event &ev) {
+GuiActs OFSGuiButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 	GuiActs ret = NOT_CLICKED;
-	switch(ev.type) {
-	case SDL_MOUSEBUTTONDOWN:
-		if(ev.button.state == SDL_BUTTON(SDL_BUTTON_LEFT))
-		{
-			if(ev.button.x > _size.x && ev.button.x < _size.x + _size.w) {
-				if(ev.button.y > _size.y && ev.button.y < _size.y + _size.h) {
-					_isClicked = true;
-					setIndex(2); // Mouse was pressed down on button
+	if(ev->eventType == EVENT_SDL) {
+		switch(ev->sdl.type) {
+		case SDL_MOUSEBUTTONDOWN:
+			if(ev->sdl.button.state == SDL_BUTTON(SDL_BUTTON_LEFT)) {
+				if(ev->sdl.button.x > _size.x && ev->sdl.button.x < _size.x + _size.w) {
+					if(ev->sdl.button.y > _size.y &&
+						ev->sdl.button.y < _size.y + _size.h) {
+						_isClicked = true;
+						setIndex(2); // Mouse was pressed down on button
+					}
 				}
 			}
-		}
-		break;
-	case SDL_MOUSEBUTTONUP:
-		if(_isClicked) {
-			setIndex(0);
-			_isClicked = false;
-			if(ev.button.x > _size.x && ev.button.x < _size.x + _size.w && ev.button.y > _size.y &&
-				ev.button.y < _size.y + _size.h) {
-				setIndex(1);
-				ret = _act;
+			break;
+		case SDL_MOUSEBUTTONUP:
+			if(_isClicked) {
+				setIndex(0);
+				_isClicked = false;
+				if(ev->sdl.button.x > _size.x && ev->sdl.button.x < _size.x + _size.w &&
+					ev->sdl.button.y > _size.y && ev->sdl.button.y < _size.y + _size.h) {
+					setIndex(1);
+					ret = _act;
+				}
 			}
-		}
-		break;
-	case SDL_MOUSEMOTION:
+			break;
+		case SDL_MOUSEMOTION:
 
-		if(!_isClicked) {
-			if(ev.motion.x > _size.x && ev.motion.x < _size.x + _size.w && ev.motion.y > _size.y &&
-				ev.motion.y < _size.y + _size.h)
-				setIndex(1); // Hovering over
-			else
-				setIndex(0); // normal state
+			if(!_isClicked) {
+				if(ev->sdl.motion.x > _size.x && ev->sdl.motion.x < _size.x + _size.w &&
+					ev->sdl.motion.y > _size.y && ev->sdl.motion.y < _size.y + _size.h)
+					setIndex(1); // Hovering over
+				else
+					setIndex(0); // normal state
+			}
+			break;
 		}
-		break;
 	}
 	return ret;
 }

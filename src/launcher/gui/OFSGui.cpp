@@ -78,8 +78,11 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 }
 
 void OFSGui::setProgress(const float &progress) {
+	_evs.emplace_back(std::move(new OFSGuiEvent(EVENT_PROGBAR_UPDATE, (void*)&progress)));
+	/*
 	for(auto &i : _imgs)
 		i->setProgress(progress);
+	 */
 }
 
 bool OFSGui::loop() {
@@ -88,27 +91,36 @@ bool OFSGui::loop() {
 #endif
 	SDL_Event e;
 
-	SDL_RenderClear(_renderer);
-	for(auto &i : _imgs) {
-		i->renderCopy(_renderer);
-	}
-	SDL_RenderPresent(_renderer);
+
 	std::vector<GuiActs> actStack;
+
 
 	while(SDL_PollEvent(&e)) {
 		if(e.type == SDL_QUIT)
 			_quit=true;
 		else
 		{
+			_evs.emplace_back(std::move(new OFSGuiEvent(&e)));
+			/*
 			for(auto &i : _imgs)
 			{
 				GuiActs a = i->parseEvents(e);
 				if(a != NOT_CLICKED)
 					actStack.push_back(a);
-			}
+			}*/
 		}
 	}
-	SDL_PumpEvents();
+	//SDL_PumpEvents();
+
+	for(auto &i : _imgs)
+	{
+		for(auto &ev : _evs) {
+			GuiActs a = i->parseEvents(ev);
+			if(a != NOT_CLICKED)
+				actStack.push_back(a);
+		}
+	}
+	_evs.clear();
 
 	for(auto act : actStack)
 	{
@@ -116,6 +128,12 @@ bool OFSGui::loop() {
 		simulateButton(act);
 	}
 	actStack.clear();
+
+	SDL_RenderClear(_renderer);
+	for(auto &i : _imgs) {
+		i->renderCopy(_renderer);
+	}
+	SDL_RenderPresent(_renderer);
 
 	return !_quit;
 }

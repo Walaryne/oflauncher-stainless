@@ -33,6 +33,7 @@ DEFINE_LAYOUT(installLayout) {
 	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_CANCEL, "Cancel", -1, 290, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
+
 }
 
 // OLD LAYOUT, DELETE LATER

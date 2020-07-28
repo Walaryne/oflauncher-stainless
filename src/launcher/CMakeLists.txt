@@ -47,7 +47,7 @@ if(INCLUDE_RESOURCES)
 endif()
 
 if(USE_GUI)
-    find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
+    find_path(SDL2_INCLUDE_DIR SDL.h)
     find_library(SDL2_LIBRARY SDL2)
 
     if(SDL2_LIBRARY)

@@ -3,6 +3,7 @@
 
 #include "SDL2/SDL.h"
 #include <string>
+#include <memory>
 
 #include "OFSGuiActs.h"
 #include "OFSGuiError.h"
@@ -40,7 +41,7 @@ public:
 	SDL_Texture *getTexture();
 	virtual void renderCopy(SDL_Renderer *renderer);
 	void setIndex(const int &i);
-	virtual GuiActs parseEvents(const SDL_Event &ev);
+	virtual GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
 	virtual void setProgress(const float &progress);
 };
 
