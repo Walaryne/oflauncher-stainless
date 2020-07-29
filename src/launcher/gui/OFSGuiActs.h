@@ -1,8 +1,8 @@
 #ifndef OFLAUNCHER_STAINLESS_OFSGUIACTS_H
 #define OFLAUNCHER_STAINLESS_OFSGUIACTS_H
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 360
+#define WINDOW_WIDTH 960
+#define WINDOW_HEIGHT 540
 
 enum GuiActs { // Add an activity name here
 	NOT_CLICKED,
