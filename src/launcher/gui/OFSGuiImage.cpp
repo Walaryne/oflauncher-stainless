@@ -9,7 +9,9 @@ OFSGuiImage::OFSGuiImage(resData data, SDL_Renderer *renderer, const int &x = 0,
 	SDL_RWops *rw = SDL_RWFromMem((void *)data.buf, data.len);
 	SDL_Surface *textureSurface = SDL_LoadBMP_RW(rw, 1);
 #else
-	SDL_Surface *textureSurface = SDL_LoadBMP(data.c_str());
+	fs::path p = fs::current_path();
+	p += "/" + data;
+	SDL_Surface *textureSurface = SDL_LoadBMP(p.make_preferred().string().c_str());
 #endif
 	int w, h;
 	if(textureSurface == nullptr)
@@ -42,7 +44,10 @@ SDL_Texture *OFSGuiImage::_loadSecondImg(resData dataToLoad,
 	SDL_RWops *rw = SDL_RWFromMem((void *)dataToLoad.buf, dataToLoad.len);
 	SDL_Surface *textureSurface = SDL_LoadBMP_RW(rw, 1);
 #else
-	SDL_Surface *textureSurface = SDL_LoadBMP(dataToLoad.c_str());
+	fs::path p = fs::current_path();
+	p += "/" + dataToLoad;
+	SDL_Surface *textureSurface = SDL_LoadBMP(p.make_preferred().string().c_str());
+	//SDL_Surface *textureSurface = SDL_LoadBMP(dataToLoad.c_str());
 #endif
 	int w, h;
 	if(textureSurface == nullptr)

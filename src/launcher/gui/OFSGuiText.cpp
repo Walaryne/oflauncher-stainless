@@ -10,8 +10,10 @@ OFSGuiText::OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::stri
 									fontData.len);
 	TTF_Font *font = TTF_OpenFontRW(data, 1, text_size);
 #else
+	fs::path p = fs::current_path();
+	p += "/" + fontData;
 	TTF_Font *font =
-		TTF_OpenFont(fontData.c_str(), text_size);
+		TTF_OpenFont(p.make_preferred().string().c_str(), text_size);
 #endif
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiText");

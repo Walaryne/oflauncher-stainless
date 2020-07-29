@@ -69,9 +69,13 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 	SDL_RWops *rw = SDL_RWFromMem((void *)(spriteMapData->buf), spriteMapData->len);
 	SDL_Surface *spriteSurface = SDL_LoadBMP_RW(rw, 1);
 #else
+	fs::path p = fs::current_path();
+	p += "/" + spriteMapData;
+	fs::path p2 = fs::current_path();
+	p2 += "/" + fontData;
 	TTF_Font *font =
-		TTF_OpenFont(fontData.c_str(), textSize);
-	SDL_Surface *spriteSurface = SDL_LoadBMP(spriteMapData.c_str());
+		TTF_OpenFont(p2.make_preferred().string().c_str(), textSize);
+	SDL_Surface *spriteSurface = SDL_LoadBMP(p.make_preferred().string().c_str());
 #endif
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiButton");

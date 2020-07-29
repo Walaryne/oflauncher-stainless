@@ -21,6 +21,7 @@ void checkDirsExist() {
 }
 
 int doGui(void *ptr) {
+	TRYCATCHERR_START()
 	OFSGui g;
 	while(g.loop()) {
 		GuiActs a = g.getLastAct();
@@ -31,6 +32,7 @@ int doGui(void *ptr) {
 			SDL_SemPost(butDataLock);
 		}
 	}
+	TRYCATCHERR_END("OFSGui")
 	SDL_SemWait(continueDataLock);
 	continueData = false;
 	SDL_SemPost(continueDataLock);
