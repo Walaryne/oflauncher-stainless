@@ -1,10 +1,10 @@
 #include "OFSGuiButton.h"
 
 #ifdef INCLUDE_RESOURCES
-#define DATA(res_name) res_name##_bmp_data
 #include "res/button_d.bmp.h"
+#define BUTDATA(res_name) & res_name##_bmp_data
 #else
-#define DATA(res_name) "../res/" #res_name ".bmp"
+#define BUTDATA(res_name) "../res/" #res_name ".bmp"
 #endif
 
 #define TEXT_BUMP_VERT 2
@@ -39,20 +39,25 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 	: OFSGuiImage() {
 	bool white;
 	int textSize;
+#ifdef INCLUDE_RESOURCES
 	resData *spriteMapData;
+#else
+	std::string spriteMapData;
+#endif
+
 	switch(buttonType){
 	case(BIG_BOY_BUTTON):
-		spriteMapData = &DATA(button_d);
+		spriteMapData = BUTDATA(button_d);
 		white = true;
 		textSize = 80;
 		break;
 	case(SMALL_BUTTON):
-		spriteMapData = &DATA(button_d);
+		spriteMapData = BUTDATA(button_d);
 		white = true;
 		textSize = 20;
 		break;
 	default:
-		spriteMapData = &DATA(button_d);
+		spriteMapData = BUTDATA(button_d);
 		white = true;
 		textSize = 40;
 			break;
@@ -66,7 +71,7 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 #else
 	TTF_Font *font =
 		TTF_OpenFont(fontData.c_str(), textSize);
-	SDL_Surface *spriteSurface = SDL_LoadBMP(spriteMapData->c_str());
+	SDL_Surface *spriteSurface = SDL_LoadBMP(spriteMapData.c_str());
 #endif
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiButton");
