@@ -88,6 +88,7 @@ void OFSGui::setProgress(const float &progress) {
 bool OFSGui::loop() {
 #ifndef INCLUDE_RESOURCES
 	_new_path = fs::current_path();
+	fs::current_path(_orig_path);
 #endif
 	SDL_Event e;
 
@@ -134,7 +135,9 @@ bool OFSGui::loop() {
 		i->renderCopy(_renderer);
 	}
 	SDL_RenderPresent(_renderer);
-
+#ifndef INCLUDE_RESOURCES
+	fs::current_path(_new_path);
+#endif
 	return !_quit;
 }
 
