@@ -23,6 +23,8 @@ public:
 	std::string getSourcemodsPath();
 
 private:
+	void expandPaths();
+
 	fs::path p_steamPath;
 	fs::path p_sourcePath;
 	fs::path p_sourcemodsPath;
