@@ -10,7 +10,6 @@
 class OFSGuiTextEntry : public OFSGuiText {
 private:
 	SDL_Texture *_backing;
-	SDL_Rect _backSrc;
 	SDL_Rect _backSize;
 
 	std::string _text;
@@ -18,8 +17,10 @@ private:
 
 public:
 	OFSGuiTextEntry(resData fontData, SDL_Renderer *renderer, const std::string &text,
-					const int &x, const int &y, const int &width);
+					const int &x, const int &y, const int &width, const bool &startFocused = false);
 	~OFSGuiTextEntry();
+
+	GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
 
 	void renderCopy(SDL_Renderer *renderer);
 };

@@ -71,7 +71,3 @@ GuiActs OFSGuiProgBar::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 	}
 	return NOT_CLICKED;
 }
-
-void OFSGuiProgBar::setProgress(const float &progress) {
-	_progress = _barWidth * progress;
-}
