@@ -44,7 +44,6 @@ public:
 	virtual void renderCopy(SDL_Renderer *renderer);
 	void setIndex(const int &i);
 	virtual GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
-	virtual void setProgress(const float &progress);
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIIMAGE_H

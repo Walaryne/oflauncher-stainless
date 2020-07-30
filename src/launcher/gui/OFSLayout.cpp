@@ -17,6 +17,8 @@ DEFINE_LAYOUT(preInstallLayout) {
 
 	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_INSTALL, "Install", -1, 100, BIG_BOY_BUTTON);
 
+	addTextEntry(FONTDATA(SourceSansPro_Regular), "What");
+
 	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
 }
 DEFINE_LAYOUT(installLayout) {

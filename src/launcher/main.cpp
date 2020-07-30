@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
 	// g.simulateButton(BUT_CLICKED_INSTALL);
 
 	std::string gameFolderName = "open_fortress";
+	/*
 
 	TRYCATCHERR_START()
 	fs::path of = fs::path(opd.getSourcemodsPath() + "/" + gameFolderName)
@@ -81,6 +82,7 @@ int main(int argc, char *argv[]) {
 	net.fetchDatabase();
 
 	OFSDatabase db(&net);
+	*/
 
 	// To Fenteale: Later on you'll have direct access to two automated
 	// functions. These will be updateGame and verifyIntegrity respectively.
