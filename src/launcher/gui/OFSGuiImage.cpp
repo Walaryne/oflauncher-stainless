@@ -83,7 +83,8 @@ void OFSGuiImage::setIndex(const int &i) {
 }
 
 void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
-	SDL_RenderCopy(renderer, _texture, &_src, &_size);
+	if(_texture)
+		SDL_RenderCopy(renderer, _texture, &_src, &_size);
 }
 
 GuiActs OFSGuiImage::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {

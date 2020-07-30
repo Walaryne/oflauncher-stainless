@@ -35,9 +35,12 @@ OFSGui::OFSGui() {
 		throw SDLTTFException("Can't Init SDL_ttf");
 
 	preInstallLayout();
+
+	SDL_StartTextInput();
 }
 
 OFSGui::~OFSGui() {
+	SDL_StopTextInput();
 	_imgs.clear();
 	SDL_DestroyRenderer(_renderer);
 	SDL_DestroyWindow(_window);
@@ -157,7 +160,7 @@ void OFSGui::addText(resData fontData, const std::string &text, const int &text_
 		std::make_unique<OFSGuiText>(fontData, _renderer, text, text_size, x, y));
 }
 void OFSGui::addTextEntry(resData fontData, const std::string &text, const int &x, const int &y,
-						  const int &width) {
+						  const int &width, const bool& startFocused) {
 	_imgs.push_back(
 		std::make_unique<OFSGuiTextEntry>(fontData, _renderer, text, x, y, width));
 }

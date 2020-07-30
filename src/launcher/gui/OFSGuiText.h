@@ -8,6 +8,8 @@
 #include "OFSGuiImage.h"
 
 class OFSGuiText : public OFSGuiImage {
+protected:
+	TTF_Font * _fontData;
 public:
 	OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::string &text,
 			   const int &text_size = 20, const int &x = 0, const int &y = 0,

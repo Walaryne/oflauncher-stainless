@@ -8,14 +8,14 @@ OFSGuiText::OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::stri
 #ifdef INCLUDE_RESOURCES
 	SDL_RWops *data = SDL_RWFromMem((void *)fontData.buf,
 									fontData.len);
-	TTF_Font *font = TTF_OpenFontRW(data, 1, text_size);
+	_fontData = TTF_OpenFontRW(data, 1, text_size);
 #else
 	fs::path p = fs::current_path();
 	p += "/" + fontData;
-	TTF_Font *font =
+	_fontData =
 		TTF_OpenFont(p.make_preferred().string().c_str(), text_size);
 #endif
-	if(font == nullptr)
+	if(_fontData == nullptr)
 		throw SDLTTFException("OFSGuiText");
 
 	SDL_Color fontcolor;
@@ -26,29 +26,36 @@ OFSGuiText::OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::stri
 
 	_subImages = 0;
 	int w, h;
-	SDL_Surface *textureSurface =
-		TTF_RenderText_Blended(font, text.c_str(), fontcolor);
-	if(textureSurface == nullptr)
-		throw SDLTTFException("OFSGuiText");
-	_texture = SDL_CreateTextureFromSurface(renderer, textureSurface);
-	if(_texture == nullptr)
-		throw SDLException("OFSGuiText");
+	if(text == "")
+	{
+		_texture == nullptr;
+	}
+	else {
+		SDL_Surface *textureSurface =
+			TTF_RenderText_Blended(_fontData, text.c_str(), fontcolor);
+		if(textureSurface == nullptr)
+			throw SDLTTFException("OFSGuiText");
+		_texture = SDL_CreateTextureFromSurface(renderer, textureSurface);
+		if(_texture == nullptr)
+			throw SDLException("OFSGuiText");
 
-	SDL_QueryTexture(_texture, nullptr, nullptr, &w, &h);
-	_size.h = h;
-	_size.w = w;
-	if(x >= 0)
-		_size.x = x;
-	else
-		_size.x = (WINDOW_WIDTH / 2) - (w / 2);
-	_size.y = y;
+		SDL_QueryTexture(_texture, nullptr, nullptr, &w, &h);
+		_size.h = h;
+		_size.w = w;
+		if(x >= 0)
+			_size.x = x;
+		else
+			_size.x = (WINDOW_WIDTH / 2) - (w / 2);
+		_size.y = y;
 
-	_src.h = h;
-	_src.w = w;
-	_src.x = 0;
-	_src.y = 0;
+		_src.h = h;
+		_src.w = w;
+		_src.x = 0;
+		_src.y = 0;
 
-	SDL_FreeSurface(textureSurface);
+		SDL_FreeSurface(textureSurface);
+	}
+	_renderer = renderer;
 }
 
 OFSGuiText::~OFSGuiText() {

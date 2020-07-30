@@ -17,9 +17,10 @@ DEFINE_LAYOUT(preInstallLayout) {
 
 	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_INSTALL, "Install", -1, 100, BIG_BOY_BUTTON);
 
-	addTextEntry(FONTDATA(SourceSansPro_Regular), "What");
+	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_OPTIONS, "Options", 50, 200, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
+	bindActivity(BUT_CLICKED_OPTIONS, OFSGui::SteamDirOption);
 }
 DEFINE_LAYOUT(installLayout) {
 	clearLayout();
@@ -37,44 +38,15 @@ DEFINE_LAYOUT(installLayout) {
 	bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
 
 }
-
-// OLD LAYOUT, DELETE LATER
-/*
-DEFINE_LAYOUT(setupLayout) { // main menu
+DEFINE_LAYOUT(SteamDirOption) {
 	clearLayout();
-	// Keep in mind, the order they are added to the vector are the order they
-	// are rendered to the screen.
 
-	// Background image
-	addImage("../res/bg.bmp");
+	addImage(DATA(bg));
 
-	addText("Installing", 70, 180, 100);
-	//addButton("../res/update.bmp", BUT_CLICKED_UPDATE, 100, 100, 2);
+	addText(FONTDATA(SourceSansPro_Regular), "Please enter the directory you have steam installed in.", 28, -1, 200);
+	addTextEntry(FONTDATA(SourceSansPro_Regular), "Edit me", 100, 300, 400);
 
-	//addImage("../res/tab.bmp", 0, 0, 1);
-	setLastIndex(1);
-	//addButton("../res/tab.bmp", TAB_CLICKED_OPTIONS, 64, 0, 1);
+	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Accept", 50, 450, SMALL_BUTTON);
 
-	addSpinny("../res/spinny.bmp", 288, 200);
-
-	//bindActivity(TAB_CLICKED_OPTIONS,
-	//			 OFSGui::setupLayoutOptions); // not implemented
-											  // yet
+	bindActivity(BUT_CLICKED_MAIN, OFSGui::preInstallLayout);
 }
-
-DEFINE_LAYOUT(setupLayoutOptions) {
-	clearLayout();
-
-	// Background image
-	addImage("../res/bg.bmp");
-
-	addButton("../res/tab.bmp", TAB_CLICKED_MAIN, 0, 0, 1);
-
-	addImage("../res/tab.bmp", 64, 0, 1);
-	setLastIndex(1);
-
-	addText("Test Option", 5, 80);
-	addTextEntry("Text here", 200, 80, 300);
-
-	bindActivity(TAB_CLICKED_MAIN, OFSGui::setupLayout);
-} */
