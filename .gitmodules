@@ -1,0 +1,3 @@
+[submodule "minlzma"]
+	path = minlzma
+	url = https://github.com/ionescu007/minlzma
