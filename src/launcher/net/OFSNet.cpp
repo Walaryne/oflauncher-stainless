@@ -52,6 +52,10 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	CURLcode retcode = curl_easy_perform(p_curlh);
 	std::cout << "cURL return code: " << retcode << std::endl;
+
+	//insert all the other friggin code here for unlzma and checksumming
+
+	std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
 	std::fflush(file);
 	std::fclose(file);
 }
