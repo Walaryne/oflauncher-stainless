@@ -28,11 +28,17 @@ public:
 
 private:
 	static inline void convertURL(std::string &s);
+	static size_t memCallback(void *data, size_t size, size_t nmemb, void *userp);
     std::string p_serverURL;
     std::string p_dbFileName;
     std::string p_gameFolderName;
     fs::path p_cwd;
 	CURL *p_curlh;
+
+	struct curl_mem_buf {
+		char *res;
+		size_t size;
+	};
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSNET_H

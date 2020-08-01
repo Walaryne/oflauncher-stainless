@@ -67,3 +67,16 @@ std::string OFSNet::getFolderName() {
 void OFSNet::setFolderName(std::string name) {
 	p_gameFolderName = std::move(name);
 }
+
+size_t OFSNet::memCallback(void *data, size_t size, size_t nmemb, void *userp) {
+	size_t realsize = size * nmemb;
+	auto *mem = static_cast<curl_mem_buf*> (userp);
+
+	char *ptr =
+		static_cast<char *>(realloc(mem->res, mem->size + realsize + 1));
+
+	mem->res = ptr;
+
+
+	return 0;
+}
