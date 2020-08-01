@@ -39,6 +39,7 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 	: OFSGuiImage() {
 	bool white;
 	int textSize;
+	int textTopOffset = 0;  //the bigger the button, the more space it looks like there is empty on the bottom.
 #ifdef INCLUDE_RESOURCES
 	resData *spriteMapData;
 #else
@@ -50,6 +51,7 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 		spriteMapData = BUTDATA(button_d);
 		white = true;
 		textSize = 80;
+		textTopOffset = 10;
 		break;
 	case(SMALL_BUTTON):
 		spriteMapData = BUTDATA(button_d);
@@ -60,7 +62,7 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 		spriteMapData = BUTDATA(button_d);
 		white = true;
 		textSize = 40;
-			break;
+		break;
 	}
 #ifdef INCLUDE_RESOURCES
 	SDL_RWops *data = SDL_RWFromMem((void *)(fontData.buf),
@@ -92,12 +94,12 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 	int w, h;
 	SDL_Surface *textSurfaceNoCrop =
 		TTF_RenderText_Blended(font, text.c_str(), fontcolor);
-	SDL_Surface *textSurface = SDL_CreateRGBSurfaceWithFormat(0, textSurfaceNoCrop->w, textSurfaceNoCrop->h / 2, 32, SDL_PIXELFORMAT_RGBA32);
+	SDL_Surface *textSurface = SDL_CreateRGBSurfaceWithFormat(0, textSurfaceNoCrop->w, textSurfaceNoCrop->h / 1.5, 32, SDL_PIXELFORMAT_RGBA32);
 	SDL_Rect textCrop;
 	textCrop.x = 0;
-	textCrop.y = textSurfaceNoCrop->h / 4;
+	textCrop.y = (textSurfaceNoCrop->h / 4) - textTopOffset;
 	textCrop.w = textSurfaceNoCrop->w;
-	textCrop.h = textSurfaceNoCrop->h / 2;
+	textCrop.h = textSurfaceNoCrop->h / 1.5;
 	SDL_BlitSurface(textSurfaceNoCrop, &textCrop, textSurface, nullptr);
 	SDL_FreeSurface(textSurfaceNoCrop);
 	if(textSurface == nullptr)

@@ -88,4 +88,5 @@ void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
 }
 
 GuiActs OFSGuiImage::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
+	return NOT_CLICKED;
 }
