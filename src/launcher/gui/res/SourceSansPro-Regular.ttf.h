@@ -24181,5 +24181,5 @@ unsigned char SourceSansPro_Regular_ttf[] = {
   0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x07, 0x04, 0x07, 0x11, 0x00, 0x01,
   0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00
 };
-unsigned int SourceSansPro_Regular_ttf_len = 290156;
+int SourceSansPro_Regular_ttf_len = 290156;
 EmbedData SourceSansPro_Regular_ttf_data = { SourceSansPro_Regular_ttf, SourceSansPro_Regular_ttf_len };
