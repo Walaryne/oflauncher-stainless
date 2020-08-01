@@ -3,7 +3,7 @@
 
 struct EmbedData {
 	const void *buf;
-	unsigned int len;
+	int len;
 };
 
 #endif

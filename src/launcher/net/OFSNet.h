@@ -37,7 +37,7 @@ private:
 	CURL *p_curlh;
 
 	struct curl_mem_buf {
-		char *res;
+		char *memfile;
 		size_t size;
 	};
 };

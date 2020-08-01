@@ -35,6 +35,8 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	dir.remove_filename();
 	std::cout << "Dir is: " + dir.string() << std::endl;
 
+	curl_mem_buf membuf{};
+
 	if(!fs::exists(dir)) {
 		fs::create_directories(dir);
 	}
@@ -45,9 +47,9 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	}
 
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
-	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, file);
+	curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, OFSNet::memCallback);
+	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, &membuf);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
-	curl_easy_setopt(p_curlh, CURLOPT_ACCEPT_ENCODING, "gzip");
 	CURLcode retcode = curl_easy_perform(p_curlh);
 	std::cout << "cURL return code: " << retcode << std::endl;
 	std::fflush(file);
@@ -73,13 +75,13 @@ size_t OFSNet::memCallback(void *data, size_t size, size_t nmemb, void *userp) {
 	auto *mem = static_cast<curl_mem_buf*> (userp);
 
 	char *ptr =
-		static_cast<char *>(realloc(mem->res, mem->size + realsize + 1));
+		static_cast<char *>(realloc(mem->memfile, mem->size + realsize + 1));
 
-	mem->res = ptr;
+	mem->memfile = ptr;
 
-	std::memcpy(&(mem->res[mem->size]), data, realsize);
+	std::memcpy(&(mem->memfile[mem->size]), data, realsize);
 	mem->size += realsize;
-	mem->res[mem->size] = 0;
+	mem->memfile[mem->size] = 0;
 
 	return realsize;
 }

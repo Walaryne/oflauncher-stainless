@@ -27,8 +27,8 @@ class OFSGuiImage {
 protected:
 	SDL_Texture *_texture;
 	SDL_Renderer * _renderer;
-	SDL_Rect _src;
-	SDL_Rect _size;
+	SDL_Rect _src{};
+	SDL_Rect _size{};
 	int _subImages;
 
 	SDL_Texture* _loadSecondImg(resData dataToLoad,
