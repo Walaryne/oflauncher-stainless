@@ -6,6 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSNET_H
 
 #include <curl/curl.h>
+#include <cstring>
 #include <string>
 #include <filesystem>
 #include <cstdio>

@@ -77,6 +77,9 @@ size_t OFSNet::memCallback(void *data, size_t size, size_t nmemb, void *userp) {
 
 	mem->res = ptr;
 
+	std::memcpy(&(mem->res[mem->size]), data, realsize);
+	mem->size += realsize;
+	mem->res[mem->size] = 0;
 
-	return 0;
+	return realsize;
 }
