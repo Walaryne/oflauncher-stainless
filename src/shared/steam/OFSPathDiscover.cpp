@@ -73,6 +73,10 @@ void OFSPathDiscover::expandPaths() {
 		if(fs::exists(p_steamPath / "steamapps/sourcemods")) {
 			std::cout << "Path also contains sourcemods dir" << std::endl;
 			p_sourcemodsPath = p_steamPath / "steamapps/sourcemods";
+		} else {
+			std::cout << "Path does not contain sourcemods dir, creating it..." << std::endl;
+			p_sourcemodsPath = p_steamPath / "steamapps/sourcemods";
+			fs::create_directory(p_steamPath / "steamapps/sourcemods");
 		}
 
 		if(fs::exists(p_steamPath /
