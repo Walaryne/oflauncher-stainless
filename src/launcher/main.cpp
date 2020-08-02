@@ -40,6 +40,9 @@ int doGui(void *ptr) {
 }
 
 int main(int argc, char *argv[]) {
+	auto updater = new OFUpdater();
+	updater->checkForUpdate();
+
 	bool runFromGame = false;
 	for(int i = 0; i < argc; i++)
 		if(strcmp(argv[i], "-check-for-updates") == 0)

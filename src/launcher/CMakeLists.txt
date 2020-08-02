@@ -36,7 +36,10 @@ set(SOURCES
         ../shared/util/OFSUtil.h
         ../shared/util/OFSUtil.cpp
         ../shared/util/md5.h
-        ../shared/util/md5.cpp)
+        ../shared/util/md5.cpp
+        ../updater/OFUpdater.cpp
+        ../updater/OFUpdater.h
+        ../version.h)
 
 
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -86,4 +89,32 @@ else()
     else()
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} minlzlib)
     endif()
+endif()
+
+if (WIN32)
+    add_definitions(-DCURL_STATICLIB)
+
+    target_link_libraries(${PROJECT_NAME} PUBLIC
+            V:\\libs\\bin\\freetype-2.10.0\\objs\\freetype.lib
+            kernel32.lib
+            Version.lib
+            user32.lib
+            gdi32.lib
+            winspool.lib
+            shell32.lib
+            ole32.lib
+            oleaut32.lib
+            uuid.lib
+            comdlg32.lib
+            advapi32.lib
+            Ws2_32.lib
+            Wldap32.lib
+            crypt32.lib
+            Normaliz.lib
+            winmm.lib
+            mincore.lib
+            version.lib
+            imm32.lib
+            dinput8.lib
+            Setupapi.lib)
 endif()

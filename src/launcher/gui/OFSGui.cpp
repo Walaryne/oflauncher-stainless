@@ -3,6 +3,8 @@
 //
 
 #include "OFSGui.h"
+#include "../../version.h"
+#include <sstream>
 
 //########### OFSGui ############
 OFSGui::OFSGui() {
@@ -15,8 +17,13 @@ OFSGui::OFSGui() {
 	if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
 		throw SDLException("Can't Init SDL");
 
+    std::stringstream titleFmt;
+    titleFmt << "Open Fortress Launcher v" << OF_LAUNCHER_VERSION_MAJOR << "."
+		<< OF_LAUNCHER_VERSION_MINOR << "."
+		<< OF_LAUNCHER_VERSION_PATCH;
+
 	_window =
-		SDL_CreateWindow("Open Fortress Launcher", SDL_WINDOWPOS_UNDEFINED,
+		SDL_CreateWindow(titleFmt.str().c_str(), SDL_WINDOWPOS_UNDEFINED,
 						 SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
 						 SDL_WINDOW_SHOWN | SDL_WINDOW_UTILITY);
 	// On my computer, I have "unredir-if-possible" enabled in my picom
