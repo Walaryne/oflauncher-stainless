@@ -44,20 +44,21 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 		std::perror("FOPEN: ");
 	}
 
+	curl_mem_buf membuf{};
+
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, OFSNet::memCallback);
-	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, &p_membuf);
+	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, &membuf);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	CURLcode retcode = curl_easy_perform(p_curlh);
 	std::cout << "cURL return code: " << retcode << std::endl;
 
 	//insert all the other friggin code here for unlzma and checksumming
 
-	std::fwrite(p_membuf.memfile, sizeof(char), p_membuf.size, file);
+	std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
 	std::fflush(file);
 	std::fclose(file);
-	std::free(p_membuf.memfile);
-	p_membuf.size = 0;
+	std::free(membuf.memfile);
 }
 
 void OFSNet::convertURL(std::string &URL) {
@@ -79,7 +80,7 @@ size_t OFSNet::memCallback(void *data, size_t size, size_t nmemb, void *userp) {
 	auto *mem = static_cast<curl_mem_buf*> (userp);
 
 	char *ptr =
-		static_cast<char *>(malloc(mem->size + realsize + 1));
+		static_cast<char *>(realloc(mem->memfile, mem->size + realsize + 1));
 
 	mem->memfile = ptr;
 
