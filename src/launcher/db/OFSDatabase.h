@@ -24,6 +24,7 @@ public:
 	void compareRevisions();
 	void compareIntegrity();
 	bool downloadSingleFile();
+	int getQueueSize();
 	inline void copyDb();
 
 private:

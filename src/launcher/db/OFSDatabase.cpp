@@ -129,3 +129,7 @@ void OFSDatabase::copyDb() {
 
 	fs::copy(p_remoteDBPath, p_localDBPath);
 }
+
+int OFSDatabase::getQueueSize() {
+	return p_downloadQueue.size();
+}
