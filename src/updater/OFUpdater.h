@@ -6,6 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFUPDATER_H
 
 #include "../version.h"
+#include "../shared/util/md5.h"
 
 #include <curl/curl.h>
 #include <cstdlib>
@@ -31,7 +32,9 @@ private:
 	void checkVersionString();
     void fetchChecksum();
     static void downloadNewVersion();
+	static void validateChecksum();
     static void renameSelf(bool restore = false);
+
 	static bool fetchString(std::string URL, std::string &outData);
     static std::string executablePath();
 

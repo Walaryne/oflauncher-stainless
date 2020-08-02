@@ -37,7 +37,8 @@ void OFUpdater::checkForUpdate() {
 		std::cout << "Launcher requires updating!" << std::endl;
 		renameSelf();
 		downloadNewVersion();
-        rebootLauncher();
+        validateChecksum();
+        //rebootLauncher();
     } else {
         if(fs::exists(OLD_LAUNCHER_BIN_NAME)) {
 			std::cout << "Found old launcher bin, removing it!" << std::endl;
@@ -189,4 +190,29 @@ std::string OFUpdater::executablePath() {
 	GetModuleFileNameA(nullptr, fileNameBuffer, MAX_PATH);
 	return fileNameBuffer;
 #endif
+}
+void OFUpdater::validateChecksum() {
+    fs::path p = executablePath();
+    std::string exeName = p.filename().u8string();
+
+    std::ifstream fileStream(exeName.c_str(), std::ios::in | std::ios::binary);
+
+
+    MD5_CTX ctx;
+    MD5_Init(&ctx);
+
+    char tempBuffer[512];
+    while (fileStream.read(tempBuffer, sizeof(tempBuffer)) || fileStream.gcount()) {
+        MD5_Update(&ctx, tempBuffer, fileStream.gcount());
+    }
+
+    unsigned char digest[16];
+    MD5_Final(digest, &ctx);
+
+	std::string md5String;
+    char md5string[33];
+    for(int i = 0; i < 16; ++i)
+        sprintf(&md5string[i*2], "%02x", (unsigned int)digest[i]);
+
+	std::cout << "MD5 Checksum of launcher bin: " << md5string << std::endl;
 }
