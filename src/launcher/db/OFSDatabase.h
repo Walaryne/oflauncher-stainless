@@ -34,7 +34,6 @@ private:
 	fs::path p_localDBPath;
 	fs::path p_remoteDBPath;
 	std::deque<std::string> p_downloadQueue;
-	std::deque<std::string>::iterator p_it;
 	std::vector<std::string> p_remotePaths;
 	std::vector<std::string> p_localPaths;
 	static int databasePathConsumer(void *param, int argc, char **argv, char **column);

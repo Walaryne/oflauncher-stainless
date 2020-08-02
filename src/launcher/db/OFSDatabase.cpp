@@ -97,11 +97,12 @@ void OFSDatabase::compareIntegrity() {
 }
 
 bool OFSDatabase::downloadSingleFile() {
-	if(p_it != p_downloadQueue.end()) {
-		fs::path fileDownloading = (fs::current_path() / fs::path(*p_it)).make_preferred();
+	if(!p_downloadQueue.empty()) {
+		std::string file = p_downloadQueue.front();
+		fs::path fileDownloading = (fs::current_path() / fs::path(file)).make_preferred();
 		std::cout << "Downloading file: " << fileDownloading << std::endl;
-		p_net->downloadFile("/" + *p_it, fileDownloading);
-		++p_it;
+		p_net->downloadFile("/" + file, fileDownloading);
+		p_downloadQueue.pop_front();
 		return false;
 	} else {
 		return true;
