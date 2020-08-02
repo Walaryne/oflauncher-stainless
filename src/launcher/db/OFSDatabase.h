@@ -21,8 +21,10 @@ class OFSDatabase {
 public:
 	explicit OFSDatabase(OFSNet *net);
 	OFSDatabase() =delete;
-	void updateGame();
-	void verifyIntegrity();
+	void compareRevisions();
+	void compareIntegrity();
+	bool downloadSingleFile();
+	inline void copyDb();
 
 private:
 	OFSNet *p_net;
@@ -31,14 +33,11 @@ private:
 	fs::path p_localDBPath;
 	fs::path p_remoteDBPath;
 	std::deque<std::string> p_downloadQueue;
+	std::deque<std::string>::iterator p_it;
 	std::vector<std::string> p_remotePaths;
 	std::vector<std::string> p_localPaths;
 	static int databasePathConsumer(void *param, int argc, char **argv, char **column);
 	static int databaseSingleResultConsumer(void *param, int argc, char **argv, char **column);
-	void compareRevisions();
-	void compareIntegrity();
-	void downloadNewFiles();
-
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSDATABASE_H

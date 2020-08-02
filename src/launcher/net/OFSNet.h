@@ -40,6 +40,8 @@ private:
 		char *memfile;
 		size_t size;
 	};
+
+	curl_mem_buf p_membuf{};
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSNET_H

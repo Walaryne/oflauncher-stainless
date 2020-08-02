@@ -35,8 +35,6 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	dir.remove_filename();
 	std::cout << "Dir is: " + dir.string() << std::endl;
 
-	curl_mem_buf membuf{};
-
 	if(!fs::exists(dir)) {
 		fs::create_directories(dir);
 	}
@@ -48,14 +46,14 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, OFSNet::memCallback);
-	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, &membuf);
+	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, &p_membuf);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	CURLcode retcode = curl_easy_perform(p_curlh);
 	std::cout << "cURL return code: " << retcode << std::endl;
 
 	//insert all the other friggin code here for unlzma and checksumming
 
-	std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
+	std::fwrite(p_membuf.memfile, sizeof(char), p_membuf.size, file);
 	std::fflush(file);
 	std::fclose(file);
 }

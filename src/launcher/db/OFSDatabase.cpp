@@ -27,28 +27,6 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 	}
 }
 
-void OFSDatabase::updateGame() {
-	compareRevisions();
-	downloadNewFiles();
-
-	if(fs::exists(p_localDBPath)) {
-		fs::remove(p_localDBPath);
-	}
-
-	fs::copy(p_remoteDBPath, p_localDBPath);
-}
-
-void OFSDatabase::verifyIntegrity() {
-	compareIntegrity();
-	downloadNewFiles();
-
-	if(fs::exists(p_localDBPath)) {
-		fs::remove(p_localDBPath);
-	}
-
-	fs::copy(p_remoteDBPath, p_localDBPath);
-}
-
 void OFSDatabase::compareRevisions() {
 	char *err = nullptr;
 	int rc = sqlite3_exec(p_dbFileRemote, "select path from files;",
@@ -58,6 +36,8 @@ void OFSDatabase::compareRevisions() {
 		ERRCHECK
 		throw std::runtime_error("SQLite statement didn't execute!");
 	}
+
+	p_downloadQueue.clear();
 
 	if(!p_dbFileLocal) {
 		for(const auto &v : p_remotePaths) {
@@ -109,16 +89,22 @@ void OFSDatabase::compareRevisions() {
 			}
 		}
 	}
+
+	p_it = p_downloadQueue.begin();
 }
 
 void OFSDatabase::compareIntegrity() {
 }
 
-void OFSDatabase::downloadNewFiles() {
-	for(const auto& s : p_downloadQueue) {
-		fs::path fileDownloading = (fs::current_path() / fs::path(s)).make_preferred();
+bool OFSDatabase::downloadSingleFile() {
+	if(p_it != p_downloadQueue.end()) {
+		fs::path fileDownloading = (fs::current_path() / fs::path(*p_it)).make_preferred();
 		std::cout << "Downloading file: " << fileDownloading << std::endl;
-		p_net->downloadFile("/" + s, fileDownloading);
+		p_net->downloadFile("/" + *p_it, fileDownloading);
+		++p_it;
+		return false;
+	} else {
+		return true;
 	}
 }
 
@@ -134,4 +120,12 @@ int OFSDatabase::databaseSingleResultConsumer(void *param, int argc, char **argv
 	auto retstring = static_cast<std::string *>(param);
 	*retstring = std::string(argv[0]);
 	return 0;
+}
+
+void OFSDatabase::copyDb() {
+	if(fs::exists(p_localDBPath)) {
+		fs::remove(p_localDBPath);
+	}
+
+	fs::copy(p_remoteDBPath, p_localDBPath);
 }
