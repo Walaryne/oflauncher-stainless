@@ -29,17 +29,17 @@ public:
 	std::string targetVersionChecksum;
 
 private:
-	void checkVersionString();
-    void fetchChecksum();
-    static void downloadNewVersion();
-	static void validateChecksum();
-    static void renameSelf(bool restore = false);
+    bool checkVersionString();
+    bool fetchChecksum();
+    bool validateChecksum() const;
+    static bool downloadNewVersion();
+    static bool renameSelf(bool restore = false);
 
-	static bool fetchString(std::string URL, std::string &outData);
+	static bool fetchString(const std::string& URL, std::string &outData);
     static std::string executablePath();
 
     bool needsUpdating = false;
-	void rebootLauncher();
+	static void rebootLauncher();
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFUPDATER_H

@@ -38,7 +38,7 @@ void OFUpdater::checkForUpdate() {
 		renameSelf();
 		downloadNewVersion();
         validateChecksum();
-        //rebootLauncher();
+        rebootLauncher();
     } else {
         if(fs::exists(OLD_LAUNCHER_BIN_NAME)) {
 			std::cout << "Found old launcher bin, removing it!" << std::endl;
@@ -55,13 +55,13 @@ void OFUpdater::checkForUpdate() {
 /**
  * Fetches launcher build number from server
  */
-void OFUpdater::checkVersionString() {
+bool OFUpdater::checkVersionString() {
 	bool result = fetchString(OF_LAUNCHER_VERSION_ENDPOINT, targetVersionString);
 	if (!result) {
 		std::cout << "Failed to fetch version string from server!";
         std::cout << "Skipping launcher update check.";
         needsUpdating = false;
-		return;
+		return false;
 	}
 
     int targetBuildNumber = std::stoi(targetVersionString);
@@ -70,21 +70,24 @@ void OFUpdater::checkVersionString() {
 	if (OF_LAUNCHER_BUILD_NUMBER < targetBuildNumber) {
 		needsUpdating = true;
 	}
+
+	return true;
 }
 
 /**
  * Fetches launcher checksum from server
  */
-void OFUpdater::fetchChecksum() {
+bool OFUpdater::fetchChecksum() {
     bool result = fetchString(OF_LAUNCHER_CHECKSUM_ENDPOINT, targetVersionChecksum);
     if (!result) {
         std::cout << "Failed to fetch checksum string from server!";
         std::cout << "Skipping launcher update check.";
 		needsUpdating = false;
-        return;
+        return false;
     }
 
     std::cout << "Server reports checksum: " << targetVersionChecksum << std::endl;
+	return true;
 }
 
 /**
@@ -92,7 +95,7 @@ void OFUpdater::fetchChecksum() {
  * @param URL - URL of string content to fetch
  * @param outData - Reference to string variable to store results in
  */
-bool OFUpdater::fetchString(std::string URL, std::string &outData) {
+bool OFUpdater::fetchString(const std::string& URL, std::string &outData) {
     auto curl = curl_easy_init();
     curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &outData);
@@ -117,30 +120,34 @@ bool OFUpdater::fetchString(std::string URL, std::string &outData) {
  * we will rename OLD_LAUNCHER_BIN_NAME -> this bin's original name
  * useful for when checksums fail to pass, or DL fails
  */
-void OFUpdater::renameSelf(bool restore) {
+bool OFUpdater::renameSelf(bool restore) {
 	fs::path p = executablePath();
 	std::string exeName = p.filename().u8string();
 
 	// restore is used to restore the old bin, in case we failed to DL a new one
+	bool result;
 	if(restore) {
 		std::cout << "Restoring old launcher bin" << std::endl;
-		std::rename(OLD_LAUNCHER_BIN_NAME, exeName.c_str());
+        result = std::rename(OLD_LAUNCHER_BIN_NAME, exeName.c_str());
 	} else {
         std::cout << "Moving current launcher" << std::endl;
-		std::rename(exeName.c_str(), OLD_LAUNCHER_BIN_NAME);
+        result = std::rename(exeName.c_str(), OLD_LAUNCHER_BIN_NAME);
 	}
+
+	return result;
 }
 
 /**
  * Downloads a new version of the launcher bin to this bin's original name
  */
-void OFUpdater::downloadNewVersion() {
+bool OFUpdater::downloadNewVersion() {
 	std::cout << "Downloading new launcher from server..." << std::endl;
 
 	fs::path p = executablePath();
 	std::string exeName = p.filename().u8string();
 
-	auto fileHdl = fopen(exeName.c_str(), "wb");
+    FILE *fileHdl;
+    fopen_s(&fileHdl, exeName.c_str(), "wb");
 
 	auto curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_URL, OF_LAUNCHER_URL);
@@ -154,12 +161,14 @@ void OFUpdater::downloadNewVersion() {
 	if(CURLE_OK != res) {
 		std::cerr << "Issue fetching updater target version: " << res << '\n';
 		renameSelf(true); // Return the old bin back to the original name
-		return;
+		return false;
 	}
 
 	std::cout << "Downloaded new launcher bin." << std::endl;
 
 	fclose(fileHdl);
+
+	return true;
 }
 
 void OFUpdater::rebootLauncher() {
@@ -191,12 +200,12 @@ std::string OFUpdater::executablePath() {
 	return fileNameBuffer;
 #endif
 }
-void OFUpdater::validateChecksum() {
+
+bool OFUpdater::validateChecksum() const {
     fs::path p = executablePath();
     std::string exeName = p.filename().u8string();
 
     std::ifstream fileStream(exeName.c_str(), std::ios::in | std::ios::binary);
-
 
     MD5_CTX ctx;
     MD5_Init(&ctx);
@@ -214,5 +223,7 @@ void OFUpdater::validateChecksum() {
     for(int i = 0; i < 16; ++i)
         sprintf(&md5string[i*2], "%02x", (unsigned int)digest[i]);
 
-	std::cout << "MD5 Checksum of launcher bin: " << md5string << std::endl;
+	std::cout << "MD5 Checksum of downloaded launcher bin: " << md5string << std::endl;
+
+	return md5string == targetVersionChecksum;
 }
