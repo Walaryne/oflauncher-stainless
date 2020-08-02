@@ -25,7 +25,7 @@ public:
 	void compareIntegrity();
 	bool downloadSingleFile();
 	int getQueueSize();
-	inline void copyDb();
+	void copyDb();
 
 private:
 	OFSNet *p_net;
