@@ -89,8 +89,6 @@ void OFSDatabase::compareRevisions() {
 			}
 		}
 	}
-
-	p_it = p_downloadQueue.begin();
 }
 
 void OFSDatabase::compareIntegrity() {
