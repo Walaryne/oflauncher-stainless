@@ -6,6 +6,7 @@
 
 #define OF_LAUNCHER_VERSION_ENDPOINT "https://puppy.surf/updater/version"
 #define OF_LAUNCHER_CHECKSUM_ENDPOINT "https://puppy.surf/updater/checksum"
+#define RENAME_BIN_NAME "OLD_LAUNCHER_BIN"
 
 #if WIN32
 #define OF_LAUNCHER_URL "https://puppy.surf/updater/oflauncher_stainless.exe"
@@ -86,8 +87,8 @@ void OFUpdater::splitVersionString() {
 
 		needsUpdating = false;
 
-		if(fs::exists("OLD_LAUNCHER_BIN")) {
-			while(!std::remove("OLD_LAUNCHER_bin")) {
+		if(fs::exists(RENAME_BIN_NAME)) {
+			while(!std::remove(RENAME_BIN_NAME)) {
 				// PASS -- on linux it's perfectly ok to delete the bin while
 				// it's loaded on windows, you can only rename things while
 				// they're running so this is a dumb loop to wait for the old
@@ -105,9 +106,9 @@ void OFUpdater::renameSelf(bool reverse) {
 
 	// reverse is used to restore an old bin, in case we failed to DL a new one
 	if(reverse) {
-		std::rename("OLD_LAUNCHER_BIN", exeName.c_str());
+		std::rename(RENAME_BIN_NAME, exeName.c_str());
 	} else {
-		std::rename(exeName.c_str(), "OLD_LAUNCHER_BIN");
+		std::rename(exeName.c_str(), RENAME_BIN_NAME);
 	}
 }
 
