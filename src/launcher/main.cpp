@@ -4,7 +4,7 @@
 SDL_sem *butDataLock = nullptr;
 SDL_sem *progDataLock = nullptr;
 SDL_sem *continueDataLock = nullptr;
-int butData = 0;
+int butStateData = 0;
 float progData = 0;
 bool continueData = true;
 
@@ -28,7 +28,7 @@ int doGui(void *ptr) {
 		if(a) {
 			g.setProgress(0.7f);
 			SDL_SemWait(butDataLock);
-			butData = a;
+			butStateData = a;
 			SDL_SemPost(butDataLock);
 		}
 	}
@@ -90,11 +90,11 @@ int main(int argc, char *argv[]) {
 	bool c = true;
 	while(c) {
 		SDL_SemWait(butDataLock);
-		int ga = butData;
-		butData = NOT_CLICKED;
+		int FiredGuiAct = butStateData;
+		butStateData = NOT_CLICKED;
 		SDL_SemPost(butDataLock);
-		if(ga) {
-			if(ga == BUT_CLICKED_INSTALL) {
+		if(FiredGuiAct) {
+			if(FiredGuiAct == BUT_CLICKED_INSTALL) {
 				TRYCATCHERR_START()
 				//db.updateGame();
 				TRYCATCHERR_END("Failed to update game")
