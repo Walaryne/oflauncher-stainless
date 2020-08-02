@@ -18,9 +18,7 @@ OFSGui::OFSGui() {
 		throw SDLException("Can't Init SDL");
 
     std::stringstream titleFmt;
-    titleFmt << "Open Fortress Launcher v" << OF_LAUNCHER_VERSION_MAJOR << "."
-		<< OF_LAUNCHER_VERSION_MINOR << "."
-		<< OF_LAUNCHER_VERSION_PATCH;
+    titleFmt << "Open Fortress Launcher - Build #" << OF_LAUNCHER_BUILD_NUMBER;
 
 	_window =
 		SDL_CreateWindow(titleFmt.str().c_str(), SDL_WINDOWPOS_UNDEFINED,

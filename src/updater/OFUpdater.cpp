@@ -17,25 +17,32 @@
 #endif
 
 OFUpdater::OFUpdater() {
-	printf("Launcher Version: %i.%i.%i\n", OF_LAUNCHER_VERSION_MAJOR,
-		   OF_LAUNCHER_VERSION_MINOR, OF_LAUNCHER_VERSION_PATCH);
+	printf("Current Launcher Build #%i\n", OF_LAUNCHER_BUILD_NUMBER);
 }
 
 void OFUpdater::checkForUpdate() {
-	fetchVersionString();
-	splitVersionString();
+	checkVersionString();
 
 	if(needsUpdating) {
 		std::cout << "Launcher requires updating!" << std::endl;
 		renameSelf();
 		downloadNewVersion();
+	} else {
+        if(fs::exists(RENAME_BIN_NAME)) {
+            while(!std::remove(RENAME_BIN_NAME)) {
+                // PASS -- on linux it's perfectly ok to delete the bin while
+                // it's loaded on windows, you can only rename things while
+                // they're running so this is a dumb loop to wait for the old
+                // launcher to close so we can delete it...
+            }
+        }
 	}
 }
-void OFUpdater::fetchVersionString() {
+void OFUpdater::checkVersionString() {
 	auto curl = curl_easy_init();
 	curl_easy_setopt(curl, CURLOPT_URL, OF_LAUNCHER_VERSION_ENDPOINT);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
-					 OFUpdater::versionCompareCallback);
+					 OFUpdater::versionDownloadCallback);
 	curl_easy_setopt(
 		curl, CURLOPT_TIMEOUT,
 		3L); // Short timeout as to not delay startup time too much!
@@ -47,57 +54,20 @@ void OFUpdater::fetchVersionString() {
 
 	if(CURLE_OK != res) {
 		std::cerr << "Issue fetching updater target version: " << res << '\n';
+		return;
+	}
+
+	if (OF_LAUNCHER_BUILD_NUMBER < std::stoi(targetVersionString)) {
+		needsUpdating = true;
 	}
 }
 
-size_t OFUpdater::versionCompareCallback(void *buffer, size_t size,
+size_t OFUpdater::versionDownloadCallback(void *buffer, size_t size,
 										 size_t nmemb, void *instance) {
 	auto const updater = static_cast<OFUpdater *>(instance);
 	size_t totalsize = size * nmemb;
 	updater->targetVersionString.append(static_cast<char *>(buffer), totalsize);
 	return totalsize;
-}
-
-void OFUpdater::splitVersionString() {
-	std::vector<std::string> strings;
-	std::string subj;
-
-	auto stream = std::istringstream(targetVersionString);
-
-	while(getline(stream, subj, '.')) {
-		strings.push_back(subj);
-	}
-
-	if(strings.size() != 3) {
-		std::cerr << "Error parsing the version string from the server!"
-				  << std::endl;
-	}
-
-	int targetMajor, targetMinor, targetPatch;
-	targetMajor = std::stoi(strings[0]);
-	targetMinor = std::stoi(strings[1]);
-	targetPatch = std::stoi(strings[2]);
-
-	if(targetMajor > OF_LAUNCHER_VERSION_MAJOR ||
-	   targetMinor > OF_LAUNCHER_VERSION_MINOR ||
-	   targetPatch > OF_LAUNCHER_VERSION_PATCH) {
-		needsUpdating = true;
-	} else {
-		std::cout << "Launcher is up to date!" << std::endl;
-
-		needsUpdating = false;
-
-		if(fs::exists(RENAME_BIN_NAME)) {
-			while(!std::remove(RENAME_BIN_NAME)) {
-				// PASS -- on linux it's perfectly ok to delete the bin while
-				// it's loaded on windows, you can only rename things while
-				// they're running so this is a dumb loop to wait for the old
-				// launcher to close so we can delete it...
-			}
-		}
-	}
-
-	printf("Server Version: %i.%i.%i\n", targetMajor, targetMinor, targetPatch);
 }
 
 void OFUpdater::renameSelf(bool reverse) {

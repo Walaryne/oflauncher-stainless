@@ -27,11 +27,10 @@ public:
 	std::string targetVersionString;
 
 private:
-	void fetchVersionString();
-	static size_t versionCompareCallback(void *buffer, size_t size, size_t nmemb,
+	void checkVersionString();
+	static size_t versionDownloadCallback(void *buffer, size_t size, size_t nmemb,
 								  void *param);
-	void splitVersionString();
-	bool needsUpdating{};
+	bool needsUpdating;
 	static void downloadNewVersion();
 	static void renameSelf(bool reverse = false);
 	static std::string executablePath();
