@@ -10,7 +10,8 @@ enum GuiActs { // Add an activity name here
 	BUT_CLICKED_OPTIONS,
 	BUT_CLICKED_MAIN,
 	BUT_CLICKED_INSTALL,
-	BUT_CLICKED_CANCEL
+	BUT_CLICKED_CANCEL,
+	DATA_TEXT
 };
 
 enum GuiEvents {

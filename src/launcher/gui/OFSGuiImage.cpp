@@ -1,8 +1,9 @@
 #include "OFSGuiImage.h"
 
 //####### OFSGuiImage ############
-OFSGuiImage::OFSGuiImage(resData data, SDL_Renderer *renderer, const int &x = 0,
+OFSGuiImage::OFSGuiImage(const std::string &name, resData data, SDL_Renderer *renderer, const int &x = 0,
 						 const int &y = 0, const int &NumOfSubImages = 0) {
+	_name = name;
 	_renderer = renderer;
 	_subImages = NumOfSubImages;
 #ifdef INCLUDE_RESOURCES
@@ -89,4 +90,7 @@ void OFSGuiImage::renderCopy(SDL_Renderer *renderer) {
 
 GuiActs OFSGuiImage::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 	return NOT_CLICKED;
+}
+
+void OFSGuiImage::getData(GuiActs typeToGet, void * data){
 }

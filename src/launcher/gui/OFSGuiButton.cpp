@@ -34,7 +34,7 @@ static void blitSprite(SDL_Surface* src, SDL_Surface* dst, const int &fullHeight
 
 
 //###### OFSGuiButton ###########
-OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs actToLink,
+OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Renderer *renderer, GuiActs actToLink,
 						   const int &x, const int &y, const std::string &text, const ButtonTypes& buttonType)
 	: OFSGuiImage() {
 	bool white;
@@ -254,6 +254,7 @@ OFSGuiButton::OFSGuiButton(resData fontData, SDL_Renderer *renderer, GuiActs act
 
 	_act = actToLink;
 	_isClicked = false;
+	_name = name;
 }
 
 OFSGuiButton::~OFSGuiButton() {

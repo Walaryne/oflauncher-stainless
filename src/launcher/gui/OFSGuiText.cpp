@@ -1,7 +1,7 @@
 #include "OFSGuiText.h"
 
 
-OFSGuiText::OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::string &text,
+OFSGuiText::OFSGuiText(const std::string &name, resData fontData, SDL_Renderer *renderer, const std::string &text,
 					   const int &text_size, const int &x, const int &y,
 					   const bool &white)
 	: OFSGuiImage() {
@@ -28,7 +28,7 @@ OFSGuiText::OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::stri
 	int w, h;
 	if(text == "")
 	{
-		_texture == nullptr;
+		_texture = nullptr;
 	}
 	else {
 		SDL_Surface *textureSurface =
@@ -56,6 +56,7 @@ OFSGuiText::OFSGuiText(resData fontData, SDL_Renderer *renderer, const std::stri
 		SDL_FreeSurface(textureSurface);
 	}
 	_renderer = renderer;
+	_name = name;
 }
 
 OFSGuiText::~OFSGuiText() {

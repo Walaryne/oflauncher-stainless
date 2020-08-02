@@ -13,11 +13,11 @@ DEFINE_LAYOUT(preInstallLayout) {
 	clearLayout();
 
 	// Background image
-	addImage(DATA(bg));
+	addImage("background", DATA(bg));
 
-	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_INSTALL, "Install", -1, 100, BIG_BOY_BUTTON);
+	addButton("install", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_INSTALL, "Install", -1, 100, BIG_BOY_BUTTON);
 
-	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_OPTIONS, "Options", 50, 200, SMALL_BUTTON);
+	addButton("options", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_OPTIONS, "Options", 50, 200, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
 	bindActivity(BUT_CLICKED_OPTIONS, OFSGui::SteamDirOption);
@@ -26,14 +26,14 @@ DEFINE_LAYOUT(installLayout) {
 	clearLayout();
 
 	// Background image
-	addImage(DATA(bg));
+	addImage("background", DATA(bg));
 
-	addText(FONTDATA(SourceSansPro_Regular),"Installing", 70, -1, 100);
+	addText("install button", FONTDATA(SourceSansPro_Regular),"Installing", 70, -1, 100);
 
 	// addSpinny(DATA(spinny), -1, 200);
-	addProgressBar(DATA(barM), -1, 250, 300);
+	addProgressBar("progress", DATA(barM), -1, 250, 300);
 
-	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_CANCEL, "Cancel", -1, 290, SMALL_BUTTON);
+	addButton("cancel", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_CANCEL, "Cancel", -1, 290, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
 
@@ -41,12 +41,12 @@ DEFINE_LAYOUT(installLayout) {
 DEFINE_LAYOUT(SteamDirOption) {
 	clearLayout();
 
-	addImage(DATA(bg));
+	addImage("background", DATA(bg));
 
-	addText(FONTDATA(SourceSansPro_Regular), "Please enter the directory you have steam installed in.", 28, -1, 200);
-	addTextEntry(FONTDATA(SourceSansPro_Regular), "Edit me", 100, 300, 400);
+	addText("message", FONTDATA(SourceSansPro_Regular), "Please enter the directory you have steam installed in.", 28, -1, 200);
+	addTextEntry("steamPath", FONTDATA(SourceSansPro_Regular), "Edit me", 100, 300, 400);
 
-	addButton(FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Accept", 50, 450, SMALL_BUTTON);
+	addButton("accept", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Accept", 50, 450, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_MAIN, OFSGui::preInstallLayout);
 }

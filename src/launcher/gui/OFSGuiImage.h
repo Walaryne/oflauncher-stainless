@@ -30,6 +30,9 @@ protected:
 	SDL_Rect _src{};
 	SDL_Rect _size{};
 	int _subImages;
+	std::string _name;
+
+	void setIndex(const int &i);
 
 	SDL_Texture* _loadSecondImg(resData dataToLoad,
 											 SDL_Rect *srcRect,
@@ -37,13 +40,14 @@ protected:
 
 public:
 	OFSGuiImage(){};
-	OFSGuiImage(resData data, SDL_Renderer *renderer, const int &x,
+	OFSGuiImage(const std::string &name, resData data, SDL_Renderer *renderer, const int &x,
 				const int &y, const int &NumOfSubImages);
 	~OFSGuiImage();
 	SDL_Texture *getTexture();
 	virtual void renderCopy(SDL_Renderer *renderer);
-	void setIndex(const int &i);
+
 	virtual GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
+	virtual void getData(GuiActs typeToGet, void * data);
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIIMAGE_H

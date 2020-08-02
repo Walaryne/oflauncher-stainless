@@ -26,10 +26,14 @@ int doGui(void *ptr) {
 	while(g.loop()) {
 		GuiActs a = g.getLastAct();
 		if(a) {
-			g.setProgress(0.7f);
+			SDL_SemWait(progDataLock);
+			g.setProgress(progData);
+			std::cout << "Current pog: " << progData << std::endl;
+			 SDL_SemPost(progDataLock);
 			SDL_SemWait(butDataLock);
 			butStateData = a;
 			SDL_SemPost(butDataLock);
+
 		}
 	}
 	TRYCATCHERR_END("OFSGui")
@@ -96,6 +100,20 @@ int main(int argc, char *argv[]) {
 		if(FiredGuiAct) {
 			if(FiredGuiAct == BUT_CLICKED_INSTALL) {
 				TRYCATCHERR_START()
+				db.compareRevisions();
+				int totalFiles = db.getQueueSize();
+				while(!db.downloadSingleFile() && c)
+				{
+					SDL_SemWait(progDataLock);
+					progData = (float)db.getQueueSize() / (float)totalFiles;
+					SDL_SemPost(progDataLock);
+					SDL_SemWait(continueDataLock);
+					c = continueData;
+					SDL_SemPost(continueDataLock);
+				}
+				if(c)
+					db.copyDb();
+
 				//db.updateGame();
 				TRYCATCHERR_END("Failed to update game")
 			}

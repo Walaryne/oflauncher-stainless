@@ -16,9 +16,9 @@
 
 
 
-OFSGuiProgBar::OFSGuiProgBar(resData data, SDL_Renderer *renderer, const int &x,
+OFSGuiProgBar::OFSGuiProgBar(const std::string &name, resData data, SDL_Renderer *renderer, const int &x,
 							 const int &y, const int &width)
-	: OFSGuiImage(data, renderer, x, y, 0) {
+	: OFSGuiImage(name, data, renderer, x, y, 0) {
 
 	_renderer = renderer;
 

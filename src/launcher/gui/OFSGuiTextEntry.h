@@ -22,11 +22,12 @@ private:
 
 	void _updateText();
 public:
-	OFSGuiTextEntry(resData fontData, SDL_Renderer *renderer, const std::string &text,
+	OFSGuiTextEntry(const std::string &name, resData fontData, SDL_Renderer *renderer, const std::string &text,
 					const int &x, const int &y, const int &width, const bool &startFocused = false);
 	~OFSGuiTextEntry();
 
 	GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
+	void getData(GuiActs typeToGet, void * data);
 
 	void renderCopy(SDL_Renderer *renderer);
 };

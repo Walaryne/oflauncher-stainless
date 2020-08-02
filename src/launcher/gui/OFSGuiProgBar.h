@@ -25,7 +25,7 @@ private:
 	SDL_Renderer *_renderer;
 
 public:
-	OFSGuiProgBar(resData data, SDL_Renderer *renderer, const int &x,
+	OFSGuiProgBar(const std::string &name, resData data, SDL_Renderer *renderer, const int &x,
 				  const int &y, const int &width);
 	~OFSGuiProgBar();
 

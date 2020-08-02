@@ -4,10 +4,10 @@
 #define TEXT_EDIT_SIZE	20
 #define TEXT_EDGE_PADDING 5
 
-OFSGuiTextEntry::OFSGuiTextEntry(resData fontData, SDL_Renderer *renderer,
+OFSGuiTextEntry::OFSGuiTextEntry(const std::string &name, resData fontData, SDL_Renderer *renderer,
 								 const std::string &text, const int &x,
 								 const int &y, const int &width, const bool &startFocused)
-	: OFSGuiText(fontData, renderer, text, TEXT_EDIT_SIZE, x + TEXT_EDGE_PADDING, y, false), _text(text), _focused(startFocused) {
+	: OFSGuiText(name, fontData, renderer, text, TEXT_EDIT_SIZE, x + TEXT_EDGE_PADDING, y, false), _text(text), _focused(startFocused) {
 	int w, h;
 
 	SDL_Surface *textureSurface = SDL_CreateRGBSurfaceWithFormat(0, width, 25, 32, SDL_PIXELFORMAT_RGBA32);
@@ -159,4 +159,11 @@ void OFSGuiTextEntry::renderCopy(SDL_Renderer *renderer) {
 		SDL_RenderCopy(renderer, _texture, &_src, &_size);
 	if(_showCursor)
 		SDL_RenderCopy(renderer, _cursor, nullptr, &_cursorSize);
+}
+
+void OFSGuiTextEntry::getData(GuiActs typeToGet, void * data){
+	if(typeToGet==DATA_TEXT)
+	{
+		data = &_text;
+	}
 }

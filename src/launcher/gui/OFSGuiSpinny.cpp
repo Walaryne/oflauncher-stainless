@@ -1,8 +1,8 @@
 #include "OFSGuiSpinny.h"
 
-OFSGuiSpinny::OFSGuiSpinny(resData data, SDL_Renderer *renderer, const int &x,
+OFSGuiSpinny::OFSGuiSpinny(const std::string &name, resData data, SDL_Renderer *renderer, const int &x,
 						   const int &y)
-	: OFSGuiImage(data, renderer, x, y, 0) {
+	: OFSGuiImage(name, data, renderer, x, y, 0) {
 	_prevTick = SDL_GetTicks();
 	_angle = 0;
 }

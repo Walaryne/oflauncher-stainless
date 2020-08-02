@@ -58,18 +58,17 @@ private:
 	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
 
 	// layout construction helper methods
-	void addImage(resData data, const int &x = 0, const int &y = 0,
+	void addImage(const std::string &name, resData data, const int &x = 0, const int &y = 0,
 				  const int &NumOfSubImages = 0);
-	void addButton(resData fontData, GuiActs actToLink, const std::string& text, const int &x,
+	void addButton(const std::string &name, resData fontData, GuiActs actToLink, const std::string& text, const int &x,
 				   const int &y, const ButtonTypes& bType);
-	void addText(resData fontData, const std::string &text = "", const int &text_size = 20,
+	void addText(const std::string &name, resData fontData, const std::string &text = "", const int &text_size = 20,
 				 const int &x = 0, const int &y = 0);
-	void addTextEntry(resData fontData, const std::string &text = "", const int &x = 0,
+	void addTextEntry(const std::string &name, resData fontData, const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100, const bool& startFocused = false);
-	void addSpinny(resData data, const int &x = 0, const int &y = 0);
-	void addProgressBar(resData data, const int &x = 0, const int &y = 0,
+	void addSpinny(const std::string &name, resData data, const int &x = 0, const int &y = 0);
+	void addProgressBar(const std::string &name, resData data, const int &x = 0, const int &y = 0,
 						const int &width = 50);
-	void setLastIndex(const int &i);
 	void clearLayout();
 
 	// layouts
