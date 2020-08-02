@@ -25,15 +25,18 @@ public:
 	void checkForUpdate();
 
 	std::string targetVersionString;
+	std::string targetVersionChecksum;
 
 private:
 	void checkVersionString();
-	static size_t versionDownloadCallback(void *buffer, size_t size, size_t nmemb,
-								  void *param);
-	bool needsUpdating = false;
-	static void downloadNewVersion();
-	static void renameSelf(bool reverse = false);
-	static std::string executablePath();
+    void fetchChecksum();
+    static void downloadNewVersion();
+    static void renameSelf(bool restore = false);
+	static bool fetchString(std::string URL, std::string &outData);
+    static std::string executablePath();
+
+    bool needsUpdating = false;
+	void rebootLauncher();
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFUPDATER_H
