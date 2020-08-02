@@ -6,7 +6,7 @@
 
 #define OF_LAUNCHER_VERSION_ENDPOINT "https://puppy.surf/updater/version"
 #define OF_LAUNCHER_CHECKSUM_ENDPOINT "https://puppy.surf/updater/checksum"
-#define RENAME_BIN_NAME "OLD_LAUNCHER_BIN"
+#define RENAME_BIN_NAME "OLD_OPEN_FORTRESS_LAUNCHER_BIN"
 
 #if WIN32
 #define OF_LAUNCHER_URL "https://puppy.surf/updater/oflauncher_stainless.exe"
@@ -17,18 +17,23 @@
 #endif
 
 OFUpdater::OFUpdater() {
-	printf("Current Launcher Build #%i\n", OF_LAUNCHER_BUILD_NUMBER);
+	std::cout << "Current Launcher Build #" <<  OF_LAUNCHER_BUILD_NUMBER << std::endl;
 }
 
 void OFUpdater::checkForUpdate() {
 	checkVersionString();
 
+	// Ensure the working directory is the one that contains the launcher bin
+	fs::path workingDir = executablePath();
+	fs::current_path(workingDir.remove_filename());
+
 	if(needsUpdating) {
 		std::cout << "Launcher requires updating!" << std::endl;
 		renameSelf();
 		downloadNewVersion();
-	} else {
+    } else {
         if(fs::exists(RENAME_BIN_NAME)) {
+			std::cout << "Found old launcher bin, removing it!" << std::endl;
             while(!std::remove(RENAME_BIN_NAME)) {
                 // PASS -- on linux it's perfectly ok to delete the bin while
                 // it's loaded on windows, you can only rename things while
@@ -57,7 +62,10 @@ void OFUpdater::checkVersionString() {
 		return;
 	}
 
-	if (OF_LAUNCHER_BUILD_NUMBER < std::stoi(targetVersionString)) {
+    int targetBuildNumber = std::stoi(targetVersionString);
+	std::cout << "Server reports Build #" << targetBuildNumber << std::endl;
+
+	if (OF_LAUNCHER_BUILD_NUMBER < targetBuildNumber) {
 		needsUpdating = true;
 	}
 }
@@ -76,8 +84,10 @@ void OFUpdater::renameSelf(bool reverse) {
 
 	// reverse is used to restore an old bin, in case we failed to DL a new one
 	if(reverse) {
+		std::cout << "Restoring old launcher bin" << std::endl;
 		std::rename(RENAME_BIN_NAME, exeName.c_str());
 	} else {
+        std::cout << "Moving current launcher" << std::endl;
 		std::rename(exeName.c_str(), RENAME_BIN_NAME);
 	}
 }

@@ -30,7 +30,7 @@ private:
 	void checkVersionString();
 	static size_t versionDownloadCallback(void *buffer, size_t size, size_t nmemb,
 								  void *param);
-	bool needsUpdating;
+	bool needsUpdating = false;
 	static void downloadNewVersion();
 	static void renameSelf(bool reverse = false);
 	static std::string executablePath();
