@@ -24,12 +24,13 @@ int doGui(void *ptr) {
 	TRYCATCHERR_START()
 	OFSGui g;
 	while(g.loop()) {
+		//set progress
+		SDL_SemWait(progDataLock);
+		g.setProgress(progData);
+		SDL_SemPost(progDataLock);
+
 		GuiActs a = g.getLastAct();
 		if(a) {
-			SDL_SemWait(progDataLock);
-			g.setProgress(progData);
-			std::cout << "Current pog: " << progData << std::endl;
-			 SDL_SemPost(progDataLock);
 			SDL_SemWait(butDataLock);
 			butStateData = a;
 			SDL_SemPost(butDataLock);
@@ -105,7 +106,7 @@ int main(int argc, char *argv[]) {
 				while(!db.downloadSingleFile() && c)
 				{
 					SDL_SemWait(progDataLock);
-					progData = (float)db.getQueueSize() / (float)totalFiles;
+					progData = ((float)totalFiles - (float)db.getQueueSize()) / (float)totalFiles;
 					SDL_SemPost(progDataLock);
 					SDL_SemWait(continueDataLock);
 					c = continueData;
@@ -114,7 +115,6 @@ int main(int argc, char *argv[]) {
 				if(c)
 					db.copyDb();
 
-				//db.updateGame();
 				TRYCATCHERR_END("Failed to update game")
 			}
 		}
