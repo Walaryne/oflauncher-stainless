@@ -56,6 +56,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	std::fwrite(p_membuf.memfile, sizeof(char), p_membuf.size, file);
 	std::fflush(file);
 	std::fclose(file);
+	std::memset(p_membuf.memfile, 0, p_membuf.size);
 }
 
 void OFSNet::convertURL(std::string &URL) {
