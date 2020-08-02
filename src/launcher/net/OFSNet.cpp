@@ -56,7 +56,8 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	std::fwrite(p_membuf.memfile, sizeof(char), p_membuf.size, file);
 	std::fflush(file);
 	std::fclose(file);
-	std::memset(p_membuf.memfile, 0, p_membuf.size);
+	std::free(p_membuf.memfile);
+	p_membuf.size = 0;
 }
 
 void OFSNet::convertURL(std::string &URL) {
@@ -78,7 +79,7 @@ size_t OFSNet::memCallback(void *data, size_t size, size_t nmemb, void *userp) {
 	auto *mem = static_cast<curl_mem_buf*> (userp);
 
 	char *ptr =
-		static_cast<char *>(realloc(mem->memfile, mem->size + realsize + 1));
+		static_cast<char *>(malloc(mem->size + realsize + 1));
 
 	mem->memfile = ptr;
 
