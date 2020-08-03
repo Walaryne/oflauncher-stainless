@@ -6,6 +6,7 @@
 #include "res/install.bmp.h"
 //#include "res/spinny.bmp.h"
 #include "res/barM.bmp.h"
+#include "res/folder.bmp.h"
 #include "res/SourceSansPro-Regular.ttf.h"
 #endif
 
@@ -43,10 +44,13 @@ DEFINE_LAYOUT(SteamDirOption) {
 
 	addImage("background", DATA(bg));
 
-	addText("message", FONTDATA(SourceSansPro_Regular), "Please enter the directory you have steam installed in.", 28, -1, 200);
+	addText("message", FONTDATA(SourceSansPro_Regular), "Options", 32, -1, 200);
+	addText("message", FONTDATA(SourceSansPro_Regular), "Steam Directory:", 25, 100, 260);
 	addTextEntry("steamPath", FONTDATA(SourceSansPro_Regular), "Edit me", 100, 300, 400);
 
 	addButton("accept", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Accept", 50, 450, SMALL_BUTTON);
+
+	addDirButton("dirChooser", DATA(folder), 520, 280, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_MAIN, OFSGui::preInstallLayout);
 }

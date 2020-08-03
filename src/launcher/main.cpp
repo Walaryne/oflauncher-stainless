@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
 
 	// init semaphore for checking button data
 	butDataLock = SDL_CreateSemaphore(1);
-	progDataLock = SDL_CreateSemaphore(1);
+	progDataLock = SDL_CreateSemaphore(2);
 
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)nullptr);
 

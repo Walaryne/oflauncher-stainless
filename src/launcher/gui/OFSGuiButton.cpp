@@ -39,14 +39,14 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	: OFSGuiImage() {
 	bool white;
 	int textSize;
-	int textTopOffset = 0;  //the bigger the button, the more space it looks like there is empty on the bottom.
+	int textTopOffset = 0; // the bigger the button, the more space it looks like there is empty on the bottom.
 #ifdef INCLUDE_RESOURCES
 	resData *spriteMapData;
 #else
 	std::string spriteMapData;
 #endif
 
-	switch(buttonType){
+	switch(buttonType) {
 	case(BIG_BOY_BUTTON):
 		spriteMapData = BUTDATA(button_d);
 		white = true;
@@ -65,10 +65,10 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 		break;
 	}
 #ifdef INCLUDE_RESOURCES
-	SDL_RWops *data = SDL_RWFromMem((void *)(fontData.buf),
-									fontData.len);
+	SDL_RWops *data = SDL_RWFromMem((void *)(fontData.buf), fontData.len);
 	TTF_Font *font = TTF_OpenFontRW(data, 1, textSize);
-	SDL_RWops *rw = SDL_RWFromMem((void *)(spriteMapData->buf), spriteMapData->len);
+	SDL_RWops *rw =
+		SDL_RWFromMem((void *)(spriteMapData->buf), spriteMapData->len);
 	SDL_Surface *spriteSurface = SDL_LoadBMP_RW(rw, 1);
 #else
 	fs::path p = fs::current_path();
@@ -77,12 +77,11 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	p2 += "/" + fontData;
 	TTF_Font *font =
 		TTF_OpenFont(p2.make_preferred().string().c_str(), textSize);
-	SDL_Surface *spriteSurface = SDL_LoadBMP(p.make_preferred().string().c_str());
+	SDL_Surface *spriteSurface =
+		SDL_LoadBMP(p.make_preferred().string().c_str());
 #endif
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiButton");
-	if(spriteSurface == nullptr)
-		throw SDLException("OFSGuiButton");
 
 	SDL_Color fontcolor;
 	if(white)
@@ -90,11 +89,11 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	else
 		fontcolor = {0, 0, 0, 255};
 
-	_subImages = 2;
-	int w, h;
 	SDL_Surface *textSurfaceNoCrop =
 		TTF_RenderText_Blended(font, text.c_str(), fontcolor);
-	SDL_Surface *textSurface = SDL_CreateRGBSurfaceWithFormat(0, textSurfaceNoCrop->w, textSurfaceNoCrop->h / 1.5, 32, SDL_PIXELFORMAT_RGBA32);
+	SDL_Surface *textSurface = SDL_CreateRGBSurfaceWithFormat(
+		0, textSurfaceNoCrop->w, textSurfaceNoCrop->h / 1.5, 32,
+		SDL_PIXELFORMAT_RGBA32);
 	SDL_Rect textCrop;
 	textCrop.x = 0;
 	textCrop.y = (textSurfaceNoCrop->h / 4) - textTopOffset;
@@ -105,6 +104,64 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	if(textSurface == nullptr)
 		throw SDLTTFException("OFSGuiText");
 
+	_renderer = renderer;
+	_act = actToLink;
+	_name = name;
+
+	_finishLoading(spriteSurface, textSurface, x, y);
+}
+
+OFSGuiButton::OFSGuiButton(const std::string &name, const EmbedData imgData, SDL_Renderer *renderer, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &buttonType)
+	: OFSGuiImage() {
+#ifdef INCLUDE_RESOURCES
+	resData *spriteMapData;
+#else
+	std::string spriteMapData;
+#endif
+
+	switch(buttonType) {
+	case(BIG_BOY_BUTTON):
+		spriteMapData = BUTDATA(button_d);
+		break;
+	case(SMALL_BUTTON):
+		spriteMapData = BUTDATA(button_d);
+		break;
+	default:
+		spriteMapData = BUTDATA(button_d);
+		break;
+	}
+#ifdef INCLUDE_RESOURCES
+	SDL_RWops *data = SDL_RWFromMem((void *)(imgData.buf), imgData.len);
+	SDL_Surface *textSurface = SDL_LoadBMP_RW(data, 1);
+	SDL_RWops *rw =
+		SDL_RWFromMem((void *)(spriteMapData->buf), spriteMapData->len);
+	SDL_Surface *spriteSurface = SDL_LoadBMP_RW(rw, 1);
+#else
+	fs::path p = fs::current_path();
+	p += "/" + spriteMapData;
+	fs::path p2 = fs::current_path();
+	p2 += "/" + imgData;
+	SDL_Surface* textSurface =
+		SDL_LoadBMP(p2.make_preferred().string().c_str());
+	SDL_Surface *spriteSurface =
+		SDL_LoadBMP(p.make_preferred().string().c_str());
+#endif
+	if(textSurface == nullptr)
+		throw SDLTTFException("OFSGuiText");
+
+	_renderer = renderer;
+	_act = actToLink;
+	_name = name;
+
+	_finishLoading(spriteSurface, textSurface, x, y);
+}
+
+void OFSGuiButton::_finishLoading(SDL_Surface *spriteSurface, SDL_Surface *textSurface, const int &x, const int &y) {
+	if(spriteSurface == nullptr)
+		throw SDLException("OFSGuiButton");
+
+	int w, h;
+	_subImages = 2;
 	//time to construct our texture
 	int spriteSize = (spriteSurface->w - 2) / 4;
 	int fullWidth = (spriteSize * 2) + textSurface->w;
@@ -229,7 +286,7 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	textRect.x += TEXT_BUMP_HOR;
 	SDL_BlitSurface(textSurface, nullptr, textureSurface, &textRect);
 	//ok, make the texture now
-	_texture = SDL_CreateTextureFromSurface(renderer, textureSurface);
+	_texture = SDL_CreateTextureFromSurface(_renderer, textureSurface);
 	if(_texture == nullptr)
 		throw SDLException("OFSGuiText");
 
@@ -252,9 +309,9 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	SDL_FreeSurface(spriteSurface);
 
 
-	_act = actToLink;
+
 	_isClicked = false;
-	_name = name;
+
 }
 
 OFSGuiButton::~OFSGuiButton() {

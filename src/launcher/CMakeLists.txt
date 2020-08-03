@@ -6,7 +6,7 @@ option(INCLUDE_RESOURCES "Use the resource header files instead of loading direc
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCES
+set(SOURCES_COMMON
         main.cpp
         main.h
         gui/OFSGuiProgBar.cpp
@@ -36,10 +36,21 @@ set(SOURCES
         ../shared/util/OFSUtil.h
         ../shared/util/OFSUtil.cpp
         ../shared/util/md5.h
-        ../shared/util/md5.cpp)
+        ../shared/util/md5.cpp
+        gui/OFSGuiDirButton.cpp
+        gui/OFSGuiDirButton.h
+        ../nativefiledialog/include/nfd.h
+        ../nativefiledialog/include/nfd_common.h
+        ../nativefiledialog/include/nfd_common.c
+        ../nativefiledialog/include/common.h)
 
+set(SOURCES_LINUX
+        ../nativefiledialog/include/nfd_gtk.c)
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+if(UNIX)
+    set(SOURCES
+            ${SOURCES_COMMON} ${SOURCES_LINUX})
+endif()
 
 if(INCLUDE_RESOURCES)
     add_compile_definitions(INCLUDE_RESOURCES)
@@ -65,24 +76,31 @@ if(USE_GUI)
         message("-- SDL2_tff not found, terminating")
         return()
     endif()
-
-    add_compile_definitions(USE_GUI)
 endif()
 
 find_package(CURL REQUIRED)
 find_package(SQLite3 REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS})
+
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ../nativefiledialog/include)
+
+ADD_DEFINITIONS(${GTK3_CFLAGS_OTHER})
+
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 if(STATIC_LINK)
     if(USE_GUI)
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} minlzlib)
+        link_directories(${GTK_LIBRARY_DIRS})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} ${GTK3_STATIC_LIBRARIES} minlzlib)
     else()
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} minlzlib)
     endif()
 else()
     if(USE_GUI)
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARY} ${SDL2TTF_LIBRARY} ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} minlzlib)
+        link_directories(${GTK_LIBRARY_DIRS})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARY} ${SDL2TTF_LIBRARY} ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} ${GTK3_LIBRARIES} minlzlib)
     else()
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} minlzlib)
     endif()
