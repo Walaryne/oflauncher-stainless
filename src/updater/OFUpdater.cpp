@@ -6,7 +6,7 @@
 
 #define OF_LAUNCHER_VERSION_ENDPOINT "https://puppy.surf/updater/version"
 #define OF_LAUNCHER_CHECKSUM_ENDPOINT "https://puppy.surf/updater/checksum"
-#define OLD_LAUNCHER_BIN_NAME "OLD_OPEN_FORTRESS_LAUNCHER_BIN"
+#define OLD_LAUNCHER_BIN_NAME "OLD_OPEN_FORTRESS_LAUNCHER_BIN.bak"
 
 #if WIN32
 #define OF_LAUNCHER_URL "https://puppy.surf/updater/oflauncher_stainless.exe"
@@ -21,7 +21,7 @@ OFUpdater::OFUpdater() {
 }
 
 /**
- * Kicks up update pipeline
+ * Kicks off update pipeline
  * Will clean up files that match the name OLD_LAUNCHER_BIN_NAME in the
  * current working directory.
  */
@@ -35,17 +35,21 @@ void OFUpdater::checkForUpdate() {
 
 	if(needsUpdating) {
 		std::cout << "Launcher requires updating!" << std::endl;
-		renameSelf();
-		downloadNewVersion();
-        validateChecksum();
+		if (!renameSelf()) return;
+		if(!downloadNewVersion() || !validateChecksum()) {
+			renameSelf(true);
+			return;
+		}
+
+		// Everything completed successfully -- reboot the launcher
         rebootLauncher();
     } else {
         if(fs::exists(OLD_LAUNCHER_BIN_NAME)) {
 			std::cout << "Found old launcher bin, removing it!" << std::endl;
             while(!std::remove(OLD_LAUNCHER_BIN_NAME)) {
                 // PASS -- on linux it's perfectly ok to delete the bin while
-                // it's loaded on windows, you can only rename things while
-                // they're running so this is a dumb loop to wait for the old
+                // it's loaded, but on windows you can only RENAME things while
+                // they're running. so this is a dumb loop to wait for the old
                 // launcher to close so we can delete it...
             }
         }
@@ -58,8 +62,8 @@ void OFUpdater::checkForUpdate() {
 bool OFUpdater::checkVersionString() {
 	bool result = fetchString(OF_LAUNCHER_VERSION_ENDPOINT, targetVersionString);
 	if (!result) {
-		std::cout << "Failed to fetch version string from server!";
-        std::cout << "Skipping launcher update check.";
+		std::cout << "Failed to fetch version string from server!" << std::endl;
+        std::cout << "Skipping launcher update check." << std::endl;
         needsUpdating = false;
 		return false;
 	}
@@ -97,6 +101,7 @@ bool OFUpdater::fetchChecksum() {
  */
 bool OFUpdater::fetchString(const std::string& URL, std::string &outData) {
     auto curl = curl_easy_init();
+    long response_code;
     curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &outData);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
@@ -108,10 +113,11 @@ bool OFUpdater::fetchString(const std::string& URL, std::string &outData) {
 	});
 
     auto res = curl_easy_perform(curl);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
     curl_easy_cleanup(curl);
 
-	return res == CURLE_OK;
+	return (res == CURLE_OK) && (response_code == 200);
 }
 
 /**
@@ -150,17 +156,18 @@ bool OFUpdater::downloadNewVersion() {
     fopen_s(&fileHdl, exeName.c_str(), "wb");
 
 	auto curl = curl_easy_init();
+    long response_code;
 	curl_easy_setopt(curl, CURLOPT_URL, OF_LAUNCHER_URL);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fileHdl);
 
 	auto res = curl_easy_perform(curl);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
 	curl_easy_cleanup(curl);
 
-	if(CURLE_OK != res) {
+	if(CURLE_OK != res || response_code != 200) {
 		std::cerr << "Issue fetching updater target version: " << res << '\n';
-		renameSelf(true); // Return the old bin back to the original name
 		return false;
 	}
 
