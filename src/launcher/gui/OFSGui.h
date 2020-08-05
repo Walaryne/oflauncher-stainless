@@ -63,6 +63,7 @@ private:
 				  const int &NumOfSubImages = 0);
 	void addButton(const std::string &name, resData fontData, GuiActs actToLink, const std::string& text, const int &x,
 				   const int &y, const ButtonTypes& bType);
+	void addImgButton(const std::string &name, resData imgData, GuiActs actToLink, const int &x, const int &y, const ButtonTypes& bType);
 	void addDirButton(const std::string &name, resData fontData, const int &x,
 					  const int &y, const ButtonTypes& bType);
 	void addText(const std::string &name, resData fontData, const std::string &text = "", const int &text_size = 20,

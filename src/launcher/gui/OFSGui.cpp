@@ -154,6 +154,11 @@ void OFSGui::addButton(const std::string &name, resData fontData, GuiActs actToL
 												   x, y, text, bType));
 }
 
+void OFSGui::addImgButton(const std::string &name, resData imgData, GuiActs actToLink, const int &x = 0, const int &y = 0, const ButtonTypes& bType = DEFAULT_BUTTON) {
+	_imgs.push_back(std::make_unique<OFSGuiButton>(name, imgData, _renderer, actToLink,
+												   x, y, bType));
+}
+
 void OFSGui::addDirButton(const std::string &name, const EmbedData fontData, const int &x, const int &y, const ButtonTypes &bType) {
 	_imgs.push_back(std::make_unique<OFSGuiDirButton>(name, fontData, _renderer, x, y, bType));
 }

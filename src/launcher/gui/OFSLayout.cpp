@@ -7,6 +7,7 @@
 //#include "res/spinny.bmp.h"
 #include "res/barM.bmp.h"
 #include "res/folder.bmp.h"
+#include "res/gear2.bmp.h"
 #include "res/SourceSansPro-Regular.ttf.h"
 #include "res/tf2build.ttf.h"
 #endif
@@ -19,7 +20,8 @@ DEFINE_LAYOUT(preInstallLayout) {
 
 	addButton("install button", FONTDATA(tf2build), BUT_CLICKED_INSTALL, "Install", -1, 100, BIG_BOY_BUTTON);
 
-	addButton("options", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_OPTIONS, "Options", 50, 200, SMALL_BUTTON);
+	//addButton("options", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_OPTIONS, "Options", 50, 200, SMALL_BUTTON);
+	addImgButton("options", DATA(gear2), BUT_CLICKED_OPTIONS, 810, 400, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
 	bindActivity(BUT_CLICKED_OPTIONS, OFSGui::SteamDirOption);
