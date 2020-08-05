@@ -8,6 +8,7 @@
 #include "res/barM.bmp.h"
 #include "res/folder.bmp.h"
 #include "res/SourceSansPro-Regular.ttf.h"
+#include "res/tf2build.ttf.h"
 #endif
 
 DEFINE_LAYOUT(preInstallLayout) {
@@ -16,7 +17,7 @@ DEFINE_LAYOUT(preInstallLayout) {
 	// Background image
 	addImage("background", DATA(bg));
 
-	addButton("install", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_INSTALL, "Install", -1, 100, BIG_BOY_BUTTON);
+	addButton("install button", FONTDATA(tf2build), BUT_CLICKED_INSTALL, "Install", -1, 100, BIG_BOY_BUTTON);
 
 	addButton("options", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_OPTIONS, "Options", 50, 200, SMALL_BUTTON);
 
@@ -29,7 +30,7 @@ DEFINE_LAYOUT(installLayout) {
 	// Background image
 	addImage("background", DATA(bg));
 
-	addText("install button", FONTDATA(SourceSansPro_Regular),"Installing", 70, -1, 100);
+	addText("install", FONTDATA(tf2build),"Installing", 70, -1, 100);
 
 	// addSpinny(DATA(spinny), -1, 200);
 	addProgressBar("progress", DATA(barM), -1, 250, 300);
@@ -44,7 +45,7 @@ DEFINE_LAYOUT(SteamDirOption) {
 
 	addImage("background", DATA(bg));
 
-	addText("message", FONTDATA(SourceSansPro_Regular), "Options", 32, -1, 200);
+	addText("message", FONTDATA(tf2build), "Options", 42, -1, 100);
 	addText("message", FONTDATA(SourceSansPro_Regular), "Steam Directory:", 25, 100, 260);
 	addTextEntry("steamPath", FONTDATA(SourceSansPro_Regular), "Edit me", 100, 300, 400);
 

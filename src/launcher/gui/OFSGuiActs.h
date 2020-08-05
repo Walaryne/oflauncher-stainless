@@ -1,6 +1,8 @@
 #ifndef OFLAUNCHER_STAINLESS_OFSGUIACTS_H
 #define OFLAUNCHER_STAINLESS_OFSGUIACTS_H
 
+#include <SDL2/SDL.h>
+#include <string>
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
 
@@ -17,15 +19,14 @@ enum GuiActs { // Add an activity name here
 enum GuiEvents {
 	NO_EVENT,
 	EVENT_SDL,
-	EVENT_PROGBAR_UPDATE
+	EVENT_PROGBAR_UPDATE,
+	EVENT_DATA_TEXT
 };
 
 class OFSGuiEvent {
 public:
-	OFSGuiEvent();
-	OFSGuiEvent(SDL_Event *sdl) : sdl(*sdl), eventType(EVENT_SDL), data(nullptr) {}
-	OFSGuiEvent(GuiEvents eventType, void* data) : eventType(eventType), data(data) {}
-	SDL_Event sdl;
+	OFSGuiEvent(const std::string name, GuiEvents eventType, void* data) : name(name), eventType(eventType), data(data) {}
+	const std::string name;
 	GuiEvents eventType;
 	void * data;
 };

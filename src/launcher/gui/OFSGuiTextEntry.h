@@ -26,10 +26,10 @@ public:
 					const int &x, const int &y, const int &width, const bool &startFocused = false);
 	~OFSGuiTextEntry();
 
-	GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
-	void getData(GuiActs typeToGet, void * data);
+	GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev) override;
+	OFSGuiEvent getData(GuiActs typeToGet) override;
 
-	void renderCopy(SDL_Renderer *renderer);
+	void renderCopy(SDL_Renderer *renderer) override;
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUITEXTENTRY_H

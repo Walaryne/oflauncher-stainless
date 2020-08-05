@@ -92,5 +92,6 @@ GuiActs OFSGuiImage::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 	return NOT_CLICKED;
 }
 
-void OFSGuiImage::getData(GuiActs typeToGet, void * data){
+OFSGuiEvent OFSGuiImage::getData(GuiActs typeToGet){
+	return OFSGuiEvent(nullptr, NO_EVENT, nullptr);
 }

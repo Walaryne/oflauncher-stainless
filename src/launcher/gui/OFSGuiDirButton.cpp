@@ -11,12 +11,13 @@ OFSGuiDirButton::OFSGuiDirButton(const std::string &name, const EmbedData imgDat
 
 GuiActs OFSGuiDirButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 	if(ev->eventType == EVENT_SDL) {
-		switch(ev->sdl.type) {
+		SDL_Event * sdle = (SDL_Event *)ev->data;
+		switch(sdle->type) {
 		case SDL_MOUSEBUTTONDOWN:
-			if(ev->sdl.button.state == SDL_BUTTON(SDL_BUTTON_LEFT)) {
-				if(ev->sdl.button.x > _size.x && ev->sdl.button.x < _size.x + _size.w) {
-					if(ev->sdl.button.y > _size.y &&
-					   ev->sdl.button.y < _size.y + _size.h) {
+			if(sdle->button.state == SDL_BUTTON(SDL_BUTTON_LEFT)) {
+				if(sdle->button.x > _size.x && sdle->button.x < _size.x + _size.w) {
+					if(sdle->button.y > _size.y &&
+						sdle->button.y < _size.y + _size.h) {
 						_isClicked = true;
 						setIndex(2); // Mouse was pressed down on button
 					}
@@ -27,8 +28,8 @@ GuiActs OFSGuiDirButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 			if(_isClicked) {
 				setIndex(0);
 				_isClicked = false;
-				if(ev->sdl.button.x > _size.x && ev->sdl.button.x < _size.x + _size.w &&
-				   ev->sdl.button.y > _size.y && ev->sdl.button.y < _size.y + _size.h) {
+				if(sdle->button.x > _size.x && sdle->button.x < _size.x + _size.w &&
+					sdle->button.y > _size.y && sdle->button.y < _size.y + _size.h) {
 					setIndex(1);
 					NFD_OpenDialog( nullptr, nullptr, nullptr);
 				}
@@ -37,8 +38,8 @@ GuiActs OFSGuiDirButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 		case SDL_MOUSEMOTION:
 
 			if(!_isClicked) {
-				if(ev->sdl.motion.x > _size.x && ev->sdl.motion.x < _size.x + _size.w &&
-				   ev->sdl.motion.y > _size.y && ev->sdl.motion.y < _size.y + _size.h)
+				if(sdle->motion.x > _size.x && sdle->motion.x < _size.x + _size.w &&
+					sdle->motion.y > _size.y && sdle->motion.y < _size.y + _size.h)
 					setIndex(1); // Hovering over
 				else
 					setIndex(0); // normal state

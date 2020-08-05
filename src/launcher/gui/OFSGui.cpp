@@ -81,7 +81,7 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 }
 
 void OFSGui::setProgress(const float &progress) {
-	_evs.emplace_back(std::move(new OFSGuiEvent(EVENT_PROGBAR_UPDATE, (void*)&progress)));
+	_evs.emplace_back(std::move(new OFSGuiEvent("all", EVENT_PROGBAR_UPDATE, (void*)&progress)));
 	/*
 	for(auto &i : _imgs)
 		i->setProgress(progress);
@@ -104,14 +104,9 @@ bool OFSGui::loop() {
 			_quit=true;
 		else
 		{
-			_evs.emplace_back(std::move(new OFSGuiEvent(&e)));
-			/*
-			for(auto &i : _imgs)
-			{
-				GuiActs a = i->parseEvents(e);
-				if(a != NOT_CLICKED)
-					actStack.push_back(a);
-			}*/
+			SDL_Event *buffer = (SDL_Event*)malloc(sizeof(SDL_Event));
+			*buffer = e;
+			_evs.emplace_back(std::move(new OFSGuiEvent("all", EVENT_SDL, buffer)));
 		}
 	}
 	//SDL_PumpEvents();
@@ -123,6 +118,10 @@ bool OFSGui::loop() {
 			if(a != NOT_CLICKED)
 				actStack.push_back(a);
 		}
+	}
+	for(auto &ev : _evs) {
+		if(ev->eventType == EVENT_SDL)
+			free(ev->data); //clear mallocs that we made for the SDL events
 	}
 	_evs.clear();
 

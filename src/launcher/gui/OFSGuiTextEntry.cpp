@@ -93,13 +93,14 @@ void OFSGuiTextEntry::_updateText() {
 GuiActs OFSGuiTextEntry::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 {
 	if(ev->eventType == EVENT_SDL) {
-		switch(ev->sdl.type) {
+		SDL_Event * sdle = (SDL_Event *)ev->data;
+		switch(sdle->type) {
 		case SDL_MOUSEBUTTONDOWN:
-			if(ev->sdl.button.state == SDL_BUTTON(SDL_BUTTON_LEFT)) {
-				if(ev->sdl.button.x > _backSize.x &&
-				   ev->sdl.button.x < _backSize.x + _backSize.w &&
-				   ev->sdl.button.y > _backSize.y &&
-				   ev->sdl.button.y < _backSize.y + _backSize.h) {
+			if(sdle->button.state == SDL_BUTTON(SDL_BUTTON_LEFT)) {
+				if(sdle->button.x > _backSize.x &&
+					sdle->button.x < _backSize.x + _backSize.w &&
+					sdle->button.y > _backSize.y &&
+					sdle->button.y < _backSize.y + _backSize.h) {
 					SDL_StopTextInput();
 					SDL_StartTextInput();
 					_focused = true;
@@ -113,7 +114,7 @@ GuiActs OFSGuiTextEntry::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 			break;
 		}
 		if(_focused) {
-			switch(ev->sdl.type) {
+			switch(sdle->type) {
 				/*  I dont think this is what we want?
 			case SDL_TEXTEDITING:
 				_text = ev->sdl.edit.text;
@@ -122,13 +123,13 @@ GuiActs OFSGuiTextEntry::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 				break;
 				 */
 			case SDL_TEXTINPUT:
-				_text += ev->sdl.text.text;
+				_text += sdle->text.text;
 				_updateTextNow = true;
 				_showCursor = true;
 				_toggleCursorTick = SDL_GetTicks() + 1000;
 				break;
 			case SDL_KEYDOWN:
-				if(ev->sdl.key.keysym.sym == SDLK_BACKSPACE) {
+				if(sdle->key.keysym.sym == SDLK_BACKSPACE) {
 					if(_text != "") {
 						_text.resize(_text.size() - 1, ' ');
 						_updateTextNow = true;
@@ -161,9 +162,8 @@ void OFSGuiTextEntry::renderCopy(SDL_Renderer *renderer) {
 		SDL_RenderCopy(renderer, _cursor, nullptr, &_cursorSize);
 }
 
-void OFSGuiTextEntry::getData(GuiActs typeToGet, void * data){
-	if(typeToGet==DATA_TEXT)
-	{
-		data = &_text;
-	}
+OFSGuiEvent OFSGuiTextEntry::getData(GuiActs typeToGet){
+	if(typeToGet == DATA_TEXT)
+		return OFSGuiEvent(_name, EVENT_DATA_TEXT, &_text);
+	return OFSGuiEvent(nullptr, NO_EVENT, nullptr);
 }

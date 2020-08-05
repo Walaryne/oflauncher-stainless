@@ -47,7 +47,7 @@ public:
 	virtual void renderCopy(SDL_Renderer *renderer);
 
 	virtual GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
-	virtual void getData(GuiActs typeToGet, void * data);
+	virtual OFSGuiEvent getData(GuiActs typeToGet);
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIIMAGE_H
