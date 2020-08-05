@@ -6,6 +6,7 @@
 
 #include "OFSGuiActs.h"
 #include "OFSGuiImage.h"
+#include "../../shared/util/nineSlice.h"
 #include "res/EmbedData.h"
 
 enum ButtonTypes {
@@ -21,6 +22,7 @@ private:
 	OFSImageData _right;
 	OFSImageData _text;
 	void _finishLoading(SDL_Surface *spriteSurface, SDL_Surface *textSurface, const int &x, const int &y);
+	void _finishLoading2(SDL_Surface *spriteSurface_d, SDL_Surface *spriteSurface_h, SDL_Surface *spriteSurface_c, SDL_Surface *textSurface, const int &x, const int &y, const bool &shadow);
 
 protected:
 	GuiActs _act;

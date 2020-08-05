@@ -54,8 +54,9 @@ int main(int argc, char *argv[]) {
 	curl_global_init(CURL_GLOBAL_ALL);
 
 	// init semaphore for checking button data
-	butDataLock = SDL_CreateSemaphore(1);
+	butDataLock = SDL_CreateSemaphore(2);
 	progDataLock = SDL_CreateSemaphore(2);
+	continueDataLock = SDL_CreateSemaphore( 2);
 
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)nullptr);
 
@@ -103,7 +104,7 @@ int main(int argc, char *argv[]) {
 				TRYCATCHERR_START()
 				db.compareRevisions();
 				int totalFiles = db.getQueueSize();
-				while(!db.downloadSingleFile() && c)
+				while(!db.downloadSingleFile() && c && (FiredGuiAct != BUT_CLICKED_CANCEL))
 				{
 					SDL_SemWait(progDataLock);
 					progData = ((float)totalFiles - (float)db.getQueueSize()) / (float)totalFiles;
@@ -111,8 +112,12 @@ int main(int argc, char *argv[]) {
 					SDL_SemWait(continueDataLock);
 					c = continueData;
 					SDL_SemPost(continueDataLock);
+					SDL_SemWait(butDataLock);
+					FiredGuiAct = butStateData;
+					butStateData = NOT_CLICKED;
+					SDL_SemPost(butDataLock);
 				}
-				if(c)
+				if(c && (FiredGuiAct != BUT_CLICKED_CANCEL))
 					db.copyDb();
 
 				TRYCATCHERR_END("Failed to update game")

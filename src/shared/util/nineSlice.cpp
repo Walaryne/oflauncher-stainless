@@ -4,22 +4,16 @@
 
 #include "nineSlice.h"
 
-// Params for how the nineslice is laid out
-// These could probably be passed in per image
-#define TOP_BORDER_INSET 32
-#define BOTTOM_BORDER_INSET 32
-#define LEFT_BORDER_INSET 16
-#define RIGHT_BORDER_INSET 16
+
 
 /**
  * Blits a nine-slice sprite sheet into the target surface
- * @param renderer - SDL2 renderer instance
  * @param src - source nine-slice sprite sheet
  * @param surface - destination
  * @param width - width of the desired sprite
  * @param height - height of the desired texture
  */
-void blitNineSliceToSurface(SDL_Renderer *renderer, SDL_Surface *src, SDL_Surface *surface, int width, int height) {
+void blitNineSliceToSurface(SDL_Surface *src, SDL_Surface *surface, int width, int height) {
     SDL_SetSurfaceBlendMode(src, SDL_BLENDMODE_NONE);
 
     // Rects that represent all the slices of the sheet
