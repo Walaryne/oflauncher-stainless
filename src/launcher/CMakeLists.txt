@@ -37,6 +37,8 @@ set(SOURCES_COMMON
         ../shared/util/OFSUtil.cpp
         ../shared/util/md5.h
         ../shared/util/md5.cpp
+        ../shared/util/nineSlice.cpp
+        ../shared/util/nineSlice.h
         gui/OFSGuiDirButton.cpp
         gui/OFSGuiDirButton.h
         ../nativefiledialog/include/nfd.h
