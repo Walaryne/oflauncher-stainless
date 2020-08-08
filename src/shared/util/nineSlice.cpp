@@ -24,7 +24,7 @@ void blitNineSliceToSurface(SDL_Surface *src, SDL_Surface *surface, int width, i
     topLeftCorner.h = TOP_BORDER_INSET;
 
     SDL_Rect topRightCorner{};
-    topRightCorner.x = src->w - LEFT_BORDER_INSET;
+    topRightCorner.x = src->w - RIGHT_BORDER_INSET;
     topRightCorner.y = 0;
     topRightCorner.w = RIGHT_BORDER_INSET;
     topRightCorner.h = TOP_BORDER_INSET;

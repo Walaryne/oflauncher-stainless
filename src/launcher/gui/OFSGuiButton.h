@@ -17,12 +17,7 @@ enum ButtonTypes {
 
 class OFSGuiButton : public OFSGuiImage {
 private:
-	OFSImageData _left;
-	OFSImageData _mid;
-	OFSImageData _right;
-	OFSImageData _text;
-	void _finishLoading(SDL_Surface *spriteSurface, SDL_Surface *textSurface, const int &x, const int &y);
-	void _finishLoading2(SDL_Surface *spriteSurface_d, SDL_Surface *spriteSurface_h, SDL_Surface *spriteSurface_c, SDL_Surface *textSurface, const int &x, const int &y, const bool &shadow);
+	void _finishLoading(SDL_Surface *spriteSurface_d, SDL_Surface *spriteSurface_h, SDL_Surface *spriteSurface_c, SDL_Surface *textSurface, const int &x, const int &y, const bool &shadow);
 
 protected:
 	GuiActs _act;
@@ -33,7 +28,6 @@ public:
 				 const int &x = 0, const int &y = 0, const std::string &text = "", const ButtonTypes& buttonType = DEFAULT_BUTTON);
 	OFSGuiButton(const std::string &name, resData imgData, SDL_Renderer *renderer, GuiActs actToLink = NOT_CLICKED,
 				 const int &x = 0, const int &y = 0, const ButtonTypes& buttonType = DEFAULT_BUTTON);
-	~OFSGuiButton();
 	GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
 };
 
