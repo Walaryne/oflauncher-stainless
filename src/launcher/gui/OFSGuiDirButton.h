@@ -9,11 +9,14 @@
 #include "../../nativefiledialog/include/nfd.h"
 
 class OFSGuiDirButton : public OFSGuiButton {
+private:
+	std::string _path;
+	void _clickedOnAction() override;
 public:
-	OFSGuiDirButton(const std::string &name, resData imgData, SDL_Renderer *renderer,
+	OFSGuiDirButton(const std::string &name, resData imgData, SDL_Renderer *renderer, GuiActs actToLink,
 					const int &x = 0, const int &y = 0, const ButtonTypes& buttonType = DEFAULT_BUTTON);
 
-	GuiActs parseEvents(std::shared_ptr<OFSGuiEvent> ev);
+	OFSGuiEvent getData(GuiActs typeToGet) override;
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIDIRBUTTON_H

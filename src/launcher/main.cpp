@@ -22,19 +22,35 @@ void checkDirsExist() {
 
 int doGui(void *ptr) {
 	TRYCATCHERR_START()
+	std::string autoDetectSteamPath = *((std::string *)ptr);
 	OFSGui g;
+	float prog;
 	while(g.loop()) {
 		//set progress
 		SDL_SemWait(progDataLock);
-		g.setProgress(progData);
+		prog = progData;
 		SDL_SemPost(progDataLock);
+
+		g.sendEvent("progress", EVENT_PROGBAR_UPDATE, &prog);
 
 		GuiActs a = g.getLastAct();
 		if(a) {
-			SDL_SemWait(butDataLock);
-			butStateData = a;
-			SDL_SemPost(butDataLock);
-
+			void * data;
+			switch(a) {
+			case BUT_CLICKED_UPDATE_DIR:
+				data = g.getData("dirChooser", DATA_DIR);
+				if(data != nullptr)
+					g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, data);
+				break;
+			case BUT_CLICKED_OPTIONS:
+				g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, &autoDetectSteamPath);
+				//no break here, we actually want it to also perform the default action
+			default:
+				SDL_SemWait(butDataLock);
+				butStateData = a;
+				SDL_SemPost(butDataLock);
+				break;
+			}
 		}
 	}
 	TRYCATCHERR_END("OFSGui")
@@ -58,7 +74,12 @@ int main(int argc, char *argv[]) {
 	progDataLock = SDL_CreateSemaphore(2);
 	continueDataLock = SDL_CreateSemaphore( 2);
 
-	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)nullptr);
+	//This string should be set to the steam path that will be displayed in the
+	//options menu!  We gotta make a specific function to get this path to set
+	//it here.
+	std::string steamPath = "/home/fenteale/.steam";
+
+	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
 
 	OFSPathDiscover opd;
 

@@ -143,6 +143,13 @@ GuiActs OFSGuiTextEntry::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 			}
 		}
 	}
+	else if(ev->eventType == EVENT_DATA_TEXT_UPDATE)
+	{
+		if(ev->name == _name) {
+			_text = *((std::string *)ev->data);
+			_updateTextNow = true;
+		}
+	}
 	return NOT_CLICKED;
 }
 
@@ -165,5 +172,5 @@ void OFSGuiTextEntry::renderCopy(SDL_Renderer *renderer) {
 OFSGuiEvent OFSGuiTextEntry::getData(GuiActs typeToGet){
 	if(typeToGet == DATA_TEXT)
 		return OFSGuiEvent(_name, EVENT_DATA_TEXT, &_text);
-	return OFSGuiEvent(nullptr, NO_EVENT, nullptr);
+	return OFSGuiEvent("", NO_EVENT, nullptr);
 }

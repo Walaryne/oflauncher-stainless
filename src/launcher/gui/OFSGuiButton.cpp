@@ -312,6 +312,7 @@ GuiActs OFSGuiButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 					sdle->button.y > _size.y && sdle->button.y < _size.y + _size.h) {
 					setIndex(1);
 					ret = _act;
+					_clickedOnAction();
 				}
 			}
 			break;
@@ -329,3 +330,5 @@ GuiActs OFSGuiButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 	}
 	return ret;
 }
+
+void OFSGuiButton::_clickedOnAction() {}

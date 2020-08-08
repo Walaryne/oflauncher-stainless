@@ -22,6 +22,7 @@ private:
 protected:
 	GuiActs _act;
 	bool _isClicked;
+	virtual void _clickedOnAction();
 
 public:
 	OFSGuiButton(const std::string &name, resData fontData, SDL_Renderer *renderer, GuiActs actToLink = NOT_CLICKED,

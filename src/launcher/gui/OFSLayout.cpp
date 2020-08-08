@@ -53,7 +53,7 @@ DEFINE_LAYOUT(SteamDirOption) {
 
 	addButton("accept", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Accept", 50, 450, SMALL_BUTTON);
 
-	addDirButton("dirChooser", DATA(folder), 520, 280, SMALL_BUTTON);
+	addDirButton("dirChooser", DATA(folder), BUT_CLICKED_UPDATE_DIR, 520, 280, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_MAIN, OFSGui::preInstallLayout);
 }

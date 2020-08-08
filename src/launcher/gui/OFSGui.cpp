@@ -80,12 +80,19 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 	return ret;
 }
 
-void OFSGui::setProgress(const float &progress) {
-	_evs.emplace_back(std::move(new OFSGuiEvent("all", EVENT_PROGBAR_UPDATE, (void*)&progress)));
-	/*
-	for(auto &i : _imgs)
-		i->setProgress(progress);
-	 */
+void OFSGui::sendEvent(std::string name, GuiEvents event, void * data) {
+	_evs.emplace_back(std::move(new OFSGuiEvent(name, event, data)));
+}
+
+void *OFSGui::getData(const std::string &name, GuiActs event) {
+	for(auto &x : _imgs)
+	{
+		OFSGuiEvent e = x->getData(event);
+		if(e.eventType != NO_EVENT)
+			if(e.name == name)
+				return e.data;
+	}
+	return nullptr;
 }
 
 bool OFSGui::loop() {
@@ -106,7 +113,8 @@ bool OFSGui::loop() {
 		{
 			SDL_Event *buffer = (SDL_Event*)malloc(sizeof(SDL_Event));
 			*buffer = e;
-			_evs.emplace_back(std::move(new OFSGuiEvent("all", EVENT_SDL, buffer)));
+
+			sendEvent("all", EVENT_SDL, buffer);
 		}
 	}
 	//SDL_PumpEvents();
@@ -159,8 +167,8 @@ void OFSGui::addImgButton(const std::string &name, resData imgData, GuiActs actT
 												   x, y, bType));
 }
 
-void OFSGui::addDirButton(const std::string &name, const EmbedData fontData, const int &x, const int &y, const ButtonTypes &bType) {
-	_imgs.push_back(std::make_unique<OFSGuiDirButton>(name, fontData, _renderer, x, y, bType));
+void OFSGui::addDirButton(const std::string &name, const EmbedData fontData, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &bType) {
+	_imgs.push_back(std::make_unique<OFSGuiDirButton>(name, fontData, _renderer, actToLink, x, y, bType));
 }
 
 void OFSGui::addText(const std::string &name, resData fontData, const std::string &text, const int &text_size,

@@ -45,6 +45,7 @@ private:
 	SDL_Renderer *_renderer;
 	std::vector<std::unique_ptr<OFSGuiImage>> _imgs;
 	std::vector<std::shared_ptr<OFSGuiEvent>> _evs;
+	std::vector<std::shared_ptr<OFSGuiEvent>> _datas;
 	bool _quit;
 
 	std::unordered_map<GuiActs, bool> _actStates;
@@ -64,7 +65,7 @@ private:
 	void addButton(const std::string &name, resData fontData, GuiActs actToLink, const std::string& text, const int &x,
 				   const int &y, const ButtonTypes& bType);
 	void addImgButton(const std::string &name, resData imgData, GuiActs actToLink, const int &x, const int &y, const ButtonTypes& bType);
-	void addDirButton(const std::string &name, resData fontData, const int &x,
+	void addDirButton(const std::string &name, resData fontData, GuiActs actToLink, const int &x,
 					  const int &y, const ButtonTypes& bType);
 	void addText(const std::string &name, resData fontData, const std::string &text = "", const int &text_size = 20,
 				 const int &x = 0, const int &y = 0);
@@ -94,7 +95,8 @@ public:
 
 	bool simulateButton(GuiActs actToSim);
 
-	void setProgress(const float &progress);
+	void sendEvent(std::string name, GuiEvents event, void * data);
+	void *getData(const std::string &name, GuiActs event);
 
 	bool loop();
 };

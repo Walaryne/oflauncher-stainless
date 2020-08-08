@@ -93,5 +93,5 @@ GuiActs OFSGuiImage::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 }
 
 OFSGuiEvent OFSGuiImage::getData(GuiActs typeToGet){
-	return OFSGuiEvent(nullptr, NO_EVENT, nullptr);
+	return OFSGuiEvent("", NO_EVENT, nullptr);
 }
