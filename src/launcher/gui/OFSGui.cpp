@@ -80,11 +80,11 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 	return ret;
 }
 
-void OFSGui::sendEvent(std::string name, GuiEvents event, void * data) {
-	_evs.emplace_back(std::move(new OFSGuiEvent(name, event, data)));
+void OFSGui::sendEvent(std::string name, GuiEvents event, std::shared_ptr<void> data) {
+	_evs.emplace_back(std::make_shared<OFSGuiEvent>(name, event, data));
 }
 
-void *OFSGui::getData(const std::string &name, GuiActs event) {
+std::shared_ptr<void> OFSGui::getData(const std::string &name, GuiActs event) {
 	for(auto &x : _imgs)
 	{
 		OFSGuiEvent e = x->getData(event);
@@ -95,30 +95,29 @@ void *OFSGui::getData(const std::string &name, GuiActs event) {
 	return nullptr;
 }
 
-bool OFSGui::loop() {
+bool OFSGui::loop() {  //the main loop thats called once every frame
 #ifndef INCLUDE_RESOURCES
-	_new_path = fs::current_path();
+	_new_path = fs::current_path();  //this stuff is broken.
+	//its supposed to set the path to where the exe is so that it can
+	//load resources from disk correctly but the threading breaks this.
 	fs::current_path(_orig_path);
 #endif
 	SDL_Event e;
 
-
-	std::vector<GuiActs> actStack;
-
+	std::vector<GuiActs> actStack;  //this is our queue of acts fired by the elements
 
 	while(SDL_PollEvent(&e)) {
+		//This loops for each event that hasn't been processed yet.
 		if(e.type == SDL_QUIT)
 			_quit=true;
-		else
-		{
-			SDL_Event *buffer = (SDL_Event*)malloc(sizeof(SDL_Event));
-			*buffer = e;
-
+		else {
+            std::shared_ptr<void>buffer = std::make_shared<SDL_Event>(e);
+            //make a copy of this event and add it into the queue of events
 			sendEvent("all", EVENT_SDL, buffer);
 		}
 	}
-	//SDL_PumpEvents();
 
+	//iterate through all the elements and pass all the events into them
 	for(auto &i : _imgs)
 	{
 		for(auto &ev : _evs) {
@@ -127,22 +126,19 @@ bool OFSGui::loop() {
 				actStack.push_back(a);
 		}
 	}
-	for(auto &ev : _evs) {
-		if(ev->eventType == EVENT_SDL)
-			free(ev->data); //clear mallocs that we made for the SDL events
-	}
-	_evs.clear();
+
+	_evs.clear(); //clear event queue
 
 	for(auto act : actStack)
 	{
 		_currAct = act;
-		simulateButton(act);
+		simulateButton(act);  //switch layouts
 	}
 	actStack.clear();
 
 	SDL_RenderClear(_renderer);
 	for(auto &i : _imgs) {
-		i->renderCopy(_renderer);
+		i->renderCopy(_renderer);  //call each element's render function
 	}
 	SDL_RenderPresent(_renderer);
 #ifndef INCLUDE_RESOURCES
@@ -151,6 +147,7 @@ bool OFSGui::loop() {
 	return !_quit;
 }
 
+//Functions for layout creation
 void OFSGui::addImage(const std::string &name, resData data, const int &x, const int &y,
 					  const int &NumOfSubImages) {
 	_imgs.push_back(

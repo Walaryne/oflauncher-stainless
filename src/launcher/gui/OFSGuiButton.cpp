@@ -291,7 +291,7 @@ void OFSGuiButton::_finishLoading(SDL_Surface *spriteSurface_d, SDL_Surface *spr
 GuiActs OFSGuiButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 	GuiActs ret = NOT_CLICKED;
 	if(ev->eventType == EVENT_SDL && (ev->name == _name || ev->name == "all")) {
-		SDL_Event* sdle = (SDL_Event*) ev->data;
+		std::shared_ptr<SDL_Event> sdle = std::static_pointer_cast<SDL_Event>(ev->data);
 		switch(sdle->type) {
 		case SDL_MOUSEBUTTONDOWN:
 			if(sdle->button.state == SDL_BUTTON(SDL_BUTTON_LEFT)) {

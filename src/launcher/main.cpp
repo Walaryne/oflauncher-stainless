@@ -31,11 +31,11 @@ int doGui(void *ptr) {
 		prog = progData;
 		SDL_SemPost(progDataLock);
 
-		g.sendEvent("progress", EVENT_PROGBAR_UPDATE, &prog);
+		g.sendEvent("progress", EVENT_PROGBAR_UPDATE, std::make_shared<float>(prog));
 
 		GuiActs a = g.getLastAct();
 		if(a) {
-			void * data;
+			std::shared_ptr<void> data;
 			switch(a) {
 			case BUT_CLICKED_UPDATE_DIR:
 				data = g.getData("dirChooser", DATA_DIR);
@@ -43,7 +43,7 @@ int doGui(void *ptr) {
 					g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, data);
 				break;
 			case BUT_CLICKED_OPTIONS:
-				g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, &autoDetectSteamPath);
+				g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, std::make_shared<std::string>(autoDetectSteamPath));
 				//no break here, we actually want it to also perform the default action
 			default:
 				SDL_SemWait(butDataLock);

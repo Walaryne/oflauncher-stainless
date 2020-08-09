@@ -45,7 +45,6 @@ private:
 	SDL_Renderer *_renderer;
 	std::vector<std::unique_ptr<OFSGuiImage>> _imgs;
 	std::vector<std::shared_ptr<OFSGuiEvent>> _evs;
-	std::vector<std::shared_ptr<OFSGuiEvent>> _datas;
 	bool _quit;
 
 	std::unordered_map<GuiActs, bool> _actStates;
@@ -96,8 +95,8 @@ public:
 
 	bool simulateButton(GuiActs actToSim);
 
-	void sendEvent(std::string name, GuiEvents event, void * data);
-	void *getData(const std::string &name, GuiActs event);
+	void sendEvent(std::string name, GuiEvents event, std::shared_ptr<void> data);
+    std::shared_ptr<void> getData(const std::string &name, GuiActs event);
 
 	bool loop();
 };

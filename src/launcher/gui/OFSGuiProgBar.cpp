@@ -69,8 +69,9 @@ GuiActs OFSGuiProgBar::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 {
 	GuiActs ret = NOT_CLICKED;
 	if(ev->eventType == EVENT_PROGBAR_UPDATE) {
-		_progress = _barWidth * *((float *)ev->data);
-		if( *((float *)ev->data) == 1.0f)
+		std::shared_ptr<float> progPercent = std::static_pointer_cast<float>(ev->data);
+		_progress = _barWidth * *progPercent;
+		if( *progPercent == 1.0f)
 			ret = _act;
 	}
 	return ret;
