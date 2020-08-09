@@ -185,10 +185,10 @@ void OFSGui::addSpinny(const std::string &name, resData data, const int &x, cons
 	_imgs.push_back(std::make_unique<OFSGuiSpinny>(name, data, _renderer, x, y));
 }
 
-void OFSGui::addProgressBar(const std::string &name, resData data, const int &x, const int &y,
+void OFSGui::addProgressBar(const std::string &name, resData data, GuiActs act, const int &x, const int &y,
 							const int &width) {
 	_imgs.push_back(
-		std::make_unique<OFSGuiProgBar>(name, data, _renderer, x, y, width));
+		std::make_unique<OFSGuiProgBar>(name, data, _renderer, act, x, y, width));
 }
 
 void OFSGui::clearLayout() {

@@ -121,7 +121,8 @@ int main(int argc, char *argv[]) {
 		butStateData = NOT_CLICKED;
 		SDL_SemPost(butDataLock);
 		if(FiredGuiAct) {
-			if(FiredGuiAct == BUT_CLICKED_INSTALL) {
+			switch(FiredGuiAct) {
+			case BUT_CLICKED_INSTALL:
 				TRYCATCHERR_START()
 				db.compareRevisions();
 				int totalFiles = db.getQueueSize();
@@ -138,10 +139,18 @@ int main(int argc, char *argv[]) {
 					butStateData = NOT_CLICKED;
 					SDL_SemPost(butDataLock);
 				}
-				if(c && (FiredGuiAct != BUT_CLICKED_CANCEL))
+				if(c && (FiredGuiAct != BUT_CLICKED_CANCEL)) {
 					db.copyDb();
+                    SDL_SemWait(progDataLock);
+                    progData = 1.0f;
+                    SDL_SemPost(progDataLock);
+				}
 
 				TRYCATCHERR_END("Failed to update game")
+				break;
+			case BUT_CLICKED_LAUNCH:
+				openURL("steam://run/243750");
+				break;
 			}
 		}
 		SDL_SemWait(continueDataLock);

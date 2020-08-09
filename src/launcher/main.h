@@ -9,6 +9,7 @@
 #include "db/OFSDatabase.h"
 #include "gui/OFSGui.h"
 #include "net/OFSNet.h"
+#include "../shared/util/openURL.h"
 #include <exception>
 #include <filesystem>
 #include <iostream>

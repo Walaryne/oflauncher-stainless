@@ -72,7 +72,7 @@ private:
 	void addTextEntry(const std::string &name, resData fontData, const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100, const bool& startFocused = false);
 	void addSpinny(const std::string &name, resData data, const int &x = 0, const int &y = 0);
-	void addProgressBar(const std::string &name, resData data, const int &x = 0, const int &y = 0,
+	void addProgressBar(const std::string &name, resData data, GuiActs act, const int &x = 0, const int &y = 0,
 						const int &width = 50);
 	void clearLayout();
 
@@ -84,6 +84,7 @@ private:
 	DEFINE_LAYOUT_H(preInstallLayout);
 	DEFINE_LAYOUT_H(installLayout);
 	DEFINE_LAYOUT_H(SteamDirOption);
+	DEFINE_LAYOUT_H(postInstall);
 
 public:
 	OFSGui();
