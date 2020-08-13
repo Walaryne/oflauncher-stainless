@@ -37,6 +37,7 @@ set(SOURCES_COMMON
         ../shared/util/OFSUtil.cpp
         ../shared/util/md5.h
         ../shared/util/md5.cpp
+        ../shared/util/json.hpp
         ../shared/util/nineSlice.cpp
         ../shared/util/nineSlice.h
         gui/OFSGuiDirButton.cpp
@@ -44,14 +45,25 @@ set(SOURCES_COMMON
         ../nativefiledialog/include/nfd.h
         ../nativefiledialog/include/nfd_common.h
         ../nativefiledialog/include/nfd_common.c
-        ../nativefiledialog/include/common.h ../shared/util/openURL.h)
+        ../nativefiledialog/include/common.h
+        ../shared/util/openURL.h
+        ../shared/config/OFSConfig.h ../shared/config/OFSConfig.cpp)
 
 set(SOURCES_LINUX
         ../nativefiledialog/include/nfd_gtk.c ../shared/util/openURL-linux.cpp)
 
+set(SOURCES_WIN32
+        ../nativefiledialog/include/nfd_win.cpp ../shared/util/openURL-win.cpp)
+
 if(UNIX)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
     set(SOURCES
             ${SOURCES_COMMON} ${SOURCES_LINUX})
+endif()
+
+if (WIN32)
+    set(SOURCES ${SOURCES_COMMON} ${SOURCES_WIN32})
 endif()
 
 if(INCLUDE_RESOURCES)
@@ -82,8 +94,6 @@ endif()
 
 find_package(CURL REQUIRED)
 find_package(SQLite3 REQUIRED)
-find_package(PkgConfig REQUIRED)
-pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 
 
 INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ../nativefiledialog/include)
