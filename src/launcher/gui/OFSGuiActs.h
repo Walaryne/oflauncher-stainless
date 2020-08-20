@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <string>
+#include <memory>
 #define WINDOW_WIDTH 960
 #define WINDOW_HEIGHT 540
 
@@ -13,6 +14,8 @@ enum GuiActs { // Add an activity name here
 	BUT_CLICKED_MAIN,
 	BUT_CLICKED_INSTALL,
 	BUT_CLICKED_CANCEL,
+	BUT_CLICKED_LAUNCH,
+	INSTALL_FINISHED,
 	DATA_TEXT,
 	DATA_DIR
 };
@@ -28,10 +31,11 @@ enum GuiEvents {
 
 class OFSGuiEvent {
 public:
-	OFSGuiEvent(const std::string name, GuiEvents eventType, void* data) : name(name), eventType(eventType), data(data) {}
+	OFSGuiEvent(const std::string name, GuiEvents eventType, std::shared_ptr<void> data) : name(name), eventType(eventType), data(data) {}
 	const std::string name;
 	GuiEvents eventType;
-	void * data;
+	// * data;
+	std::shared_ptr<void> data;
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUIACTS_H

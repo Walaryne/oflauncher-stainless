@@ -20,7 +20,7 @@ void OFSGuiDirButton::_clickedOnAction() {
 
 OFSGuiEvent OFSGuiDirButton::getData(GuiActs typeToGet) {
 	if(typeToGet == DATA_DIR)
-		return OFSGuiEvent(_name, EVENT_DATA_DIR, (void*)(&_path));
+		return OFSGuiEvent(_name, EVENT_DATA_DIR, std::make_shared<std::string>(_path));
 
 	return OFSGuiEvent("", NO_EVENT, nullptr);
 }

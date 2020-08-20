@@ -31,11 +31,11 @@ int doGui(void *ptr) {
 		prog = progData;
 		SDL_SemPost(progDataLock);
 
-		g.sendEvent("progress", EVENT_PROGBAR_UPDATE, &prog);
+		g.sendEvent("progress", EVENT_PROGBAR_UPDATE, std::make_shared<float>(prog));
 
 		GuiActs a = g.getLastAct();
 		if(a) {
-			void * data;
+			std::shared_ptr<void> data;
 			switch(a) {
 			case BUT_CLICKED_UPDATE_DIR:
 				data = g.getData("dirChooser", DATA_DIR);
@@ -43,7 +43,7 @@ int doGui(void *ptr) {
 					g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, data);
 				break;
 			case BUT_CLICKED_OPTIONS:
-				g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, &autoDetectSteamPath);
+				g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, std::make_shared<std::string>(autoDetectSteamPath));
 				//no break here, we actually want it to also perform the default action
 			default:
 				SDL_SemWait(butDataLock);
@@ -121,7 +121,8 @@ int main(int argc, char *argv[]) {
 		butStateData = NOT_CLICKED;
 		SDL_SemPost(butDataLock);
 		if(FiredGuiAct) {
-			if(FiredGuiAct == BUT_CLICKED_INSTALL) {
+			switch(FiredGuiAct) {
+			case BUT_CLICKED_INSTALL:
 				TRYCATCHERR_START()
 				db.compareRevisions();
 				int totalFiles = db.getQueueSize();
@@ -138,10 +139,18 @@ int main(int argc, char *argv[]) {
 					butStateData = NOT_CLICKED;
 					SDL_SemPost(butDataLock);
 				}
-				if(c && (FiredGuiAct != BUT_CLICKED_CANCEL))
+				if(c && (FiredGuiAct != BUT_CLICKED_CANCEL)) {
 					db.copyDb();
+                    SDL_SemWait(progDataLock);
+                    progData = 1.0f;
+                    SDL_SemPost(progDataLock);
+				}
 
 				TRYCATCHERR_END("Failed to update game")
+				break;
+			case BUT_CLICKED_LAUNCH:
+				openURL("steam://run/243750");
+				break;
 			}
 		}
 		SDL_SemWait(continueDataLock);

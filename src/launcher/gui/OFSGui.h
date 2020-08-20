@@ -71,7 +71,7 @@ private:
 	void addTextEntry(const std::string &name, resData fontData, const std::string &text = "", const int &x = 0,
 					  const int &y = 0, const int &width = 100, const bool& startFocused = false);
 	void addSpinny(const std::string &name, resData data, const int &x = 0, const int &y = 0);
-	void addProgressBar(const std::string &name, resData data, const int &x = 0, const int &y = 0,
+	void addProgressBar(const std::string &name, resData data, GuiActs act, const int &x = 0, const int &y = 0,
 						const int &width = 50);
 	void clearLayout();
 
@@ -83,6 +83,7 @@ private:
 	DEFINE_LAYOUT_H(preInstallLayout);
 	DEFINE_LAYOUT_H(installLayout);
 	DEFINE_LAYOUT_H(SteamDirOption);
+	DEFINE_LAYOUT_H(postInstall);
 
 public:
 	OFSGui();
@@ -94,8 +95,8 @@ public:
 
 	bool simulateButton(GuiActs actToSim);
 
-	void sendEvent(std::string name, GuiEvents event, void * data);
-	void *getData(const std::string &name, GuiActs event);
+	void sendEvent(std::string name, GuiEvents event, std::shared_ptr<void> data);
+    std::shared_ptr<void> getData(const std::string &name, GuiActs event);
 
 	bool loop();
 };

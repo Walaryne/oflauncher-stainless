@@ -47,7 +47,7 @@ OFSGuiTextEntry::~OFSGuiTextEntry() {
 }
 
 void OFSGuiTextEntry::_updateText() {
-	if(_text == "")
+	if(_text.empty())
 	{
 		_texture = nullptr;
 	}
@@ -93,7 +93,7 @@ void OFSGuiTextEntry::_updateText() {
 GuiActs OFSGuiTextEntry::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 {
 	if(ev->eventType == EVENT_SDL) {
-		SDL_Event * sdle = (SDL_Event *)ev->data;
+		std::shared_ptr<SDL_Event> sdle = std::static_pointer_cast<SDL_Event>(ev->data);
 		switch(sdle->type) {
 		case SDL_MOUSEBUTTONDOWN:
 			if(sdle->button.state == SDL_BUTTON(SDL_BUTTON_LEFT)) {
@@ -130,7 +130,7 @@ GuiActs OFSGuiTextEntry::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 				break;
 			case SDL_KEYDOWN:
 				if(sdle->key.keysym.sym == SDLK_BACKSPACE) {
-					if(_text != "") {
+					if(!_text.empty()) {
 						_text.resize(_text.size() - 1, ' ');
 						_updateTextNow = true;
 						_cursorSize.x = _size.x + 1;
@@ -146,7 +146,7 @@ GuiActs OFSGuiTextEntry::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 	else if(ev->eventType == EVENT_DATA_TEXT_UPDATE)
 	{
 		if(ev->name == _name) {
-			_text = *((std::string *)ev->data);
+			_text = *std::static_pointer_cast<std::string>(ev->data);
 			_updateTextNow = true;
 		}
 	}
@@ -171,6 +171,6 @@ void OFSGuiTextEntry::renderCopy(SDL_Renderer *renderer) {
 
 OFSGuiEvent OFSGuiTextEntry::getData(GuiActs typeToGet){
 	if(typeToGet == DATA_TEXT)
-		return OFSGuiEvent(_name, EVENT_DATA_TEXT, &_text);
+		return OFSGuiEvent(_name, EVENT_DATA_TEXT, std::make_shared<std::string>(_text));
 	return OFSGuiEvent("", NO_EVENT, nullptr);
 }

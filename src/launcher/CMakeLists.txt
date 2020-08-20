@@ -44,10 +44,10 @@ set(SOURCES_COMMON
         ../nativefiledialog/include/nfd.h
         ../nativefiledialog/include/nfd_common.h
         ../nativefiledialog/include/nfd_common.c
-        ../nativefiledialog/include/common.h)
+        ../nativefiledialog/include/common.h ../shared/util/openURL.h)
 
 set(SOURCES_LINUX
-        ../nativefiledialog/include/nfd_gtk.c)
+        ../nativefiledialog/include/nfd_gtk.c ../shared/util/openURL-linux.cpp)
 
 if(UNIX)
     set(SOURCES

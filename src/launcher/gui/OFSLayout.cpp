@@ -35,11 +35,12 @@ DEFINE_LAYOUT(installLayout) {
 	addText("install", FONTDATA(tf2build),"Installing", 70, -1, 100);
 
 	// addSpinny(DATA(spinny), -1, 200);
-	addProgressBar("progress", DATA(barM), -1, 250, 300);
+	addProgressBar("progress", DATA(barM), INSTALL_FINISHED, -1, 250, 300);
 
 	addButton("cancel", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_CANCEL, "Cancel", -1, 290, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_CANCEL, OFSGui::preInstallLayout);
+	bindActivity(INSTALL_FINISHED, OFSGui::postInstall);
 
 }
 DEFINE_LAYOUT(SteamDirOption) {
@@ -56,4 +57,11 @@ DEFINE_LAYOUT(SteamDirOption) {
 	addDirButton("dirChooser", DATA(folder), BUT_CLICKED_UPDATE_DIR, 520, 280, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_MAIN, OFSGui::preInstallLayout);
+}
+DEFINE_LAYOUT(postInstall) {
+	clearLayout();
+	addImage("background", DATA(bg));
+	addText("message", FONTDATA(tf2build), "Install Complete!", 50, -1, 100);
+	addText("message", FONTDATA(SourceSansPro_Regular), "Please restart steam to see the game in your library.", 25, -1, 150);
+	addButton("launchGame", FONTDATA(tf2build), BUT_CLICKED_LAUNCH, "Launch", -1, 190, BIG_BOY_BUTTON);
 }

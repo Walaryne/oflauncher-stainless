@@ -16,7 +16,7 @@
 
 
 
-OFSGuiProgBar::OFSGuiProgBar(const std::string &name, resData data, SDL_Renderer *renderer, const int &x,
+OFSGuiProgBar::OFSGuiProgBar(const std::string &name, resData data, SDL_Renderer *renderer, GuiActs act, const int &x,
 							 const int &y, const int &width)
 	: OFSGuiImage(name, data, renderer, x, y, 0) {
 
@@ -39,6 +39,7 @@ OFSGuiProgBar::OFSGuiProgBar(const std::string &name, resData data, SDL_Renderer
 	_mnSize.y = y;
 
 	_progress = 0;
+	_act = act;
 }
 
 OFSGuiProgBar::~OFSGuiProgBar() {
@@ -66,8 +67,12 @@ void OFSGuiProgBar::renderCopy(SDL_Renderer *renderer) {
 
 GuiActs OFSGuiProgBar::parseEvents(std::shared_ptr<OFSGuiEvent> ev)
 {
+	GuiActs ret = NOT_CLICKED;
 	if(ev->eventType == EVENT_PROGBAR_UPDATE) {
-		_progress = _barWidth * *((float *)ev->data);
+		std::shared_ptr<float> progPercent = std::static_pointer_cast<float>(ev->data);
+		_progress = _barWidth * *progPercent;
+		if( *progPercent == 1.0f)
+			ret = _act;
 	}
-	return NOT_CLICKED;
+	return ret;
 }
