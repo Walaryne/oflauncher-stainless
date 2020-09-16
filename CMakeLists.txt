@@ -4,4 +4,3 @@ SET(EXECUTABLE_OUTPUT_PATH .)
 project(oflauncher_stainless)
 
 add_subdirectory(src/launcher)
-add_subdirectory(minlzma)

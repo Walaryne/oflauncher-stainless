@@ -60,6 +60,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 
 	if (!XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer, &outputSize))
 		throw std::runtime_error("Error decompressing file.");
+	//XzDecode(nullptr, 0, nullptr, nullptr);
 
 	std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
 	std::fflush(file);

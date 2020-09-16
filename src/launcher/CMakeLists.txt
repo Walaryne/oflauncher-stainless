@@ -46,34 +46,26 @@ set(SOURCES
         ../nativefiledialog/include/nfd_common.h
         ../nativefiledialog/include/nfd_common.c
         ../nativefiledialog/include/common.h
-        ../../minlzma/minlzlib/inputbuf.c
-        ../../minlzma/minlzlib/dictbuf.c
-        ../../minlzma/minlzlib/lzma2dec.c
-        ../../minlzma/minlzlib/lzmadec.c
-        ../../minlzma/minlzlib/rangedec.c
-        ../../minlzma/minlzlib/xzstream.c
-        ../../minlzma/minlzlib/lzmadec.h
-        ../../minlzma/minlzlib/xzstream.h
-        ../../minlzma/minlzlib/minlzlib.h
-        ../../minlzma/minlzma.h
         ../shared/util/openURL.h
         ../shared/config/OFSConfig.h
         ../shared/config/OFSConfig.cpp)
 
 set(SOURCES_LINUX
-        ../nativefiledialog/include/nfd_gtk.c ../shared/util/openURL-linux.cpp)
+        ../nativefiledialog/include/nfd_gtk.c
+        ../shared/util/openURL-linux.cpp)
 
 set(SOURCES_WIN32
-        ../nativefiledialog/include/nfd_win.cpp ../shared/util/openURL-win.cpp)
+        ../nativefiledialog/include/nfd_win.cpp
+        ../shared/util/openURL-win.cpp)
 
 if(UNIX)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-    list(APPEND SOURCES ${SOURCES_LINUX})
+    set(SOURCES ${SOURCES} ${SOURCES_LINUX})
 endif()
 
 if (WIN32)
-    list(APPEND SOURCES ${SOURCES_WIN32})
+    set(SOURCES ${SOURCES} ${SOURCES_WIN32})
 endif()
 
 if(INCLUDE_RESOURCES)
@@ -105,7 +97,9 @@ endif()
 find_package(CURL REQUIRED)
 find_package(SQLite3 REQUIRED)
 
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ../nativefiledialog/include ../../minlzma ../../minlzma/minlzlib)
+add_subdirectory(minlzma)
+
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ../nativefiledialog/include minlzma)
 
 ADD_DEFINITIONS(${GTK3_CFLAGS_OTHER})
 
@@ -114,14 +108,14 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 if(STATIC_LINK)
     if(USE_GUI)
         link_directories(${GTK_LIBRARY_DIRS})
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} ${GTK3_STATIC_LIBRARIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} ${GTK3_STATIC_LIBRARIES} minlzlib)
     else()
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} minlzlib)
     endif()
 else()
     if(USE_GUI)
         link_directories(${GTK_LIBRARY_DIRS})
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_LIBRARY} ${SDL2TTF_LIBRARY} ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} ${GTK3_LIBRARIES})
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2TTF_LIBRARY} ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} ${GTK3_LIBRARIES} minlzlib)
     else()
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} minlzlib)
     endif()

@@ -7,8 +7,10 @@
 
 #include <curl/curl.h>
 //#include <../../../minlzma/minlzma.h>
+extern "C" {
 #include <minlzma.h>
-#include <inttypes.h>
+}
+#include <stdint.h>
 #include <cstring>
 #include <string>
 #include <filesystem>
