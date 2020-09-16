@@ -6,7 +6,7 @@ option(INCLUDE_RESOURCES "Use the resource header files instead of loading direc
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(SOURCES_COMMON
+set(SOURCES
         main.cpp
         main.h
         gui/OFSGuiProgBar.cpp
@@ -47,7 +47,8 @@ set(SOURCES_COMMON
         ../nativefiledialog/include/nfd_common.c
         ../nativefiledialog/include/common.h
         ../shared/util/openURL.h
-        ../shared/config/OFSConfig.h ../shared/config/OFSConfig.cpp)
+        ../shared/config/OFSConfig.h
+        ../shared/config/OFSConfig.cpp)
 
 set(SOURCES_LINUX
         ../nativefiledialog/include/nfd_gtk.c ../shared/util/openURL-linux.cpp)
@@ -58,12 +59,11 @@ set(SOURCES_WIN32
 if(UNIX)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-    set(SOURCES
-            ${SOURCES_COMMON} ${SOURCES_LINUX})
+    list(APPEND SOURCES ${SOURCES_LINUX})
 endif()
 
 if (WIN32)
-    set(SOURCES ${SOURCES_COMMON} ${SOURCES_WIN32})
+    list(APPEND SOURCES ${SOURCES_WIN32})
 endif()
 
 if(INCLUDE_RESOURCES)
@@ -95,8 +95,7 @@ endif()
 find_package(CURL REQUIRED)
 find_package(SQLite3 REQUIRED)
 
-
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ../nativefiledialog/include)
+INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${SQLITE_INCLUDE_DIRS} ${GTK3_INCLUDE_DIRS} ../nativefiledialog/include ../../minlzma)
 
 ADD_DEFINITIONS(${GTK3_CFLAGS_OTHER})
 

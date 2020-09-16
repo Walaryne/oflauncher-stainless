@@ -54,6 +54,12 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	std::cout << "cURL return code: " << retcode << std::endl;
 
 	//insert all the other friggin code here for unlzma and checksumming
+	//uint8_t* inputBuffer = std::static_pointer_cast<uint8_t *>(membuf.memfile);
+	uint8_t* outputBuffer = nullptr;
+	uint32_t outputSize = 0;
+
+	if (!XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer, &outputSize))
+		throw std::runtime_error("Error decompressing file.");
 
 	std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
 	std::fflush(file);

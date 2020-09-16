@@ -10,6 +10,7 @@
 #include "gui/OFSGui.h"
 #include "net/OFSNet.h"
 #include "../shared/util/openURL.h"
+#include "../shared/config/OFSConfig.h"
 #include <exception>
 #include <filesystem>
 #include <iostream>

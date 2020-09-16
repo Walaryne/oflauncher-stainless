@@ -9,6 +9,9 @@ OFSConfig::OFSConfig() {
 	std::cout << "Config path dir: " << configFilePath << std::endl;
 }
 
+OFSConfig::~OFSConfig() {
+}
+
 /**
  * Loads the config file from disk
  * @return - succeeded
@@ -36,7 +39,7 @@ bool OFSConfig::loadFromDisk() {
 	} catch(std::exception &e) {
 		hdl.close();
 		std::cerr << e.what() << std::endl;
-		throw std::exception(
+		throw std::runtime_error(
 			"Failed to parse JSON config file, it may be corrupt.");
 	}
 
@@ -81,13 +84,18 @@ bool OFSConfig::exists(const char *path) {
  * @return - path of config file
  */
 std::filesystem::path OFSConfig::getConfigFilePath() {
+
+
+#if WIN32
 	char buffer[MAX_PATH];
 	size_t len;
-
 	errno_t error = getenv_s(&len, buffer, sizeof(buffer) - 1, ENV_DIR);
 	if(error != 0) {
 		throw std::exception("Failed to get env variable for config file path");
 	}
+#else
+	char * buffer = getenv(ENV_DIR);
+#endif
 
 	return buffer / std::filesystem::path(CONFIG_FILE_NAME);
 }
@@ -97,7 +105,7 @@ std::filesystem::path OFSConfig::getConfigFilePath() {
  */
 void OFSConfig::assertDocumentLoaded() const {
 	if(!documentLoaded) {
-		throw std::exception(
+		throw std::runtime_error(
 			"Config file operator called before the file was opened.");
 	}
 }

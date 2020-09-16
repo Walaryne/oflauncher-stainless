@@ -15,13 +15,18 @@
 #define DEFAULT_CONFIG_TEXT "{}"
 #define CONFIG_FILE_NAME ".oflauncher.config"
 
-#if __linux__
-#define ENV_DIR "HOME"
-#endif
-
 #if WIN32
 #include <windows.h>
 #define ENV_DIR "appdata"
+#else
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <exception>
+
+#define ENV_DIR "HOME"
+#define MAX_PATH PATH_MAX
 #endif
 
 #define OFLAUNCHER_STAINLESS_OFSCONFIG_H

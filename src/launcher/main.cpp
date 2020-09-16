@@ -82,6 +82,8 @@ int main(int argc, char *argv[]) {
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
 
 	OFSPathDiscover opd;
+	OFSConfig cf;
+	cf.loadFromDisk();
 
 	// if(runFromGame)
 	// g.simulateButton(BUT_CLICKED_INSTALL);
