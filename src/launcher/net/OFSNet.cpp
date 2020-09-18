@@ -30,7 +30,7 @@ void OFSNet::fetchDatabase() {
 	std::cout << "Database was fetched successfully!" << std::endl;
 }
 
-void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
+void OFSNet::downloadFile(const std::string &path, const fs::path& to, const bool &decompress) {
 	fs::path dir = to;
 	dir.remove_filename();
 	std::cout << "Dir is: " + dir.string() << std::endl;
@@ -58,14 +58,34 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	uint8_t* outputBuffer = nullptr;
 	uint32_t outputSize = 0;
 
-	if (!XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer, &outputSize))
-		throw std::runtime_error("Error decompressing file.");
+	if (decompress) {
+		bool success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
+								&outputSize);
+		outputBuffer = (uint8_t*)std::malloc(outputSize);
+		success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
+								&outputSize);
+		if(!success || !outputBuffer) {
+			std::fflush(file);
+			std::fclose(file);
+			std::free(membuf.memfile);
+			std::free(outputBuffer);
+
+			throw std::runtime_error("Error decompressing file.");
+		}
+		else {
+			std::fwrite(outputBuffer, sizeof(uint8_t), outputSize, file);
+		}
+	}
+	else
+		std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
 	//XzDecode(nullptr, 0, nullptr, nullptr);
 
-	std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
+
 	std::fflush(file);
 	std::fclose(file);
 	std::free(membuf.memfile);
+	if(decompress)
+		std::free(outputBuffer);
 }
 
 void OFSNet::convertURL(std::string &URL) {

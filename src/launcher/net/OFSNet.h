@@ -29,7 +29,7 @@ public:
 	std::string getFolderName();
 	void setFolderName(std::string name);
 	void fetchDatabase();
-	void downloadFile(const std::string &path, const fs::path& to);
+	void downloadFile(const std::string &path, const fs::path& to, const bool &decompress = false);
 
 
 private:

@@ -99,7 +99,7 @@ bool OFSDatabase::downloadSingleFile() {
 		std::string file = p_downloadQueue.front();
 		fs::path fileDownloading = (fs::current_path() / fs::path(file)).make_preferred();
 		std::cout << "Downloading file: " << fileDownloading << std::endl;
-		p_net->downloadFile("/" + file, fileDownloading);
+		p_net->downloadFile("/" + file, fileDownloading, true);
 		p_downloadQueue.pop_front();
 		return false;
 	} else {
