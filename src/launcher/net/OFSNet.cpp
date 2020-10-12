@@ -3,7 +3,7 @@
 //
 
 #include "OFSNet.h"
-
+#include <fstream>
 #include <utility>
 
 OFSNet::OFSNet(std::string serverURL, std::string gameFolderName) {
@@ -54,38 +54,32 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 	std::cout << "cURL return code: " << retcode << std::endl;
 
 	//insert all the other friggin code here for unlzma and checksumming
-	//uint8_t* inputBuffer = std::static_pointer_cast<uint8_t *>(membuf.memfile);
 	uint8_t* outputBuffer = nullptr;
-	uint32_t outputSize = 0;
+	size_t outputSize = 0;
 
 	if (decompress) {
-		bool success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
-								&outputSize);
-		outputBuffer = (uint8_t*)std::malloc(outputSize);
-		success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
-								&outputSize);
-		if(!success || !outputBuffer) {
-			std::fflush(file);
-			std::fclose(file);
-			std::free(membuf.memfile);
-			std::free(outputBuffer);
-
-			throw std::runtime_error("Error decompressing file.");
+		outputBuffer = OFLZMA::decompress((uint8_t *)membuf.memfile, membuf.size, &outputSize);
+		if(outputBuffer) {
+			std::fwrite(outputBuffer, 1, outputSize, file);
+			free(outputBuffer);
 		}
 		else {
-			std::fwrite(outputBuffer, sizeof(uint8_t), outputSize, file);
+			std::ofstream logFile;
+			logFile.open("launcherLog.txt", std::ofstream::out | std::ofstream::app);
+			logFile << to << std::endl;
+			logFile.close();
+			std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
 		}
 	}
-	else
+	else {
 		std::fwrite(membuf.memfile, sizeof(char), membuf.size, file);
-	//XzDecode(nullptr, 0, nullptr, nullptr);
+	}
 
 
 	std::fflush(file);
 	std::fclose(file);
 	std::free(membuf.memfile);
-	if(decompress)
-		std::free(outputBuffer);
+
 }
 
 void OFSNet::convertURL(std::string &URL) {

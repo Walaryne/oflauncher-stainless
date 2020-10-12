@@ -6,10 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSNET_H
 
 #include <curl/curl.h>
-//#include <../../../minlzma/minlzma.h>
-extern "C" {
-#include <minlzma.h>
-}
+#include "../lzma/OFLZMA.h"
 #include <stdint.h>
 #include <cstring>
 #include <string>
@@ -17,6 +14,7 @@ extern "C" {
 #include <cstdio>
 #include <utility>
 #include <iostream>
+#include <memory>
 
 namespace fs = std::filesystem;
 

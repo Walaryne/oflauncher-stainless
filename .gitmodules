@@ -1,3 +1,0 @@
-[submodule "src/launcher/minlzma"]
-	path = src/launcher/minlzma
-	url = https://github.com/Fenteale/minlzma.git
