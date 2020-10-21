@@ -5,7 +5,7 @@
 #ifndef OFLAUNCHER_STAINLESS_MAIN_H
 #define OFLAUNCHER_STAINLESS_MAIN_H
 
-#include "../shared/steam/OFSPathDiscover.h"
+#include "../shared/steam/OFSSteam.h"
 #include "db/OFSDatabase.h"
 #include "gui/OFSGui.h"
 #include "net/OFSNet.h"

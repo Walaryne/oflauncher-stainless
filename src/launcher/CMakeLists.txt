@@ -51,7 +51,7 @@ set(SOURCES
         ../shared/config/OFSConfig.cpp
         lzma/OFLZMA.cpp
         lzma/OFLZMA.h
-        )
+        ../shared/steam/OFSSteam.cpp ../shared/steam/OFSSteam.h ../shared/steam/OFSSteamApp.cpp ../shared/steam/OFSSteamApp.h)
 
 set(SOURCES_LINUX
         ../nativefiledialog/include/nfd_gtk.c

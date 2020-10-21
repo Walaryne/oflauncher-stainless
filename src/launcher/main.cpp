@@ -81,7 +81,8 @@ int main(int argc, char *argv[]) {
 
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
 
-	OFSPathDiscover opd;
+	//OFSPathDiscover opd;
+	OFSSteam steam;
 	OFSConfig cf;
 	cf.loadFromDisk();
 
@@ -91,8 +92,11 @@ int main(int argc, char *argv[]) {
 	std::string gameFolderName = "open_fortress";
 
 	TRYCATCHERR_START()
-	fs::path of = fs::path(opd.getSourcemodsPath() + "/" + gameFolderName)
+	fs::path of = fs::path(steam.getSourcemodsPath() / gameFolderName)
 					  .make_preferred();
+
+	std::cout << steam.getApp(440)->getName() << std::endl;
+	std::cout << steam.getApp(440)->getInstallPath() << std::endl;
 
 	if(!fs::exists(of)) {
 		fs::create_directories(of);
@@ -104,6 +108,7 @@ int main(int argc, char *argv[]) {
 	TRYCATCHERR_END("Could not find or set directory correctly.")
 
 	OFSNet net("http://svn.openfortress.fun/files", gameFolderName);
+	//OFSNet net("http://127.0.0.1/", gameFolderName);
 
 	// To Fenteale: This should be called the moment that the "Update"
 	// button is pressed.
