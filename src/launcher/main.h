@@ -8,6 +8,7 @@
 #include "../shared/steam/OFSSteam.h"
 #include "db/OFSDatabase.h"
 #include "gui/OFSGui.h"
+#include "gui/OFSGuiThread.h"
 #include "net/OFSNet.h"
 #include "../shared/util/openURL.h"
 #include "../shared/config/OFSConfig.h"

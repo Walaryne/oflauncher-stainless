@@ -20,46 +20,6 @@ void checkDirsExist() {
 	}
 }
 
-int doGui(void *ptr) {
-	TRYCATCHERR_START()
-	std::string autoDetectSteamPath = *((std::string *)ptr);
-	OFSGui g;
-	float prog;
-	while(g.loop()) {
-		//set progress
-		SDL_SemWait(progDataLock);
-		prog = progData;
-		SDL_SemPost(progDataLock);
-
-		g.sendEvent("progress", EVENT_PROGBAR_UPDATE, std::make_shared<float>(prog));
-
-		GuiActs a = g.getLastAct();
-		if(a) {
-			std::shared_ptr<void> data;
-			switch(a) {
-			case BUT_CLICKED_UPDATE_DIR:
-				data = g.getData("dirChooser", DATA_DIR);
-				if(data != nullptr)
-					g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, data);
-				break;
-			case BUT_CLICKED_OPTIONS:
-				g.sendEvent("steamPath", EVENT_DATA_TEXT_UPDATE, std::make_shared<std::string>(autoDetectSteamPath));
-				//no break here, we actually want it to also perform the default action
-			default:
-				SDL_SemWait(butDataLock);
-				butStateData = a;
-				SDL_SemPost(butDataLock);
-				break;
-			}
-		}
-	}
-	TRYCATCHERR_END("OFSGui")
-	SDL_SemWait(continueDataLock);
-	continueData = false;
-	SDL_SemPost(continueDataLock);
-	return 0;
-}
-
 int main(int argc, char *argv[]) {
 	bool runFromGame = false;
 	for(int i = 0; i < argc; i++)
@@ -77,14 +37,29 @@ int main(int argc, char *argv[]) {
 	//This string should be set to the steam path that will be displayed in the
 	//options menu!  We gotta make a specific function to get this path to set
 	//it here.
-	std::string steamPath = "/home/fenteale/.steam";
+	std::string steamPath;
 
-	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
+
 
 	//OFSPathDiscover opd;
-	OFSSteam steam;
+	OFSSteam* steam = nullptr;
 	OFSConfig cf;
+	TRYCATCHERR_START()
 	cf.loadFromDisk();
+	if(!cf.exists("/steamPath"))	{
+		steam = new OFSSteam();
+		steamPath = steam->getSteamPath();
+		cf.writeValue("/steamPath", steamPath);
+		cf.commitToDisk();
+	}
+	else {
+		cf.readValue("/steamPath", steamPath);
+		steam = new OFSSteam(steamPath);
+	}
+
+	TRYCATCHERR_END("Can't load config file.")
+
+	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
 
 	// if(runFromGame)
 	// g.simulateButton(BUT_CLICKED_INSTALL);
@@ -92,11 +67,11 @@ int main(int argc, char *argv[]) {
 	std::string gameFolderName = "open_fortress";
 
 	TRYCATCHERR_START()
-	fs::path of = fs::path(steam.getSourcemodsPath() / gameFolderName)
+	fs::path of = fs::path(steam->getSourcemodsPath() / gameFolderName)
 					  .make_preferred();
 
-	std::cout << steam.getApp(440)->getName() << std::endl;
-	std::cout << steam.getApp(440)->getInstallPath() << std::endl;
+	//std::cout << steam.getApp(440)->getName() << std::endl;
+	//std::cout << steam.getApp(440)->getInstallPath() << std::endl;
 
 	if(!fs::exists(of)) {
 		fs::create_directories(of);

@@ -49,12 +49,14 @@ DEFINE_LAYOUT(SteamDirOption) {
 	addImage("background", DATA(bg));
 
 	addText("message", FONTDATA(tf2build), "Options", 42, -1, 100);
-	addText("message", FONTDATA(SourceSansPro_Regular), "Steam Directory:", 25, 100, 260);
-	addTextEntry("steamPath", FONTDATA(SourceSansPro_Regular), "Edit me", 100, 300, 400);
+	addText("message", FONTDATA(SourceSansPro_Regular), "Steam Directory:", 25, 100, 200);
+	addTextEntry("steamPath", FONTDATA(SourceSansPro_Regular), "Edit me", 100, 240, 400);
+	addButton("redogaminfo", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_UPDATEGAMEINFO, "Regenerate gameinfo.txt", 100, 290, SMALL_BUTTON);
 
-	addButton("accept", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Accept", 50, 450, SMALL_BUTTON);
+	addButton("back", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Back", 50, 450, SMALL_BUTTON);
+	addButton("saveop", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_SAVEOP, "Save Settings", 150, 450, SMALL_BUTTON);
 
-	addDirButton("dirChooser", DATA(folder), BUT_CLICKED_UPDATE_DIR, 520, 280, SMALL_BUTTON);
+	addDirButton("dirChooser", DATA(folder), BUT_CLICKED_UPDATE_DIR, 520, 220, SMALL_BUTTON);
 
 	bindActivity(BUT_CLICKED_MAIN, OFSGui::preInstallLayout);
 }
