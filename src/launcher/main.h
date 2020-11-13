@@ -12,6 +12,7 @@
 #include "net/OFSNet.h"
 #include "../shared/util/openURL.h"
 #include "../shared/config/OFSConfig.h"
+#include "gameinfo/OFSGameInfo.h"
 #include <exception>
 #include <filesystem>
 #include <iostream>

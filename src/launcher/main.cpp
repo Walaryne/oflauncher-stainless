@@ -59,6 +59,58 @@ int main(int argc, char *argv[]) {
 
 	TRYCATCHERR_END("Can't load config file.")
 
+	TRYCATCHERR_START()
+	if(!steam->getApp(440))
+	{
+		SDL_MessageBoxButtonData buttons[] = {
+			{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
+			{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}
+		};
+
+		SDL_MessageBoxData askTF2 = {
+			SDL_MESSAGEBOX_WARNING,
+			nullptr,
+			"Did not detect TF2",
+			"Team Fortress 2 must be installed before you are\n"
+			"able to run Open Fortress.\n\n"
+			"Install now?",
+			SDL_arraysize(buttons),
+			buttons,
+			nullptr
+		};
+		int buttonid;
+		if(SDL_ShowMessageBox(&askTF2, &buttonid) < 0)
+			throw;
+		if(buttonid == 0)
+			openURL("steam://install/440");
+	}
+	if(!steam->getApp(243750))
+	{
+		SDL_MessageBoxButtonData buttons[] = {
+			{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
+			{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}
+		};
+
+		SDL_MessageBoxData askSDK = {
+			SDL_MESSAGEBOX_WARNING,
+			nullptr,
+			"Did not detect Source SDK Base",
+			"Source SDK Base 2013 Multiplayer must be\n"
+			"installed before you are able to run Open Fortress.\n\n"
+			"Install now?",
+			SDL_arraysize(buttons),
+			buttons,
+			nullptr
+		};
+		int buttonid;
+		if(SDL_ShowMessageBox(&askSDK, &buttonid) < 0)
+			throw;
+		if(buttonid == 0)
+			openURL("steam://install/243750");
+	}
+
+	TRYCATCHERR_END("Couldn't display prompt messages.")
+
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
 
 	// if(runFromGame)
@@ -132,6 +184,9 @@ int main(int argc, char *argv[]) {
 				break;
 			case BUT_CLICKED_LAUNCH:
 				openURL("steam://run/243750");
+				break;
+			case BUT_CLICKED_UPDATEGAMEINFO:
+				writeGameInfo(fs::current_path(), steam);
 				break;
 			}
 		}
