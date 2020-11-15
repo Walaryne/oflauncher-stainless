@@ -9,6 +9,7 @@
 #define ERRCHECK {if (err!=NULL) {std::cerr << err << std::endl; sqlite3_free(err);}}
 
 #include "../net/OFSNet.h"
+#include "../MD5/OFSVerifyIntegrity.h"
 #include <deque>
 #include <filesystem>
 #include <sqlite3.h>
@@ -22,7 +23,7 @@ public:
 	explicit OFSDatabase(OFSNet *net);
 	OFSDatabase() =delete;
 	void compareRevisions();
-	void compareIntegrity();
+	bool compareIntegrity();
 	bool downloadSingleFile();
 	int getQueueSize();
 	void copyDb();

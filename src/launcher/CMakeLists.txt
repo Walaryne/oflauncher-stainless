@@ -51,7 +51,7 @@ set(SOURCES
         ../shared/config/OFSConfig.cpp
         lzma/OFLZMA.cpp
         lzma/OFLZMA.h
-        ../shared/steam/OFSSteam.cpp ../shared/steam/OFSSteam.h ../shared/steam/OFSSteamApp.cpp ../shared/steam/OFSSteamApp.h gui/OFSGuiThread.cpp gui/OFSGuiThread.h gameinfo/OFSGameInfo.cpp gameinfo/OFSGameInfo.h)
+        ../shared/steam/OFSSteam.cpp ../shared/steam/OFSSteam.h ../shared/steam/OFSSteamApp.cpp ../shared/steam/OFSSteamApp.h gui/OFSGuiThread.cpp gui/OFSGuiThread.h gameinfo/OFSGameInfo.cpp gameinfo/OFSGameInfo.h MD5/OFSVerifyIntegrity.cpp MD5/OFSVerifyIntegrity.h)
 
 set(SOURCES_LINUX
         ../nativefiledialog/include/nfd_gtk.c
@@ -105,12 +105,14 @@ INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR} ${CURL_INCLUDE_D
 
 ADD_DEFINITIONS(${GTK3_CFLAGS_OTHER})
 
+add_subdirectory(hashlib2plus)
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 if(STATIC_LINK)
     link_directories(${GTK_LIBRARY_DIRS})
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} ${GTK3_STATIC_LIBRARIES} ${LIBLZMA_LIBRARIES})
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${SDL2_STATIC_LIBRARIES} ${SDL2_TTF_STATIC_LIBRARIES} ${CURL_STATIC_LIBRARIES} ${SQLITE_STATIC_LIBRARIES} ${GTK3_STATIC_LIBRARIES} ${LIBLZMA_LIBRARIES} hashlib2plus)
 else()
     link_directories(${GTK_LIBRARY_DIRS})
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2TTF_LIBRARY} ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} ${GTK3_LIBRARIES} ${LIBLZMA_LIBRARIES})
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC ${SDL2_LIBRARY} ${SDL2TTF_LIBRARY} ${CURL_LIBRARIES} ${SQLite3_LIBRARIES} ${GTK3_LIBRARIES} ${LIBLZMA_LIBRARIES} hashlib2plus)
 endif()

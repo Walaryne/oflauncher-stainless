@@ -91,7 +91,42 @@ void OFSDatabase::compareRevisions() {
 	}
 }
 
-void OFSDatabase::compareIntegrity() {
+bool OFSDatabase::compareIntegrity() {
+	if(!p_dbFileLocal)
+		return false;
+		//throw std::runtime_error("Please generate local DB before trying to compare integrity!!");
+
+	bool ret = true;
+	std::vector<std::basic_string<char>> remoteCS;
+	char *err = nullptr;
+	std::vector<std::basic_string<char>> localFiles;
+	int rc = sqlite3_exec(p_dbFileLocal, "select path from files;",
+						  OFSDatabase::databasePathConsumer, &localFiles, &err);
+
+	if(rc != SQLITE_OK) {
+		ERRCHECK
+		throw std::runtime_error("SQLite statement didn't execute!");
+	}
+
+	for(auto &lf : localFiles)
+	{
+		std::basic_string<char> cs = "";
+		std::string cmd = "select checksum from files where path=\""+lf+"\";";
+		rc = sqlite3_exec(p_dbFileLocal, cmd.c_str(),
+						  OFSDatabase::databaseSingleResultConsumer, &cs, &err);
+
+		if(rc != SQLITE_OK) {
+			ERRCHECK
+			throw std::runtime_error("SQLite statement didn't execute!");
+		}
+		if(!verifyIntegrity(fs::path(lf), cs)) {
+			std::cout << lf << " IS BAD BAD BAD!!!!!" << std::endl;
+			ret = false;
+			break;
+		}
+	}
+
+	return ret;
 }
 
 bool OFSDatabase::downloadSingleFile() {
@@ -127,6 +162,7 @@ void OFSDatabase::copyDb() {
 	}
 
 	fs::copy(p_remoteDBPath, p_localDBPath);
+	sqlite3_open(p_localDBPath.make_preferred().string().c_str(), &p_dbFileLocal);
 }
 
 int OFSDatabase::getQueueSize() {

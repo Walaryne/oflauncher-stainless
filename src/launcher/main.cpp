@@ -178,6 +178,7 @@ int main(int argc, char *argv[]) {
                     SDL_SemWait(progDataLock);
                     progData = 1.0f;
                     SDL_SemPost(progDataLock);
+					std::cout << db.compareIntegrity() << std::endl;
 				}
 
 				TRYCATCHERR_END("Failed to update game")
