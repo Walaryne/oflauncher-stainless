@@ -91,16 +91,21 @@ void OFSDatabase::compareRevisions() {
 	}
 }
 
-bool OFSDatabase::compareIntegrity() {
+int OFSDatabase::compareIntegrity() {
 	if(!p_dbFileLocal)
-		return false;
+		return -1;
 		//throw std::runtime_error("Please generate local DB before trying to compare integrity!!");
+	p_net->fetchDatabase();
+	int rc = sqlite3_open(p_remoteDBPath.make_preferred().string().c_str(), &p_dbFileRemote);
+	if(rc != SQLITE_OK) {
+		throw std::runtime_error("SQLite database didn't open!");
+	}
 
-	bool ret = true;
+	int ret = 0;
 	std::vector<std::basic_string<char>> remoteCS;
 	char *err = nullptr;
 	std::vector<std::basic_string<char>> localFiles;
-	int rc = sqlite3_exec(p_dbFileLocal, "select path from files;",
+	rc = sqlite3_exec(p_dbFileLocal, "select path from files;",
 						  OFSDatabase::databasePathConsumer, &localFiles, &err);
 
 	if(rc != SQLITE_OK) {
@@ -120,9 +125,15 @@ bool OFSDatabase::compareIntegrity() {
 			throw std::runtime_error("SQLite statement didn't execute!");
 		}
 		if(!verifyIntegrity(fs::path(lf), cs)) {
-			std::cout << lf << " IS BAD BAD BAD!!!!!" << std::endl;
-			ret = false;
-			break;
+			std::cout << lf << " IS BAD!!!!" << std::endl;
+			cmd = "update files set revision=-1 where path=\""+lf+"\";";
+			rc = sqlite3_exec(p_dbFileLocal, cmd.c_str(),
+							  nullptr, nullptr, &err);
+			if(rc != SQLITE_OK) {
+				ERRCHECK
+				throw std::runtime_error("SQLite statement didn't execute!");
+			}
+			ret++;
 		}
 	}
 

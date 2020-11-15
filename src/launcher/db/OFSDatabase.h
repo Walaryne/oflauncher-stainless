@@ -23,7 +23,7 @@ public:
 	explicit OFSDatabase(OFSNet *net);
 	OFSDatabase() =delete;
 	void compareRevisions();
-	bool compareIntegrity();
+	int compareIntegrity();
 	bool downloadSingleFile();
 	int getQueueSize();
 	void copyDb();

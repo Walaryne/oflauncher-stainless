@@ -178,7 +178,7 @@ int main(int argc, char *argv[]) {
                     SDL_SemWait(progDataLock);
                     progData = 1.0f;
                     SDL_SemPost(progDataLock);
-					std::cout << db.compareIntegrity() << std::endl;
+					//std::cout << db.compareIntegrity() << std::endl;
 				}
 
 				TRYCATCHERR_END("Failed to update game")
@@ -188,6 +188,10 @@ int main(int argc, char *argv[]) {
 				break;
 			case BUT_CLICKED_UPDATEGAMEINFO:
 				writeGameInfo(fs::current_path(), steam);
+				break;
+			case BUT_CLICKED_VERIFYINTEGRITY:
+				std::cout << "Verifying integrity..."  << std::endl;
+				std::cout << db.compareIntegrity() << std::endl;
 				break;
 			}
 		}

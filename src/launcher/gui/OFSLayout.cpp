@@ -51,7 +51,8 @@ DEFINE_LAYOUT(SteamDirOption) {
 	addText("message", FONTDATA(tf2build), "Options", 42, -1, 100);
 	addText("message", FONTDATA(SourceSansPro_Regular), "Steam Directory:", 25, 100, 200);
 	addTextEntry("steamPath", FONTDATA(SourceSansPro_Regular), "Edit me", 100, 240, 400);
-	addButton("redogaminfo", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_UPDATEGAMEINFO, "Regenerate gameinfo.txt", 100, 290, SMALL_BUTTON);
+	addButton("redogaminfo", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_UPDATEGAMEINFO, "Regenerate gameinfo.txt", 100, 310, SMALL_BUTTON);
+	addButton("verify", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_VERIFYINTEGRITY, "Verify integrity of game files", 400, 310, SMALL_BUTTON);
 
 	addButton("back", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_MAIN, "Back", 50, 450, SMALL_BUTTON);
 	addButton("saveop", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_SAVEOP, "Save Settings", 150, 450, SMALL_BUTTON);
