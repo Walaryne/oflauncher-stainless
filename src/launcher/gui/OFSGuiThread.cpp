@@ -37,10 +37,10 @@ int doGui(void *ptr) {
 				//no break here, we actually want it to also perform the default action
 				break;
 			case BUT_CLICKED_SAVEOP:
-				std::shared_ptr<std::string> spT = std::static_pointer_cast<std::string>(g.getData("steamPath", DATA_TEXT));
-				std::cout << *spT << std::endl;
-				cf.writeValue("/steamPath", *spT);
+				cf.writeValue("/steamPath", *std::static_pointer_cast<std::string>(g.getData("steamPath", DATA_TEXT)));
 				cf.commitToDisk();
+				break;
+			default:
 				break;
 			}
 			if(updateState)	{
