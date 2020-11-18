@@ -7,10 +7,19 @@
 
 int doGui(void *ptr) {
 	TRYCATCHERR_START()
+	OFSUserSettings us(*((std::string*)(ptr)));
+	//us.setLaunchOpt(us.getUsers()[0], "-secure -steam");
+	std::vector<OFSSteamUser> sU;
+	sU = us.getUsers();
+
 	std::string sp;
 	OFSConfig cf;
 	cf.loadFromDisk();
 	OFSGui g;
+	std::vector<std::string> userString;
+	for(auto &u : sU)
+		userString.push_back(u.name);
+	g.setUsers(userString);
 	float prog;
 	while(g.loop()) {
 		//set progress
@@ -40,6 +49,18 @@ int doGui(void *ptr) {
 				cf.writeValue("/steamPath", *std::static_pointer_cast<std::string>(g.getData("steamPath", DATA_TEXT)));
 				cf.commitToDisk();
 				break;
+			case BUT_CLICKED_STEAMUSER:
+				std::cout << g.getUser() << std::endl;
+				for(auto &u : sU)
+					if(u.name == g.getUser())
+						us.setLaunchOpt(u, "-secure -steam");
+				break;
+			case INSTALL_FINISHED:
+#ifdef __LINUX__
+				if(firstTime)
+					g.simulateButton(BUT_CLICKED_SHOW_STEAMUSER);
+#endif
+				break;
 			default:
 				break;
 			}
@@ -48,6 +69,13 @@ int doGui(void *ptr) {
 				butStateData = a;
 				SDL_SemPost(butDataLock);
 			}
+		}
+		if(verifyState>=0) {
+			g.verified = verifyState;
+			g.simulateButton(BUT_CLICKED_OPTIONS);
+			SDL_SemWait(verifyStateLock);
+			verifyState = -2;
+			SDL_SemPost(verifyStateLock);
 		}
 	}
 	TRYCATCHERR_END("OFSGui")

@@ -122,8 +122,11 @@ bool OFSGui::loop() {  //the main loop thats called once every frame
 	{
 		for(auto &ev : _evs) {
 			GuiActs a = i->parseEvents(ev);
-			if(a != NOT_CLICKED)
+			if(a != NOT_CLICKED) {
+				if(a==BUT_CLICKED_STEAMUSER)
+					_selectedUser=i->getName();
 				actStack.push_back(a);
+			}
 		}
 	}
 
@@ -147,6 +150,8 @@ bool OFSGui::loop() {  //the main loop thats called once every frame
 	return !_quit;
 }
 
+void OFSGui::quit() { _quit = true; }
+
 //Functions for layout creation
 void OFSGui::addImage(const std::string &name, resData data, const int &x, const int &y,
 					  const int &NumOfSubImages) {
@@ -157,6 +162,15 @@ void OFSGui::addButton(const std::string &name, resData fontData, GuiActs actToL
 					   const int &y = 0, const ButtonTypes& bType = DEFAULT_BUTTON) {
 	_imgs.push_back(std::make_unique<OFSGuiButton>(name, fontData, _renderer, actToLink,
 												   x, y, text, bType));
+}
+
+void OFSGui::addButtonArray(resData fontData, GuiActs actToLink, const int &x,
+						 const int &y, const ButtonTypes& bType) {
+	int currY = y;
+	for(auto &n : _usersString)	{
+		addButton(n, fontData, actToLink, n, x,	currY, bType);
+		currY += 80;
+	}
 }
 
 void OFSGui::addImgButton(const std::string &name, resData imgData, GuiActs actToLink, const int &x = 0, const int &y = 0, const ButtonTypes& bType = DEFAULT_BUTTON) {

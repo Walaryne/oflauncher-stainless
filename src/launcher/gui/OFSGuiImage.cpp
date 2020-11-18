@@ -78,6 +78,10 @@ OFSGuiImage::~OFSGuiImage() {
 	SDL_DestroyTexture(_texture);
 }
 
+std::string OFSGuiImage::getName() {
+	return _name;
+}
+
 void OFSGuiImage::setIndex(const int &i) {
 	if(i >= 0 && i <= _subImages)
 		_src.y = _size.h * i;

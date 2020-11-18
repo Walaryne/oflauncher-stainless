@@ -9,13 +9,17 @@
 #include <exception>
 #include "OFSGui.h"
 #include "../../shared/config/OFSConfig.h"
+#include "../launchopt/OFSLaunchOpt.h"
 
 extern SDL_sem * butDataLock;
 extern SDL_sem * continueDataLock;
+extern SDL_sem * verifyStateLock;
 
 extern int butStateData;
 extern float progData;
 extern bool continueData;
+extern bool firstTime;
+extern int verifyState;
 
 #define TRYCATCHERR_START() try {
 

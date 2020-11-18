@@ -16,6 +16,7 @@ set(OFS_LIBRARIES
         OFSLZMA
         OFSGameInfo
         OFSMD5
+        OFSLaunchOpt
         OFSConfig
         OFSSteam
         OFSUtil
@@ -37,6 +38,7 @@ add_subdirectory(nativefiledialog)
 add_subdirectory(lzma)
 add_subdirectory(gameinfo)
 add_subdirectory(MD5)
+add_subdirectory(launchopt)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

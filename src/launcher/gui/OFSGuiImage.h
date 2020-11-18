@@ -43,6 +43,7 @@ public:
 	OFSGuiImage(const std::string &name, resData data, SDL_Renderer *renderer, const int &x,
 				const int &y, const int &NumOfSubImages);
 	~OFSGuiImage();
+	virtual std::string getName();
 	SDL_Texture *getTexture();
 	virtual void renderCopy(SDL_Renderer *renderer);
 

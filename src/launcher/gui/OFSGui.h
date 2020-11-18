@@ -51,6 +51,11 @@ private:
 	GuiActs _currAct;
 	std::unordered_map<int, GuiButtonMethod> _bindMeths;
 
+	//maybe could do this better in the future:
+	std::vector<std::string> _usersString;
+	std::string _selectedUser;
+
+
 #ifndef INCLUDE_RESOURCES
 	fs::path _orig_path;
 	fs::path _new_path;
@@ -63,6 +68,8 @@ private:
 				  const int &NumOfSubImages = 0);
 	void addButton(const std::string &name, resData fontData, GuiActs actToLink, const std::string& text, const int &x,
 				   const int &y, const ButtonTypes& bType);
+	void addButtonArray(resData fontData, GuiActs actToLink, const int &x,
+						const int &y, const ButtonTypes& bType);
 	void addImgButton(const std::string &name, resData imgData, GuiActs actToLink, const int &x, const int &y, const ButtonTypes& bType);
 	void addDirButton(const std::string &name, resData fontData, GuiActs actToLink, const int &x,
 					  const int &y, const ButtonTypes& bType);
@@ -84,6 +91,10 @@ private:
 	DEFINE_LAYOUT_H(installLayout);
 	DEFINE_LAYOUT_H(SteamDirOption);
 	DEFINE_LAYOUT_H(postInstall);
+	DEFINE_LAYOUT_H(selectUser);
+	DEFINE_LAYOUT_H(verifyFiles);
+	DEFINE_LAYOUT_H(postVerifyFiles);
+	DEFINE_LAYOUT_H(quitLayout);
 
 public:
 	OFSGui();
@@ -98,7 +109,15 @@ public:
 	void sendEvent(std::string name, GuiEvents event, std::shared_ptr<void> data);
     std::shared_ptr<void> getData(const std::string &name, GuiActs event);
 
+	void setUsers(std::vector<std::string> users) {_usersString = users; }
+	std::string getUser() {return _selectedUser;}
+
 	bool loop();
+
+	void quit();
+
+	//WARNING WARNING: LAZY!!!
+	int verified;
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUI_H

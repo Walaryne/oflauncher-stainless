@@ -4,9 +4,13 @@
 SDL_sem *butDataLock = nullptr;
 SDL_sem *progDataLock = nullptr;
 SDL_sem *continueDataLock = nullptr;
+SDL_sem *verifyStateLock = nullptr;
 int butStateData = 0;
 float progData = 0;
 bool continueData = true;
+bool firstTime = false;
+int verifyState = -2;
+
 
 void checkDirsExist() {
 	fs::path remote = fs::path("launcher/remote").make_preferred();
@@ -33,6 +37,7 @@ int main(int argc, char *argv[]) {
 	butDataLock = SDL_CreateSemaphore(2);
 	progDataLock = SDL_CreateSemaphore(2);
 	continueDataLock = SDL_CreateSemaphore( 2);
+	verifyStateLock = SDL_CreateSemaphore(2);
 
 	//This string should be set to the steam path that will be displayed in the
 	//options menu!  We gotta make a specific function to get this path to set
@@ -111,12 +116,15 @@ int main(int argc, char *argv[]) {
 
 	TRYCATCHERR_END("Couldn't display prompt messages.")
 
+
+
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
 
 	// if(runFromGame)
 	// g.simulateButton(BUT_CLICKED_INSTALL);
 
 	std::string gameFolderName = "open_fortress";
+
 
 	TRYCATCHERR_START()
 	fs::path of = fs::path(steam->getSourcemodsPath() / gameFolderName)
@@ -126,6 +134,7 @@ int main(int argc, char *argv[]) {
 	//std::cout << steam.getApp(440)->getInstallPath() << std::endl;
 
 	if(!fs::exists(of)) {
+		firstTime=true;
 		fs::create_directories(of);
 	}
 
@@ -146,6 +155,8 @@ int main(int argc, char *argv[]) {
 	// To Fenteale: Later on you'll have direct access to two automated
 	// functions. These will be updateGame and verifyIntegrity respectively.
 	// I'll try to add some callbacks and stuff so you can use progress bars!
+
+
 
 	// gui is setup.  run all installer stuff
 	bool c = true;
@@ -178,7 +189,13 @@ int main(int argc, char *argv[]) {
                     SDL_SemWait(progDataLock);
                     progData = 1.0f;
                     SDL_SemPost(progDataLock);
-					//std::cout << db.compareIntegrity() << std::endl;
+					if(firstTime)
+					{
+						writeGameInfo(fs::current_path(), steam);
+#ifdef __LINUX__
+						//put code to write launch options here
+#endif
+					}
 				}
 
 				TRYCATCHERR_END("Failed to update game")
@@ -190,8 +207,15 @@ int main(int argc, char *argv[]) {
 				writeGameInfo(fs::current_path(), steam);
 				break;
 			case BUT_CLICKED_VERIFYINTEGRITY:
-				std::cout << "Verifying integrity..."  << std::endl;
-				std::cout << db.compareIntegrity() << std::endl;
+				SDL_SemWait(verifyStateLock);
+				verifyState = -1;
+				SDL_SemPost(verifyStateLock);
+				std::cout << "Verifying integrity..." << std::endl;
+				int vi = db.compareIntegrity();
+				std::cout << vi << std::endl;
+				SDL_SemWait(verifyStateLock);
+				verifyState = vi;
+				SDL_SemPost(verifyStateLock);
 				break;
 			}
 		}
