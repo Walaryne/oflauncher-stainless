@@ -159,27 +159,27 @@ void OFSGui::addImage(const std::string &name, resData data, const int &x, const
 		std::make_unique<OFSGuiImage>(name, data, _renderer, x, y, NumOfSubImages));
 }
 void OFSGui::addButton(const std::string &name, resData fontData, GuiActs actToLink, const std::string& text, const int &x = 0,
-					   const int &y = 0, const ButtonTypes& bType = DEFAULT_BUTTON) {
+					   const int &y = 0, const int textSize = 30) {
 	_imgs.push_back(std::make_unique<OFSGuiButton>(name, fontData, _renderer, actToLink,
-												   x, y, text, bType));
+												   x, y, text, textSize));
 }
 
 void OFSGui::addButtonArray(resData fontData, GuiActs actToLink, const int &x,
-						 const int &y, const ButtonTypes& bType) {
+						 const int &y, const int textSize = 30) {
 	int currY = y;
 	for(auto &n : _usersString)	{
-		addButton(n, fontData, actToLink, n, x,	currY, bType);
-		currY += 80;
+		addButton(n, fontData, actToLink, n, x,	currY, textSize);
+		currY += 30;
 	}
 }
 
-void OFSGui::addImgButton(const std::string &name, resData imgData, GuiActs actToLink, const int &x = 0, const int &y = 0, const ButtonTypes& bType = DEFAULT_BUTTON) {
-	_imgs.push_back(std::make_unique<OFSGuiButton>(name, imgData, _renderer, actToLink,
+void OFSGui::addImgButton(const std::string &name, resData imgData, resData imgDataSel, GuiActs actToLink, const int &x = 0, const int &y = 0, const ButtonTypes& bType = DEFAULT_BUTTON) {
+	_imgs.push_back(std::make_unique<OFSGuiButton>(name, imgData, imgDataSel, _renderer, actToLink,
 												   x, y, bType));
 }
 
-void OFSGui::addDirButton(const std::string &name, const EmbedData fontData, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &bType) {
-	_imgs.push_back(std::make_unique<OFSGuiDirButton>(name, fontData, _renderer, actToLink, x, y, bType));
+void OFSGui::addDirButton(const std::string &name, const EmbedData fontData, const EmbedData imgDataSel, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &bType) {
+	_imgs.push_back(std::make_unique<OFSGuiDirButton>(name, fontData, imgDataSel, _renderer, actToLink, x, y, bType));
 }
 
 void OFSGui::addText(const std::string &name, resData fontData, const std::string &text, const int &text_size,

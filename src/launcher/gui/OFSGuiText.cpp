@@ -32,7 +32,7 @@ OFSGuiText::OFSGuiText(const std::string &name, resData fontData, SDL_Renderer *
 	}
 	else {
 		if(white) {
-			fontcolor = {255, 255, 255, 255};
+			fontcolor = {0xe0, 0x96, 0xff, 255};
 			backDrop = TTF_RenderText_Blended(_fontData, text.c_str(), {0, 0, 0, 250});
 			backSize.x = DROP_SHADOW_DISTANCE;
 			backSize.y = DROP_SHADOW_DISTANCE;
@@ -43,6 +43,7 @@ OFSGuiText::OFSGuiText(const std::string &name, resData fontData, SDL_Renderer *
 			fontcolor = {0, 0, 0, 255};
 
 		SDL_Surface *textureSurface = nullptr;
+		/*
 		if(backDrop != nullptr) {
 			SDL_Surface * tSurface = TTF_RenderText_Blended(_fontData, text.c_str(), fontcolor);
 			if(tSurface == nullptr)
@@ -53,11 +54,12 @@ OFSGuiText::OFSGuiText(const std::string &name, resData fontData, SDL_Renderer *
 			SDL_FreeSurface(tSurface);
 		}
 		else {
+		 */
 			textureSurface =
 				TTF_RenderText_Blended(_fontData, text.c_str(), fontcolor);
 			if(textureSurface == nullptr)
 				throw SDLTTFException("OFSGuiText");
-		}
+		//}
 		_texture = SDL_CreateTextureFromSurface(renderer, textureSurface);
 		if(_texture == nullptr)
 			throw SDLException("OFSGuiText");

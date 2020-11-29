@@ -4,8 +4,8 @@
 
 #include "OFSGuiDirButton.h"
 
-OFSGuiDirButton::OFSGuiDirButton(const std::string &name, const EmbedData imgData, SDL_Renderer *renderer, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &buttonType) :
- OFSGuiButton(name, imgData, renderer, actToLink, x, y, buttonType){
+OFSGuiDirButton::OFSGuiDirButton(const std::string &name, const EmbedData imgData, const EmbedData imgDataSel, SDL_Renderer *renderer, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &buttonType) :
+ OFSGuiButton(name, imgData, imgDataSel, renderer, actToLink, x, y, buttonType){
 
 }
 

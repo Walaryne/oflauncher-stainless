@@ -12,7 +12,7 @@ OFSGuiTextEntry::OFSGuiTextEntry(const std::string &name, resData fontData, SDL_
 
 	SDL_Surface *textureSurface = SDL_CreateRGBSurfaceWithFormat(0, width, 25, 32, SDL_PIXELFORMAT_RGBA32);
 	SDL_FillRect(textureSurface, nullptr,
-				 SDL_MapRGB(textureSurface->format, 0xFF, 0xFF, 0xFF));
+				 SDL_MapRGB(textureSurface->format, 0x11, 0x0c, 0x19));
 	if(textureSurface == nullptr)
 		throw SDLException("OFSGuiTextEntry");
 
@@ -24,11 +24,11 @@ OFSGuiTextEntry::OFSGuiTextEntry(const std::string &name, resData fontData, SDL_
 	_backSize.h = h;
 	_backSize.w = w;
 	_backSize.x = x;
-	_backSize.y = y;
+	_backSize.y = y+3;
 
 	textureSurface = SDL_CreateRGBSurfaceWithFormat(0, 2, 18, 32, SDL_PIXELFORMAT_RGBA32);
 	SDL_FillRect(textureSurface, nullptr,
-				 SDL_MapRGB(textureSurface->format, 0, 0, 0));
+				 SDL_MapRGB(textureSurface->format, 0xe0, 0x96, 0xff));
 	_cursor = SDL_CreateTextureFromSurface(renderer, textureSurface);
 	if(!_cursor)
 		throw SDLException("OFSGuiTextEntry");
@@ -55,7 +55,7 @@ void OFSGuiTextEntry::_updateText() {
 		if(_fontData == nullptr)
 			throw SDLTTFException("OFSGuiTextEntry");
 
-		SDL_Color fontcolor = {0, 0, 0, 255};
+		SDL_Color fontcolor = {0xe0, 0x96, 0xff, 255};
 
 		_subImages = 0;
 		int w, h;

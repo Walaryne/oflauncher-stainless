@@ -20,61 +20,14 @@
 
 //###### OFSGuiButton ###########
 OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Renderer *renderer, GuiActs actToLink,
-						   const int &x, const int &y, const std::string &text, const ButtonTypes& buttonType)
+						   const int &x, const int &y, const std::string &text, const int fontSize)
 	: OFSGuiImage() {
 	bool white, crop, shadow;
-	int textSize;
 	int textTopOffset = 0; // the bigger the button, the more space it looks like there is empty on the bottom.
-#ifdef INCLUDE_RESOURCES
-	resData *spriteMapData_d;
-	resData *spriteMapData_h;
-	resData *spriteMapData_c;
-#else
-	std::string spriteMapData_d;
-	std::string spriteMapData_h;
-	std::string spriteMapData_c;
-#endif
 
-	switch(buttonType) {
-	case(BIG_BOY_BUTTON):
-		spriteMapData_d = BUTDATA(primary_idle);
-		spriteMapData_h = BUTDATA(primary_hover);
-		spriteMapData_c = BUTDATA(primary_press);
-		white = true;
-		crop = false;
-		shadow = true;
-		textSize = 80;
-		textTopOffset = 7;
-		break;
-	case(SMALL_BUTTON):
-		spriteMapData_d = BUTDATA(button_idle);
-		spriteMapData_h = BUTDATA(button_hover);
-		spriteMapData_c = BUTDATA(button_press);
-		white = true;
-		crop = true;
-		shadow = true;
-		textSize = 20;
-		break;
-	default:
-		spriteMapData_d = BUTDATA(button_idle);
-		spriteMapData_h = BUTDATA(button_hover);
-		spriteMapData_c = BUTDATA(button_press);
-		crop = false;
-		white = true;
-		shadow = true;
-		textSize = 40;
-		break;
-	}
 #ifdef INCLUDE_RESOURCES
 	SDL_RWops *data = SDL_RWFromMem((void *)(fontData.buf), fontData.len);
-	TTF_Font *font = TTF_OpenFontRW(data, 1, textSize);
-	SDL_RWops *rw =
-		SDL_RWFromMem((void *)(spriteMapData_d->buf), spriteMapData_d->len);
-	SDL_Surface *spriteSurface_d = SDL_LoadBMP_RW(rw, 1);
-	rw = SDL_RWFromMem((void *)(spriteMapData_h->buf), spriteMapData_h->len);
-	SDL_Surface *spriteSurface_h = SDL_LoadBMP_RW(rw, 1);
-	rw = SDL_RWFromMem((void *)(spriteMapData_c->buf), spriteMapData_c->len);
-	SDL_Surface *spriteSurface_c = SDL_LoadBMP_RW(rw, 1);
+	TTF_Font *font = TTF_OpenFontRW(data, 1, fontSize);
 #else
 	fs::path p_d = fs::current_path();
 	p_d += "/" + spriteMapData_d;
@@ -96,108 +49,55 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiButton");
 
-	SDL_Color fontcolor;
-	if(white)
-		fontcolor = {255, 255, 255, 255};
-	else
-		fontcolor = {0, 0, 0, 255};
-
 	SDL_Surface *textSurface = nullptr;
 
-	if(crop) {
 
-		SDL_Surface *textSurfaceNoCrop =
-			TTF_RenderText_Blended(font, text.c_str(), fontcolor);
-		textSurface = SDL_CreateRGBSurfaceWithFormat(
-			0, textSurfaceNoCrop->w + (shadow * DROP_SHADOW_DISTANCE), textSurfaceNoCrop->h / 1.5, 32,
-			SDL_PIXELFORMAT_RGBA32);
-		SDL_Rect textCrop;
-		textCrop.x = 0;
-		textCrop.y = (textSurfaceNoCrop->h / 4) - textTopOffset;
-		textCrop.w = textSurfaceNoCrop->w;
-		textCrop.h = textSurfaceNoCrop->h / 1.5;
-		if(shadow){
-			SDL_Surface *dropShadow = TTF_RenderText_Blended(font, text.c_str(), {0, 0, 0, 250});
-			SDL_Rect dropDst = {DROP_SHADOW_DISTANCE, textTopOffset + DROP_SHADOW_DISTANCE, dropShadow->w, dropShadow->h};
-			SDL_BlitSurface(dropShadow, &textCrop, textSurface, &dropDst);
-			SDL_FreeSurface(dropShadow);
-		}
+	SDL_Surface *textSurfaceNoCrop =
+		TTF_RenderText_Blended(font, text.c_str(), {0xe0, 0x96, 0xff, 255});
+	SDL_Surface *textSurfaceSel =
+		TTF_RenderText_Blended(font, text.c_str(), {0xff, 0xff, 0xff, 255});
+	if(!textSurfaceNoCrop || !textSurfaceSel)
+		throw SDLTTFException("OFSGuiButton");
 
-		SDL_BlitSurface(textSurfaceNoCrop, &textCrop, textSurface, nullptr);
-		SDL_FreeSurface(textSurfaceNoCrop);
-	}
-	else {
-		SDL_Surface *textSurfaceNoCrop =
-			TTF_RenderText_Blended(font, text.c_str(), fontcolor);
-		textSurface = SDL_CreateRGBSurfaceWithFormat(
-			0, textSurfaceNoCrop->w, textSurfaceNoCrop->h, 32,
-			SDL_PIXELFORMAT_RGBA32);
-		SDL_Rect textCrop;
-		textCrop.x = 0;
-		textCrop.y = textTopOffset;
-		textCrop.w = textSurfaceNoCrop->w;
-		textCrop.h = textSurfaceNoCrop->h;
-		if(shadow){
-			SDL_Surface *dropShadow = TTF_RenderText_Blended(font, text.c_str(), {0, 0, 0, 250});
-			SDL_Rect dropDst = {DROP_SHADOW_DISTANCE, textTopOffset + DROP_SHADOW_DISTANCE, dropShadow->w, dropShadow->h};
-			SDL_BlitSurface(dropShadow, nullptr, textSurface, &dropDst);
-			SDL_FreeSurface(dropShadow);
-		}
-		SDL_BlitSurface(textSurfaceNoCrop, nullptr, textSurface, &textCrop);
-		SDL_FreeSurface(textSurfaceNoCrop);
-	}
+	textSurface = SDL_CreateRGBSurfaceWithFormat(
+		0, textSurfaceNoCrop->w, textSurfaceNoCrop->h, 32,
+		SDL_PIXELFORMAT_RGBA32);
+	SDL_Rect textCrop;
+	textCrop.x = 0;
+	//textCrop.y = -fontSize/3;
+	textCrop.y = textTopOffset;
+	textCrop.w = textSurfaceNoCrop->w;
+	textCrop.h = textSurfaceNoCrop->h;
+	SDL_BlitSurface(textSurfaceNoCrop, nullptr, textSurface, &textCrop);
+	SDL_FreeSurface(textSurfaceNoCrop);
 
 	if(textSurface == nullptr)
 		throw SDLTTFException("OFSGuiText");
 
-
+	SDL_Surface* arrowSurf = TTF_RenderText_Blended(font, ">", {0xe0, 0x96, 0xff, 255});
+	_arrowRect.x = x - arrowSurf->w;
+	_arrowRect.y = y;
+	_arrowRect.w = arrowSurf->w;
+	_arrowRect.h = arrowSurf->h;
+	_arrow = SDL_CreateTextureFromSurface(renderer, arrowSurf);
+	SDL_FreeSurface(arrowSurf);
 
 	_renderer = renderer;
 	_act = actToLink;
 	_name = name;
 
-	_finishLoading(spriteSurface_d, spriteSurface_h, spriteSurface_c, textSurface, x, y, shadow);
+	_isImgBut = false;
+	_finishLoading(textSurface, textSurfaceSel, x, y, shadow);
 }
 
-OFSGuiButton::OFSGuiButton(const std::string &name, const EmbedData imgData, SDL_Renderer *renderer, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &buttonType)
+OFSGuiButton::OFSGuiButton(const std::string &name, const EmbedData imgData, const EmbedData imgDataSel, SDL_Renderer *renderer, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &buttonType)
 	: OFSGuiImage() {
-#ifdef INCLUDE_RESOURCES
-	resData *spriteMapData_d;
-	resData *spriteMapData_h;
-	resData *spriteMapData_c;
-#else
-	std::string spriteMapData_d;
-	std::string spriteMapData_h;
-	std::string spriteMapData_c;
-#endif
 
-	switch(buttonType) {
-	case(BIG_BOY_BUTTON):
-		spriteMapData_d = BUTDATA(primary_idle);
-		spriteMapData_h = BUTDATA(primary_hover);
-		spriteMapData_c = BUTDATA(primary_press);
-		break;
-	case(SMALL_BUTTON):
-		spriteMapData_d = BUTDATA(button_idle);
-		spriteMapData_h = BUTDATA(button_hover);
-		spriteMapData_c = BUTDATA(button_press);
-		break;
-	default:
-		spriteMapData_d = BUTDATA(button_idle);
-		spriteMapData_h = BUTDATA(button_hover);
-		spriteMapData_c = BUTDATA(button_press);
-		break;
-	}
 #ifdef INCLUDE_RESOURCES
 	SDL_RWops *data = SDL_RWFromMem((void *)(imgData.buf), imgData.len);
 	SDL_Surface *textSurface = SDL_LoadBMP_RW(data, 1);
-	SDL_RWops *rw =
-		SDL_RWFromMem((void *)(spriteMapData_d->buf), spriteMapData_d->len);
-	SDL_Surface *spriteSurface_d = SDL_LoadBMP_RW(rw, 1);
-	rw = SDL_RWFromMem((void *)(spriteMapData_h->buf), spriteMapData_h->len);
-	SDL_Surface *spriteSurface_h = SDL_LoadBMP_RW(rw, 1);
-	rw = SDL_RWFromMem((void *)(spriteMapData_c->buf), spriteMapData_c->len);
-	SDL_Surface *spriteSurface_c = SDL_LoadBMP_RW(rw, 1);
+	SDL_RWops *data_sel = SDL_RWFromMem((void *)(imgDataSel.buf), imgDataSel.len);
+	SDL_Surface *textSurfaceSel = SDL_LoadBMP_RW(data_sel, 1);
 #else
 	fs::path p_d = fs::current_path();
 	p_d += "/" + spriteMapData_d;
@@ -217,36 +117,40 @@ OFSGuiButton::OFSGuiButton(const std::string &name, const EmbedData imgData, SDL
 		SDL_LoadBMP(p_c.make_preferred().string().c_str());
 #endif
 	if(textSurface == nullptr)
-		throw SDLTTFException("OFSGuiText");
+		throw SDLException("OFSGuiText");
 
 	_renderer = renderer;
 	_act = actToLink;
 	_name = name;
 
-	_finishLoading(spriteSurface_d, spriteSurface_h, spriteSurface_c, textSurface, x, y, false);
+	_isImgBut = true;
+
+	_finishLoading(textSurface, textSurfaceSel, x, y, false);
 }
 
-void OFSGuiButton::_finishLoading(SDL_Surface *spriteSurface_d, SDL_Surface *spriteSurface_h, SDL_Surface *spriteSurface_c, SDL_Surface *textSurface, const int &x, const int &y, const bool &shadow) {
-	int fullWidth = textSurface->w + LEFT_BORDER_INSET + RIGHT_BORDER_INSET;
-	int fullHeight = textSurface->h + TOP_BORDER_INSET + BOTTOM_BORDER_INSET;
+void OFSGuiButton::_finishLoading(SDL_Surface *textSurface, SDL_Surface* selectedSurface, const int &x, const int &y, const bool &shadow) {
+	int fullWidth = textSurface->w;// + LEFT_BORDER_INSET + RIGHT_BORDER_INSET;
+	int fullHeight = textSurface->h; //+ TOP_BORDER_INSET + BOTTOM_BORDER_INSET;
 	SDL_Surface *textureSurface = SDL_CreateRGBSurfaceWithFormat(0, fullWidth, fullHeight * 3, 32, SDL_PIXELFORMAT_RGBA32);
 
 	SDL_Surface *textureSurface_tmp = SDL_CreateRGBSurfaceWithFormat(0, fullWidth, fullHeight, 32, SDL_PIXELFORMAT_RGBA32);
-	blitNineSliceToSurface(spriteSurface_d, textureSurface_tmp, fullWidth, fullHeight);
+	/*
+	//blitNineSliceToSurface(spriteSurface_d, textureSurface_tmp, fullWidth, fullHeight);
 	SDL_Rect paster = {0, 0, fullWidth, fullHeight};
 	SDL_BlitSurface(textureSurface_tmp, nullptr, textureSurface, &paster);
 
-	blitNineSliceToSurface(spriteSurface_h, textureSurface_tmp, fullWidth, fullHeight);
+	//blitNineSliceToSurface(spriteSurface_h, textureSurface_tmp, fullWidth, fullHeight);
 	paster.y += fullHeight;
 	SDL_BlitSurface(textureSurface_tmp, nullptr, textureSurface, &paster);
 
-	blitNineSliceToSurface(spriteSurface_c, textureSurface_tmp, fullWidth, fullHeight);
+	//blitNineSliceToSurface(spriteSurface_c, textureSurface_tmp, fullWidth, fullHeight);
 	paster.y += fullHeight;
 	SDL_BlitSurface(textureSurface_tmp, nullptr, textureSurface, &paster);
+	 */
 
 	SDL_Rect textRect;
-	textRect.x = LEFT_BORDER_INSET;
-	textRect.y = TOP_BORDER_INSET;
+	textRect.x = 0;//LEFT_BORDER_INSET;
+	textRect.y = 0; //TOP_BORDER_INSET;
 	textRect.w = textSurface->w;
 	textRect.h = textSurface->h;
 	SDL_BlitSurface(textSurface, nullptr, textureSurface, &textRect);
@@ -254,9 +158,10 @@ void OFSGuiButton::_finishLoading(SDL_Surface *spriteSurface_d, SDL_Surface *spr
 	textRect.y += fullHeight;
 	SDL_BlitSurface(textSurface, nullptr, textureSurface, &textRect);
 
-	textRect.y += fullHeight + TEXT_BUMP_VERT;
-	textRect.x += TEXT_BUMP_HOR;
-	SDL_BlitSurface(textSurface, nullptr, textureSurface, &textRect);
+	//textRect.y += fullHeight + TEXT_BUMP_VERT;
+	//textRect.x += TEXT_BUMP_HOR;
+	textRect.y += fullHeight;
+	SDL_BlitSurface(selectedSurface, nullptr, textureSurface, &textRect);
 
 	_texture = SDL_CreateTextureFromSurface(_renderer, textureSurface);
 	if(_texture == nullptr)
@@ -283,9 +188,8 @@ void OFSGuiButton::_finishLoading(SDL_Surface *spriteSurface_d, SDL_Surface *spr
 
 	SDL_FreeSurface(textureSurface);
 	SDL_FreeSurface(textureSurface_tmp);
-	SDL_FreeSurface(spriteSurface_d);
-	SDL_FreeSurface(spriteSurface_h);
-	SDL_FreeSurface(spriteSurface_c);
+
+	_isHovered = false;
 }
 
 GuiActs OFSGuiButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
@@ -320,15 +224,29 @@ GuiActs OFSGuiButton::parseEvents(std::shared_ptr<OFSGuiEvent> ev) {
 
 			if(!_isClicked) {
 				if(sdle->motion.x > _size.x && sdle->motion.x < _size.x + _size.w &&
-					sdle->motion.y > _size.y && sdle->motion.y < _size.y + _size.h)
+					sdle->motion.y > _size.y && sdle->motion.y < _size.y + _size.h) {
 					setIndex(1); // Hovering over
-				else
+					_isHovered = true;
+				}
+				else {
 					setIndex(0); // normal state
+					_isHovered = false;
+				}
+
 			}
 			break;
 		}
 	}
 	return ret;
+}
+
+void OFSGuiButton::renderCopy(SDL_Renderer *renderer) {
+	if(_texture) {
+		SDL_RenderCopy(renderer, _texture, &_src, &_size);
+		if(!_isImgBut && _isHovered) {
+			SDL_RenderCopy(renderer, _arrow, nullptr, &_arrowRect);
+		}
+	}
 }
 
 void OFSGuiButton::_clickedOnAction() {}
