@@ -4,7 +4,7 @@ SET(DB_SOURCES
 
 find_package(SQLite3 REQUIRED)
 
-include_directories(${SQLITE_INCLUDE_DIRS})
+include_directories(${SQLITE_INCLUDE_DIR})
 
 add_library(OFSdb ${DB_SOURCES})
 

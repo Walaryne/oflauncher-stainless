@@ -4,7 +4,7 @@ SET(NET_SOURCES
 
 find_package(CURL REQUIRED)
 
-include_directories(${CURL_INCLUDE_DIRS})
+include_directories(${CURL_INCLUDE_DIR})
 
 add_library(OFSNet ${NET_SOURCES})
 
