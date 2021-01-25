@@ -80,7 +80,7 @@ OFSSteamApp *OFSSteam::getApp(int appID) {
 		acfToCheck += "/appmanifest_" + std::to_string(appID) + ".acf";
 		acfToCheck = acfToCheck.make_preferred();
 		if(fs::exists(acfToCheck))
-			return new OFSSteamApp(acfToCheck);
+			return new OFSSteamApp(acfToCheck.string());
 	}
 	return nullptr;
 }
