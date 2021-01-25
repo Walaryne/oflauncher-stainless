@@ -54,5 +54,5 @@ std::string OFSSteamApp::getName() {
 }
 
 std::string OFSSteamApp::getInstallPath() {
-	return _appPath;
+	return _appPath.string();
 }

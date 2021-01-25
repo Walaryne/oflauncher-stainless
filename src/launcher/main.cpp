@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 	cf.loadFromDisk();
 	if(!cf.exists("/steamPath"))	{
 		steam = new OFSSteam();
-		steamPath = steam->getSteamPath();
+		steamPath = steam->getSteamPath().string();
 		cf.writeValue("/steamPath", steamPath);
 		cf.commitToDisk();
 	}

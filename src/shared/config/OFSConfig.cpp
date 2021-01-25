@@ -86,7 +86,7 @@ bool OFSConfig::exists(const char *path) {
 std::filesystem::path OFSConfig::getConfigFilePath() {
 
 
-#if WIN32
+#if _MSC_VER
 	char buffer[MAX_PATH];
 	size_t len;
 	errno_t error = getenv_s(&len, buffer, sizeof(buffer) - 1, ENV_DIR);
