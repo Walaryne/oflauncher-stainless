@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
-#include <error.h>
 #include <string.h>
 //#include "SDK/CPP/7zip/Compress/LzmaDecoder.h"
 #include "lzma.h"
