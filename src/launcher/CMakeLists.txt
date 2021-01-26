@@ -13,7 +13,6 @@ set(OFS_LIBRARIES
         OFSGui
         OFSdb
         OFSNet
-        OFSLZMA
         OFSGameInfo
         OFSMD5
         OFSLaunchOpt

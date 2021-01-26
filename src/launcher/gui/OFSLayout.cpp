@@ -24,7 +24,7 @@ DEFINE_LAYOUT(preInstallLayout) {
 	addImage("background", DATA(bg));
 	addText("upName", FONTDATA(SourceCodePro_Bold), "NEW UPDATE AVAILABLE!", 30, 570, 60);
 	addImage("promo", DATA(promo), 570, 100);
-	addButton("install button", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_INSTALL, "PATCH NOTES", 570, 300, 25);
+	addButton("patch notes", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_PN, "PATCH NOTES", 570, 300, 25);
 
 	addButton("install button", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_INSTALL, "INSTALL", 30, 100, 25);
 	addButton("options", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_OPTIONS, "OPTIONS", 30, 130, 25);

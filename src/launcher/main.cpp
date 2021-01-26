@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 		if(SDL_ShowMessageBox(&askTF2, &buttonid) < 0)
 			throw;
 		if(buttonid == 0)
-			openURL("steam://install/440");
+			SDL_OpenURL("steam://install/440");
 	}
 	if(!steam->getApp(243750))
 	{
@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
 		if(SDL_ShowMessageBox(&askSDK, &buttonid) < 0)
 			throw;
 		if(buttonid == 0)
-			openURL("steam://install/243750");
+			SDL_OpenURL("steam://install/243750");
 	}
 
 	TRYCATCHERR_END("Couldn't display prompt messages.")
@@ -201,7 +201,10 @@ int main(int argc, char *argv[]) {
 				TRYCATCHERR_END("Failed to update game")
 				break;
 			case BUT_CLICKED_LAUNCH:
-				openURL("steam://run/243750");
+				SDL_OpenURL("steam://run/243750");
+				break;
+			case BUT_CLICKED_PN:
+				SDL_OpenURL("https://openfortress.fun");
 				break;
 			case BUT_CLICKED_UPDATEGAMEINFO:
 				writeGameInfo(fs::current_path(), steam);
