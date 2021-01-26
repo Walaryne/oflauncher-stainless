@@ -13,14 +13,14 @@ set(OFS_LIBRARIES
         OFSGui
         OFSdb
         OFSNet
-        OFSLZMA
         OFSGameInfo
         OFSMD5
         OFSLaunchOpt
         OFSConfig
         OFSSteam
         OFSUtil
-        nfd)
+        nfd
+        minlzlib)
 
 if(UNIX)
     find_package(PkgConfig REQUIRED)
@@ -35,7 +35,6 @@ add_subdirectory(gui)
 add_subdirectory(db)
 add_subdirectory(net)
 add_subdirectory(nativefiledialog)
-add_subdirectory(lzma)
 add_subdirectory(gameinfo)
 add_subdirectory(MD5)
 add_subdirectory(launchopt)

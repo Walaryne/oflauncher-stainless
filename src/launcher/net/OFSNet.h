@@ -6,7 +6,11 @@
 #define OFLAUNCHER_STAINLESS_OFSNET_H
 
 #include <curl/curl.h>
-#include "../lzma/OFLZMA.h"
+//#include "../lzma/OFLZMA.h"
+#include <inttypes.h>
+extern "C" {
+#include "../../shared/minlzma/minlzma.h"
+}
 #include <stdint.h>
 #include <cstring>
 #include <string>

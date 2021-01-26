@@ -24,7 +24,7 @@ DEFINE_LAYOUT(preInstallLayout) {
 	addImage("background", DATA(bg));
 	addText("upName", FONTDATA(SourceCodePro_Bold), "NEW UPDATE AVAILABLE!", 30, 570, 60);
 	addImage("promo", DATA(promo), 570, 100);
-	addButton("install button", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_INSTALL, "PATCH NOTES", 570, 300, 25);
+	addButton("patch notes", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_PN, "PATCH NOTES", 570, 300, 25);
 
 	addButton("install button", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_INSTALL, "INSTALL", 30, 100, 25);
 	addButton("options", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_OPTIONS, "OPTIONS", 30, 130, 25);
@@ -43,12 +43,12 @@ DEFINE_LAYOUT(installLayout) {
 	// Background image
 	addImage("background", DATA(bg));
 
-	addText("install", FONTDATA(tf2build),"Installing", 70, -1, 100);
+	addText("install", FONTDATA(SourceCodePro_Bold),"INSTALLING...", 25, 30, 100);
 
 	addSpinny("loadingSpinny", DATA(spinny), -1, 200);
 	addProgressBar("progress", DATA(barM), INSTALL_FINISHED, -1, 300, 300);
 
-	addButton("cancel", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_CANCEL, "Cancel", -1, 340, SMALL_BUTTON);
+	addButton("cancel", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_CANCEL, "CANCEL", 30, 490, 25);
 
 	addImage("stripe", DATA(stripe), 0, 470);
 	addText("log", FONTDATA(SourceCodePro_Bold), "industries.TF", 25, 730, 490);
@@ -83,9 +83,9 @@ DEFINE_LAYOUT(SteamDirOption) {
 DEFINE_LAYOUT(postInstall) {
 	clearLayout();
 	addImage("background", DATA(bg));
-	addText("message", FONTDATA(tf2build), "Install Complete!", 50, -1, 100);
-	addText("message", FONTDATA(SourceSansPro_Regular), "Please restart steam to see the game in your library.", 25, -1, 150);
-	addButton("launchGame", FONTDATA(tf2build), BUT_CLICKED_LAUNCH, "Close", -1, 190, BIG_BOY_BUTTON);
+	addText("message", FONTDATA(SourceCodePro_Bold), "INSTALL COMPLETE!", 25, 30, 100);
+	addText("message", FONTDATA(SourceCodePro_Bold), "PLEASE RESTART STEAM TO SEE IT IN YOUR LIBRARY.", 25, 30, 130);
+	addButton("launchGame", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_LAUNCH, "CLOSE", 30, 190, 25);
 
 	addImage("stripe", DATA(stripe), 0, 470);
 	addText("log", FONTDATA(SourceCodePro_Bold), "industries.TF", 25, 730, 490);
@@ -98,7 +98,7 @@ DEFINE_LAYOUT(postInstall) {
 DEFINE_LAYOUT(selectUser) {
 	clearLayout();
 	addImage("background", DATA(bg));
-	addText("title", FONTDATA(tf2build), "Select user to install for", 40, -1, 40);
+	addText("title", FONTDATA(tf2build), "SELECT USER TO INSTALL FOR", 40, -1, 40);
 	addButtonArray(FONTDATA(SourceCodePro_Bold), BUT_CLICKED_STEAMUSER, -1, 100, 25);
 
 	addImage("stripe", DATA(stripe), 0, 470);
