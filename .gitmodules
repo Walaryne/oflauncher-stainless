@@ -1,0 +1,3 @@
+[submodule "src/shared/minlzma"]
+	path = src/shared/minlzma
+	url = https://github.com/ionescu007/minlzma.git

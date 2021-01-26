@@ -131,9 +131,10 @@ OFSGuiButton::OFSGuiButton(const std::string &name, const EmbedData imgData, con
 void OFSGuiButton::_finishLoading(SDL_Surface *textSurface, SDL_Surface* selectedSurface, const int &x, const int &y, const bool &shadow) {
 	int fullWidth = textSurface->w;// + LEFT_BORDER_INSET + RIGHT_BORDER_INSET;
 	int fullHeight = textSurface->h; //+ TOP_BORDER_INSET + BOTTOM_BORDER_INSET;
-	SDL_Surface *textureSurface = SDL_CreateRGBSurfaceWithFormat(0, fullWidth, fullHeight * 3, 32, SDL_PIXELFORMAT_RGBA32);
+	//SDL_Surface *textureSurface = SDL_CreateRGBSurfaceWithFormat(0, fullWidth, fullHeight * 3, 32, SDL_PIXELFORMAT_RGBA32);
+	SDL_Surface *textureSurface = SDL_CreateRGBSurfaceWithFormat(0, fullWidth, fullHeight * 3, 32, textSurface->format->format);
 
-	SDL_Surface *textureSurface_tmp = SDL_CreateRGBSurfaceWithFormat(0, fullWidth, fullHeight, 32, SDL_PIXELFORMAT_RGBA32);
+	SDL_Surface *textureSurface_tmp = SDL_CreateRGBSurfaceWithFormat(0, fullWidth, fullHeight, 32, textSurface->format->format);
 	/*
 	//blitNineSliceToSurface(spriteSurface_d, textureSurface_tmp, fullWidth, fullHeight);
 	SDL_Rect paster = {0, 0, fullWidth, fullHeight};
