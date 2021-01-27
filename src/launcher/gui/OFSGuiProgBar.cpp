@@ -4,11 +4,8 @@
 #include "res/barR.bmp.h"
 #include <iostream>
 
-#ifdef INCLUDE_RESOURCES
+
 #define DATA(res_name) res_name##_bmp_data
-#else
-#define DATA(res_name) "../res/" #res_name ".bmp"
-#endif
 
 #define PIX_DRAW_PAST                                                          \
 	2 // how many pixels to start drawing the loading bar progress into the end

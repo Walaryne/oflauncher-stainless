@@ -1,6 +1,6 @@
 #include "OFSLayout.h"
 
-#ifdef INCLUDE_RESOURCES
+
 #include "res/bg.bmp.h"
 #include "res/stripe.bmp.h"
 #include "res/cancel.bmp.h"
@@ -15,7 +15,7 @@
 #include "res/tf2build.ttf.h"
 #include "res/SourceCodePro-Bold.ttf.h"
 #include "res/SourceCodePro-Regular.ttf.h"
-#endif
+
 
 DEFINE_LAYOUT(preInstallLayout) {
 	clearLayout();

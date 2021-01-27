@@ -6,9 +6,7 @@
 
 //########### OFSGui ############
 OFSGui::OFSGui() {
-#ifndef INCLUDE_RESOURCES
-	_orig_path = fs::current_path();
-#endif
+
 	_quit = false;
 	_actStates.emplace(NOT_CLICKED, false);
 
@@ -68,14 +66,10 @@ bool OFSGui::simulateButton(GuiActs actToSim) {
 	else
 		_actStates.emplace(actToSim, true);
 	if(_bindMeths[actToSim]) {
-#ifndef INCLUDE_RESOURCES
-		fs::current_path(_orig_path);
-#endif
+
 		_bindMeths[actToSim](this);
 		ret = true;
-#ifndef INCLUDE_RESOURCES
-		fs::current_path(_new_path);
-#endif
+
 	}
 	return ret;
 }
@@ -96,12 +90,7 @@ std::shared_ptr<void> OFSGui::getData(const std::string &name, GuiActs event) {
 }
 
 bool OFSGui::loop() {  //the main loop thats called once every frame
-#ifndef INCLUDE_RESOURCES
-	_new_path = fs::current_path();  //this stuff is broken.
-	//its supposed to set the path to where the exe is so that it can
-	//load resources from disk correctly but the threading breaks this.
-	fs::current_path(_orig_path);
-#endif
+
 	SDL_Event e;
 
 	std::vector<GuiActs> actStack;  //this is our queue of acts fired by the elements
@@ -144,9 +133,7 @@ bool OFSGui::loop() {  //the main loop thats called once every frame
 		i->renderCopy(_renderer);  //call each element's render function
 	}
 	SDL_RenderPresent(_renderer);
-#ifndef INCLUDE_RESOURCES
-	fs::current_path(_new_path);
-#endif
+
 	return !_quit;
 }
 

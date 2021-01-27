@@ -13,10 +13,6 @@
 #include <unordered_map>
 #include <vector>
 
-#ifndef INCLUDE_RESOURCES
-#include <filesystem>
-namespace fs = std::filesystem;
-#endif
 
 #include "OFSGuiActs.h"
 #include "OFSGuiError.h"
@@ -56,10 +52,7 @@ private:
 	std::string _selectedUser;
 
 
-#ifndef INCLUDE_RESOURCES
-	fs::path _orig_path;
-	fs::path _new_path;
-#endif
+
 
 	void bindActivity(GuiActs actToBind, GuiButtonMethod funcPoint);
 
