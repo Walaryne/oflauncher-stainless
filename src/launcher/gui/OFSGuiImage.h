@@ -9,13 +9,8 @@
 #include "OFSGuiError.h"
 #include "res/EmbedData.h"
 
-#ifdef INCLUDE_RESOURCES
 #define resData const EmbedData
-#else
-#include <filesystem>
-namespace fs = std::filesystem;
-#define resData const std::string &
-#endif
+
 
 struct OFSImageData {
 	SDL_Texture* tex;
