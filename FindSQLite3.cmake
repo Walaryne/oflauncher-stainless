@@ -1,0 +1,18 @@
+include_directories( /usr/lib/x86_64-linux-gnu/ )
+FIND_PATH(SQLITE3_INCLUDE_DIR NAMES sqlite3.h)
+
+# Look for the library.
+SET(SQLITE3_LIBRARY /usr/lib/x86_64-linux-gnu/libsqlite3.so)
+# Handle the QUIETLY and REQUIRED arguments and set SQLITE3_FOUND to TRUE if all listed variables are TRUE.
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SQLITE3 DEFAULT_MSG SQLITE3_LIBRARY SQLITE3_INCLUDE_DIR)
+# Copy the results to the output variables.
+IF(SQLITE3_FOUND)
+	SET(SQLITE3_LIBRARIES ${SQLITE3_LIBRARY})
+	SET(SQLITE3_INCLUDE_DIRS ${SQLITE3_INCLUDE_DIR})
+ELSE(SQLITE3_FOUND)
+	SET(SQLITE3_LIBRARIES /usr/lib/x86_64-linux-gnu/libsqlite3.so)
+	SET(SQLITE3_INCLUDE_DIRS /usr/include/)
+ENDIF(SQLITE3_FOUND)
+
+MARK_AS_ADVANCED(SQLITE3_INCLUDE_DIRS SQLITE3_LIBRARIES)
