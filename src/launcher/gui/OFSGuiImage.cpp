@@ -6,14 +6,10 @@ OFSGuiImage::OFSGuiImage(const std::string &name, resData data, SDL_Renderer *re
 	_name = name;
 	_renderer = renderer;
 	_subImages = NumOfSubImages;
-#ifdef INCLUDE_RESOURCES
+
 	SDL_RWops *rw = SDL_RWFromMem((void *)data.buf, data.len);
 	SDL_Surface *textureSurface = SDL_LoadBMP_RW(rw, 1);
-#else
-	fs::path p = fs::current_path();
-	p += "/" + data;
-	SDL_Surface *textureSurface = SDL_LoadBMP(p.make_preferred().string().c_str());
-#endif
+
 	int w, h;
 	if(textureSurface == nullptr)
 		throw SDLException("OFSGuiImage");
@@ -41,15 +37,10 @@ OFSGuiImage::OFSGuiImage(const std::string &name, resData data, SDL_Renderer *re
 SDL_Texture *OFSGuiImage::_loadSecondImg(resData dataToLoad,
 										   SDL_Rect *srcRect,
 										   SDL_Rect *sizeRect) {
-#ifdef INCLUDE_RESOURCES
+
 	SDL_RWops *rw = SDL_RWFromMem((void *)dataToLoad.buf, dataToLoad.len);
 	SDL_Surface *textureSurface = SDL_LoadBMP_RW(rw, 1);
-#else
-	fs::path p = fs::current_path();
-	p += "/" + dataToLoad;
-	SDL_Surface *textureSurface = SDL_LoadBMP(p.make_preferred().string().c_str());
-	//SDL_Surface *textureSurface = SDL_LoadBMP(dataToLoad.c_str());
-#endif
+
 	int w, h;
 	if(textureSurface == nullptr)
 		throw SDLException("OFSGuiImage");

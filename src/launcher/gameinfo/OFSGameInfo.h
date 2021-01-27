@@ -6,7 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSGAMEINFO_H
 
 #include <string>
-#include <filesystem>
+#include <experimental/filesystem>
 #include <fstream>
 #include "../../shared/steam/OFSSteam.h"
 

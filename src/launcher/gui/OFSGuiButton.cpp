@@ -1,6 +1,5 @@
 #include "OFSGuiButton.h"
 
-#ifdef INCLUDE_RESOURCES
 //#include "res/button_d.bmp.h"
 #include "res/button_idle.bmp.h"
 #include "res/button_hover.bmp.h"
@@ -9,9 +8,7 @@
 #include "res/primary_hover.bmp.h"
 #include "res/primary_press.bmp.h"
 #define BUTDATA(res_name) & res_name##_bmp_data
-#else
-#define BUTDATA(res_name) "../res/" #res_name ".bmp"
-#endif
+
 
 #define TEXT_BUMP_VERT 2
 #define TEXT_BUMP_HOR  2
@@ -25,27 +22,9 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 	bool white, crop, shadow;
 	int textTopOffset = 0; // the bigger the button, the more space it looks like there is empty on the bottom.
 
-#ifdef INCLUDE_RESOURCES
 	SDL_RWops *data = SDL_RWFromMem((void *)(fontData.buf), fontData.len);
 	TTF_Font *font = TTF_OpenFontRW(data, 1, fontSize);
-#else
-	fs::path p_d = fs::current_path();
-	p_d += "/" + spriteMapData_d;
-	fs::path p_h = fs::current_path();
-	p_h += "/" + spriteMapData_h;
-	fs::path p_c = fs::current_path();
-	p_c += "/" + spriteMapData_c;
-	fs::path p2 = fs::current_path();
-	p2 += "/" + fontData;
-	TTF_Font *font =
-		TTF_OpenFont(p2.make_preferred().string().c_str(), textSize);
-	SDL_Surface *spriteSurface_d =
-		SDL_LoadBMP(p_d.make_preferred().string().c_str());
-	SDL_Surface *spriteSurface_h =
-		SDL_LoadBMP(p_h.make_preferred().string().c_str());
-	SDL_Surface *spriteSurface_c =
-		SDL_LoadBMP(p_c.make_preferred().string().c_str());
-#endif
+
 	if(font == nullptr)
 		throw SDLTTFException("OFSGuiButton");
 
@@ -93,29 +72,11 @@ OFSGuiButton::OFSGuiButton(const std::string &name, resData fontData, SDL_Render
 OFSGuiButton::OFSGuiButton(const std::string &name, const EmbedData imgData, const EmbedData imgDataSel, SDL_Renderer *renderer, GuiActs actToLink, const int &x, const int &y, const ButtonTypes &buttonType)
 	: OFSGuiImage() {
 
-#ifdef INCLUDE_RESOURCES
 	SDL_RWops *data = SDL_RWFromMem((void *)(imgData.buf), imgData.len);
 	SDL_Surface *textSurface = SDL_LoadBMP_RW(data, 1);
 	SDL_RWops *data_sel = SDL_RWFromMem((void *)(imgDataSel.buf), imgDataSel.len);
 	SDL_Surface *textSurfaceSel = SDL_LoadBMP_RW(data_sel, 1);
-#else
-	fs::path p_d = fs::current_path();
-	p_d += "/" + spriteMapData_d;
-	fs::path p_h = fs::current_path();
-	p_h += "/" + spriteMapData_h;
-	fs::path p_c = fs::current_path();
-	p_c += "/" + spriteMapData_c;
-	fs::path p2 = fs::current_path();
-	p2 += "/" + imgData;
-	SDL_Surface* textSurface =
-		SDL_LoadBMP(p2.make_preferred().string().c_str());
-	SDL_Surface *spriteSurface_d =
-		SDL_LoadBMP(p_d.make_preferred().string().c_str());
-	SDL_Surface *spriteSurface_h =
-		SDL_LoadBMP(p_h.make_preferred().string().c_str());
-	SDL_Surface *spriteSurface_c =
-		SDL_LoadBMP(p_c.make_preferred().string().c_str());
-#endif
+
 	if(textSurface == nullptr)
 		throw SDLException("OFSGuiText");
 

@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <filesystem>
+#include <experimental/filesystem>
 
 #include "../util/json.hpp"
 
@@ -99,11 +99,11 @@ public:
 private:
     bool documentLoaded = false;
     nlohmann::json parsedJsonDocument;
-	std::filesystem::path configFilePath;
+	std::experimental::filesystem::path configFilePath;
 
 	void assertDocumentLoaded() const;
 	void ensureJsonPtrExists(const nlohmann::json::json_pointer& ptr);
-	static std::filesystem::path getConfigFilePath();
+	static std::experimental::filesystem::path getConfigFilePath();
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSCONFIG_H

@@ -17,7 +17,7 @@ OFSConfig::~OFSConfig() {
  * @return - succeeded
  */
 bool OFSConfig::loadFromDisk() {
-	if(!std::filesystem::exists(configFilePath)) {
+	if(!std::experimental::filesystem::exists(configFilePath)) {
 		std::ofstream newFile(configFilePath);
 		newFile << DEFAULT_CONFIG_TEXT;
 		newFile.close();
@@ -83,7 +83,7 @@ bool OFSConfig::exists(const char *path) {
  * Gets the destination path for the config file
  * @return - path of config file
  */
-std::filesystem::path OFSConfig::getConfigFilePath() {
+std::experimental::filesystem::path OFSConfig::getConfigFilePath() {
 
 
 #if _MSC_VER
@@ -97,7 +97,7 @@ std::filesystem::path OFSConfig::getConfigFilePath() {
 	char * buffer = getenv(ENV_DIR);
 #endif
 
-	return buffer / std::filesystem::path(CONFIG_FILE_NAME);
+	return buffer / std::experimental::filesystem::path(CONFIG_FILE_NAME);
 }
 
 /**

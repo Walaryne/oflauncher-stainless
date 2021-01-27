@@ -6,12 +6,12 @@
 #define OFLAUNCHER_STAINLESS_OFSLAUNCHOPT_H
 
 #include <string>
-#include <filesystem>
+#include <experimental/filesystem>
 #include <vector>
 #include <iostream>
 #include <fstream>
 
-namespace fs=std::filesystem;
+namespace fs=std::experimental::filesystem;
 
 class OFSSteamUser {
 public:

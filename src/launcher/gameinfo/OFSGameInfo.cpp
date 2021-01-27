@@ -4,7 +4,7 @@
 
 #include "OFSGameInfo.h"
 
-namespace fs=std::filesystem;
+namespace fs=std::experimental::filesystem;
 
 const std::string giTop =
 	"\"GameInfo\"\n"

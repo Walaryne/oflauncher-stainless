@@ -22,10 +22,6 @@ SET(GUI_SOURCES
         OFSGuiThread.cpp
         OFSGuiThread.h)
 
-if(INCLUDE_RESOURCES)
-    add_compile_definitions(INCLUDE_RESOURCES)
-endif()
-
 
 find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)
 find_library(SDL2_LIBRARY SDL2)

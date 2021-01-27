@@ -10,9 +10,9 @@
 #include <exception>
 #include <iostream>
 #include <fstream>
-#include <filesystem>
+#include <experimental/filesystem>
 
-namespace fs = std::filesystem;
+namespace fs = std::experimental::filesystem;
 
 enum steamAppState {
 	NOT_READY1,
