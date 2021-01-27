@@ -1,8 +1,6 @@
 
 
 option(STATIC_LINK "Static link the libraries included" OFF)
-option(INCLUDE_RESOURCES "Use the resource header files instead of loading directly from the resource folder" ON)
-
 
 set(SOURCES
         main.cpp
@@ -24,10 +22,6 @@ set(OFS_LIBRARIES
 
 if(UNIX)
     find_package(PkgConfig REQUIRED)
-endif()
-
-if(INCLUDE_RESOURCES)
-    add_compile_definitions(INCLUDE_RESOURCES)
 endif()
 
 add_subdirectory(hashlib2plus)
