@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../filesystem.h"
 
 #include "OFSGuiActs.h"
 #include "OFSGuiError.h"

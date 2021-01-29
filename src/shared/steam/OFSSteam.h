@@ -5,12 +5,12 @@
 #ifndef OFLAUNCHER_STAINLESS_OFSSTEAM_H
 #define OFLAUNCHER_STAINLESS_OFSSTEAM_H
 
-#include <filesystem>
+#include "../../launcher/filesystem.h"
 #include <string>
 #include "OFSPathDiscover.h"
 #include "OFSSteamApp.h"
 
-namespace fs = std::filesystem;
+
 
 class OFSSteam {
 private:

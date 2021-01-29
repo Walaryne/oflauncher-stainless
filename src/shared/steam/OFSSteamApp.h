@@ -10,9 +10,9 @@
 #include <exception>
 #include <iostream>
 #include <fstream>
-#include <filesystem>
+#include "../../launcher/filesystem.h"
 
-namespace fs = std::filesystem;
+
 
 enum steamAppState {
 	NOT_READY1,

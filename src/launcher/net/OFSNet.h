@@ -14,13 +14,13 @@ extern "C" {
 #include <stdint.h>
 #include <cstring>
 #include <string>
-#include <filesystem>
+#include "../filesystem.h"
 #include <cstdio>
 #include <utility>
 #include <iostream>
 #include <memory>
 
-namespace fs = std::filesystem;
+
 
 class OFSNet {
 public:
