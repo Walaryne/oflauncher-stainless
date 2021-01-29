@@ -11,8 +11,6 @@
 #include <iostream>
 #include <fstream>
 
-namespace fs=std::filesystem;
-
 class OFSSteamUser {
 public:
 	OFSSteamUser(std::string name, std::string avPic):name(name),avPic(avPic) {};

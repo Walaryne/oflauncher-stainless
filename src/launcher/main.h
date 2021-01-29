@@ -14,7 +14,7 @@
 #include "gameinfo/OFSGameInfo.h"
 #include "launchopt/OFSLaunchOpt.h"
 #include <exception>
-#include "../filesystem.h"
+#include "filesystem.h"
 #include <iostream>
 
 #ifdef _WIN32
