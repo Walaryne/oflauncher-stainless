@@ -17,6 +17,7 @@
 #include <cstring>
 #include <iostream>
 #include <algorithm>
+#include <thread>
 
 class OFSDatabase {
 public:
@@ -25,6 +26,7 @@ public:
 	void compareRevisions();
 	int compareIntegrity();
 	bool downloadSingleFile();
+	bool downloadFiles(float &prog);
 	int getQueueSize();
 	void copyDb();
 

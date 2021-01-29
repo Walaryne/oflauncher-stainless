@@ -143,14 +143,51 @@ int OFSDatabase::compareIntegrity() {
 bool OFSDatabase::downloadSingleFile() {
 	if(!p_downloadQueue.empty()) {
 		std::string file = p_downloadQueue.front();
-		fs::path fileDownloading = (fs::current_path() / fs::path(file)).make_preferred();
-		std::cout << "Downloading file: " << fileDownloading << std::endl;
-		p_net->downloadFile("/" + file, fileDownloading, true);
+		std::cout << "Downloading file: " << file << std::endl;
+		//p_net->downloadFile("/" + file, "", true);
 		p_downloadQueue.pop_front();
 		return false;
 	} else {
 		return true;
 	}
+}
+
+struct downloadThread {
+	std::thread t;
+	bool done;
+
+	downloadThread(const std::string &serverURL, const std::string &path) : t(downloadFile, serverURL, path, &(this->done)), done(false) {}
+};
+
+bool OFSDatabase::downloadFiles(float &prog) {
+	std::string serverURL = p_net->getServerURL();
+
+	int numThreads = 0;
+	int numThreadsMax = 2;
+
+	std::vector<downloadThread> threads;
+
+	while(!p_downloadQueue.empty()) {
+		if(numThreads < numThreadsMax) {
+			threads.emplace_back(serverURL, p_downloadQueue.front());
+			p_downloadQueue.pop_front();
+			numThreads++;
+		}
+		for(auto &i : threads) {
+			if(i.done) {
+				i.t.join();
+			}
+		}
+		for(auto i = threads.cbegin(); i!= threads.cend(); i++) {
+			if(i->done) {
+				threads.erase(i);
+				numThreads--;
+			}
+		}
+		threads.shrink_to_fit();
+
+	}
+	return true;
 }
 
 int OFSDatabase::databasePathConsumer(void *param, int argc, char **argv, char **column) {
