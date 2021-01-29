@@ -5,7 +5,7 @@ option(STATIC_LINK "Static link the libraries included" OFF)
 set(SOURCES
         main.cpp
         main.h)
-
+include_directories(../shared/util)
 set(OFS_LIBRARIES
         hashlib2plus
         OFSGui
@@ -23,7 +23,6 @@ set(OFS_LIBRARIES
 if(UNIX)
     find_package(PkgConfig REQUIRED)
 endif()
-
 add_subdirectory(hashlib2plus)
 add_subdirectory(gui)
 add_subdirectory(db)
@@ -34,7 +33,6 @@ add_subdirectory(MD5)
 add_subdirectory(launchopt)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
-
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC  ${OFS_LIBRARIES})
 

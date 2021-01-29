@@ -6,7 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSLAUNCHOPT_H
 
 #include <string>
-#include "../filesystem.h"
+#include "OFFilesystem.h"
 #include <vector>
 #include <iostream>
 #include <fstream>

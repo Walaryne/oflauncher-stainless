@@ -6,7 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSVERIFYINTEGRITY_H
 
 #include <string>
-#include "../filesystem.h"
+#include "OFFilesystem.h"
 #include <iostream>
 #include "../hashlib2plus/hashlibpp.h"
 

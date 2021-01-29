@@ -8,9 +8,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "../../launcher/filesystem.h"
 
-#include "../util/json.hpp"
+#include "OFFilesystem.h"
+#include "json.hpp"
 
 #define DEFAULT_CONFIG_TEXT "{}"
 #define CONFIG_FILE_NAME ".oflauncher.config"

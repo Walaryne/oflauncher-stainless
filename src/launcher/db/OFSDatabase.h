@@ -11,7 +11,7 @@
 #include "../net/OFSNet.h"
 #include "../MD5/OFSVerifyIntegrity.h"
 #include <deque>
-#include "../filesystem.h"
+#include "OFFilesystem.h"
 #include <sqlite3.h>
 #include <vector>
 #include <cstring>

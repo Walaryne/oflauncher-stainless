@@ -5,9 +5,10 @@
 #ifndef OFLAUNCHER_STAINLESS_OFSPATH_H
 #define OFLAUNCHER_STAINLESS_OFSPATH_H
 
-#include "../util/OFSUtil.h"
+#include "OFFilesystem.h"
+#include "OFSUtil.h"
 #include <cstdlib>
-#include "../../launcher/filesystem.h"
+
 #include <iostream>
 #include <ostream>
 #include <string>
