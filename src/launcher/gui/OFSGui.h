@@ -14,8 +14,8 @@
 #include <vector>
 
 #ifndef INCLUDE_RESOURCES
-#include <filesystem>
-namespace fs = std::filesystem;
+#include "../filesystem.h"
+
 #endif
 
 #include "OFSGuiActs.h"

@@ -12,8 +12,8 @@
 #ifdef INCLUDE_RESOURCES
 #define resData const EmbedData
 #else
-#include <filesystem>
-namespace fs = std::filesystem;
+#include "../filesystem.h"
+
 #define resData const std::string &
 #endif
 

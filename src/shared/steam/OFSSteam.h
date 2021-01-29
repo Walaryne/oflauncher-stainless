@@ -10,7 +10,7 @@
 #include "OFSPathDiscover.h"
 #include "OFSSteamApp.h"
 
-namespace fs = std::filesystem;
+
 
 class OFSSteam {
 private:

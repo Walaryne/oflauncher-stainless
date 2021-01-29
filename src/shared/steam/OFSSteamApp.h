@@ -12,7 +12,7 @@
 #include <fstream>
 #include <filesystem>
 
-namespace fs = std::filesystem;
+
 
 enum steamAppState {
 	NOT_READY1,
