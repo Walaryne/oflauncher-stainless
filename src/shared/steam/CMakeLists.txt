@@ -5,5 +5,5 @@ SET(STEAM_SOURCES
         OFSSteam.h
         OFSSteamApp.cpp
         OFSSteamApp.h)
-
 add_library(OFSSteam ${STEAM_SOURCES})
+target_include_directories(OFSSteam PUBLIC ../util)

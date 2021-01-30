@@ -14,7 +14,7 @@
 #include "gameinfo/OFSGameInfo.h"
 #include "launchopt/OFSLaunchOpt.h"
 #include <exception>
-#include <filesystem>
+#include "OFFilesystem.h"
 #include <iostream>
 
 #ifdef _WIN32
@@ -25,7 +25,7 @@
 #include <unistd.h>
 #endif
 
-namespace fs = std::filesystem;
+
 
 #define TRYCATCHERR_START() try {
 

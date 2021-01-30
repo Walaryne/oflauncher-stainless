@@ -6,10 +6,10 @@
 #define OFLAUNCHER_STAINLESS_OFSVERIFYINTEGRITY_H
 
 #include <string>
-#include <filesystem>
+#include "OFFilesystem.h"
 #include <iostream>
 #include "../hashlib2plus/hashlibpp.h"
 
-bool verifyIntegrity(std::filesystem::path fToCheck, std::string md5db);
+bool verifyIntegrity(fs::path fToCheck, std::string md5db);
 
 #endif // OFLAUNCHER_STAINLESS_OFSVERIFYINTEGRITY_H

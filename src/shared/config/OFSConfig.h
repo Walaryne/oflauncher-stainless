@@ -8,9 +8,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <filesystem>
 
-#include "../util/json.hpp"
+#include "OFFilesystem.h"
+#include "json.hpp"
 
 #define DEFAULT_CONFIG_TEXT "{}"
 #define CONFIG_FILE_NAME ".oflauncher.config"
@@ -99,11 +99,11 @@ public:
 private:
     bool documentLoaded = false;
     nlohmann::json parsedJsonDocument;
-	std::filesystem::path configFilePath;
+	fs::path configFilePath;
 
 	void assertDocumentLoaded() const;
 	void ensureJsonPtrExists(const nlohmann::json::json_pointer& ptr);
-	static std::filesystem::path getConfigFilePath();
+	static fs::path getConfigFilePath();
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSCONFIG_H

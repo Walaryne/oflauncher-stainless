@@ -1,4 +1,5 @@
 SET(UTIL_SOURCES
+		OFFilesystem.h
         OFSUtil.h
         OFSUtil.cpp
         md5.h

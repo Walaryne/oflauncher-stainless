@@ -8,6 +8,7 @@
 #include "OFSGuiActs.h"
 #include "OFSGuiError.h"
 #include "res/EmbedData.h"
+#include "OFFilesystem.h"
 
 #define resData const EmbedData
 
