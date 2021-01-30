@@ -26,12 +26,11 @@ void OFSNet::setServerURL(std::string URL) {
 
 void OFSNet::fetchDatabase() {
 	downloadFile("/" + p_dbFileName,
-				 fs::path("launcher/remote").make_preferred() /
-					 p_dbFileName);
+				 fs::path("launcher/remote").make_preferred() / p_dbFileName);
 	std::cout << "Database was fetched successfully!" << std::endl;
 }
 
-void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
+void OFSNet::downloadFile(const std::string &path, const fs::path& to, const bool &decompress) {
 	fs::path dir = to;
 	dir.remove_filename();
 	std::cout << "Dir is: " + dir.string() << std::endl;
@@ -54,30 +53,29 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to) {
 	//CURLcode retcode = curl_easy_perform(p_curlh);
 	//std::cout << "cURL return code: " << retcode << std::endl;
     curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, DecompressStream);
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&to);
+    curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, (void *)&to);
 
 }
 
 //TODO: figure out how the callback works, add declarations, actually get it to work
 size_t OFSNet::DecompressStream(char *ptr, size_t size, size_t nmemb, void* path){
-		ZSTD_CCtx zstd_context = ZSTD_createDCtx();
+		fs::path d_path = (char*)path;
+		FILE *out = std::fopen(d_path.string().c_str(), "wb");
+		ZSTD_DCtx* const zstd_context = ZSTD_createDCtx();
 		size_t outputSize = ZSTD_DStreamOutSize();
-		*out = std::malloc(outputSize);
+		void* outputBuffer = std::malloc(outputSize);
 		size_t toRead = nmemb;
-		while ( (read = fread_orDie(buffIn, toRead, *ptr)) ) {
-			ZSTD_inBuffer input = { *ptr, read, 0 };
-			while (input.pos < input.size) {
-				ZSTD_outBuffer output = { *out, outputSize, 0 };
-				size_t ret = ZSTD_decompressStream(dctx, &output , &input);
-				CHECK_ZSTD(ret);
-        }
-        std::fwrite(outputBuffer, sizeof(uint8_t), outputSize, *path);
+		size_t ret;
+		ZSTD_inBuffer input = { ptr, toRead, 0 };
+		while (input.pos < input.size) {
+			ZSTD_outBuffer output = { outputBuffer, outputSize, 0 };
+			ret = ZSTD_decompressStream(zstd_context, &output , &input);
     }
-
-	std::fflush(path);
-	std::fclose(path);
-	std::free(out);
-
+	std::fwrite(outputBuffer, sizeof(uint8_t), outputSize, out);
+	std::fflush(out);
+	std::fclose(out);
+	std::free(outputBuffer);
+	return ret;
 }
 
 void OFSNet::convertURL(std::string &URL) {
