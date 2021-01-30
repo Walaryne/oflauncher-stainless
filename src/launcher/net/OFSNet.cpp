@@ -5,6 +5,7 @@
 #include "OFSNet.h"
 #include <fstream>
 #include <utility>
+#include <zstd.h>
 
 OFSNet::OFSNet(std::string serverURL, std::string gameFolderName) {
 	convertURL(serverURL);
@@ -55,14 +56,12 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 
 	//insert all the other friggin code here for unlzma and checksumming
 	uint8_t* outputBuffer = nullptr;
-	uint32_t outputSize = 0;
+	size_t outputSize = 0;
 
 	if (decompress) {
-		bool success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
-								&outputSize);
+		bool success = ZSTD_decompress(outputBuffer,outputSize,(uint8_t *)membuf.memfile, membuf.size);
 		outputBuffer = (uint8_t*)std::malloc(outputSize);
-		success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
-						   &outputSize);
+		success = ZSTD_decompress(outputBuffer,outputSize,(uint8_t *)membuf.memfile, membuf.size);
 		if(!success || !outputBuffer) {
 			std::fflush(file);
 			std::fclose(file);
