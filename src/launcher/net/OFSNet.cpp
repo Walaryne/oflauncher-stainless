@@ -63,13 +63,13 @@ size_t OFSNet::DecompressStream(char *ptr, size_t size, size_t nmemb, void* path
 		ZSTD_CCtx zstd_context = ZSTD_createDCtx();
 		size_t outputSize = ZSTD_DStreamOutSize();
 		*out = std::malloc(outputSize);
-		size_t const toRead = nmemb;
+		size_t toRead = nmemb;
 		while ( (read = fread_orDie(buffIn, toRead, *ptr)) ) {
-		ZSTD_inBuffer input = { *ptr, read, 0 };
-		while (input.pos < input.size) {
-            ZSTD_outBuffer output = { *out, outputSize, 0 };
-            size_t ret = ZSTD_decompressStream(dctx, &output , &input);
-            CHECK_ZSTD(ret);
+			ZSTD_inBuffer input = { *ptr, read, 0 };
+			while (input.pos < input.size) {
+				ZSTD_outBuffer output = { *out, outputSize, 0 };
+				size_t ret = ZSTD_decompressStream(dctx, &output , &input);
+				CHECK_ZSTD(ret);
         }
         std::fwrite(outputBuffer, sizeof(uint8_t), outputSize, *path);
     }

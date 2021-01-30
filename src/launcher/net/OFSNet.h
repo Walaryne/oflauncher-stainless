@@ -35,6 +35,7 @@ public:
 
 
 private:
+	static size_t DecompressStream(char *ptr, size_t size, size_t nmemb, void* path);
 	static inline void convertURL(std::string &s);
 	static size_t memCallback(void *data, size_t size, size_t nmemb, void *userp);
     std::string p_serverURL;
