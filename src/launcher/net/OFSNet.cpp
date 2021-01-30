@@ -61,7 +61,7 @@ static void downloadFile(const std::string &serverURL, const std::string &path, 
 	fs::path dir = origPath;
 
 	dir.remove_filename();
-	std::cout << "Dir is: " + dir.string() << std::endl;
+	//std::cout << "Dir is: " + dir.string() << std::endl;
 
 	if(!fs::exists(dir)) {
 		fs::create_directories(dir);
@@ -74,18 +74,19 @@ static void downloadFile(const std::string &serverURL, const std::string &path, 
 
 	curl_mem_buf membuf{};
 
-	std::cout << "SERVER PATH IS: " + (serverURL + path) << std::endl;
+	//std::cout << "SERVER PATH IS: " + (serverURL + path) << std::endl;
 	curl_easy_setopt(curlh, CURLOPT_WRITEFUNCTION, memCallback);
 	curl_easy_setopt(curlh, CURLOPT_WRITEDATA, &membuf);
 	curl_easy_setopt(curlh, CURLOPT_URL, (serverURL + path).c_str());
 	CURLcode retcode = curl_easy_perform(curlh);
-	std::cout << "cURL return code: " << retcode << std::endl;
+	curl_easy_cleanup(curlh);
+	//std::cout << "cURL return code: " << retcode << std::endl;
 
 	//insert all the other friggin code here for unlzma and checksumming
 	uint8_t* outputBuffer = nullptr;
 	uint32_t outputSize = 0;
 
-	if (decompress) {
+	if (false) {
 		bool success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
 								&outputSize);
 		outputBuffer = (uint8_t*)std::malloc(outputSize);
@@ -112,9 +113,11 @@ static void downloadFile(const std::string &serverURL, const std::string &path, 
 	std::free(membuf.memfile);
 
 }
-void downloadFile(const std::string &serverURL, const std::string &path, bool *done ) {
-	downloadFile(serverURL, path, "", true);
-	*done = true;
+int downloadFile(void *ptr) {
+	dfArgs *dfa = (dfArgs *)ptr;
+	downloadFile(dfa->serverURL, dfa->path, "", true);
+	*(dfa->done) = true;
+	return 0;
 }
 
 void OFSNet::fetchDatabase() {

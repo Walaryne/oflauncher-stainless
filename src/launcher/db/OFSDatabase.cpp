@@ -153,38 +153,61 @@ bool OFSDatabase::downloadSingleFile() {
 }
 
 struct downloadThread {
-	std::thread t;
-	bool done;
+	SDL_Thread *t;
+	bool *done;
+	dfArgs *a;
 
-	downloadThread(const std::string &serverURL, const std::string &path) : t(downloadFile, serverURL, path, &(this->done)), done(false) {}
+	downloadThread(const std::string &serverURL, const std::string path) {
+		*done = false;
+		a = new dfArgs(serverURL, path, done);
+		t = SDL_CreateThread(downloadFile, "df", (void *)a);
+		SDL_DetachThread(t);
+	}
 };
 
 bool OFSDatabase::downloadFiles(float &prog) {
 	std::string serverURL = p_net->getServerURL();
 
 	int numThreads = 0;
-	int numThreadsMax = 2;
+	int numThreadsMax = 50;
+
+	int *dummyRet;
+
+	int totalFiles = p_downloadQueue.size();
+	int queue = totalFiles;
+	//((float)totalFiles - (float)queue) / (float)totalFiles;
 
 	std::vector<downloadThread> threads;
-
+	//threads.push_back(downloadThread(serverURL, p_downloadQueue.front()));
+	//SDL_WaitThread(threads[0].t, nullptr);
 	while(!p_downloadQueue.empty()) {
-		if(numThreads < numThreadsMax) {
-			threads.emplace_back(serverURL, p_downloadQueue.front());
+		while(numThreads < numThreadsMax) {
+			std::cout << "Creating thread to download " << p_downloadQueue.front() << std::endl;
+			threads.push_back(std::move(downloadThread(serverURL, p_downloadQueue.front())));
 			p_downloadQueue.pop_front();
+			queue--;
 			numThreads++;
 		}
+
 		for(auto &i : threads) {
-			if(i.done) {
-				i.t.join();
+			if(*(i.done)) {
+				//SDL_WaitThread(i.t, dummyRet);
+				std::cout << "Thread finished." << std::endl;
+				numThreads--;
+				*(i.done) = false;
 			}
 		}
-		for(auto i = threads.cbegin(); i!= threads.cend(); i++) {
-			if(i->done) {
+		prog = ((float)totalFiles - (float)queue) / (float)totalFiles;
+		SDL_Delay(1);
+/*
+		for(auto &i : std::as_const(threads)) {
+			if(i.done) {
 				threads.erase(i);
 				numThreads--;
 			}
 		}
 		threads.shrink_to_fit();
+		*/
 
 	}
 	return true;

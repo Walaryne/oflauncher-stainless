@@ -22,7 +22,15 @@ extern "C" {
 
 namespace fs = std::filesystem;
 
-void downloadFile(const std::string &serverURL, const std::string &path, bool *done);
+struct dfArgs {
+	const std::string serverURL;
+	const std::string path;
+	bool *done;
+
+	dfArgs(const std::string &serverURL, const std::string &path, bool *done) : serverURL(serverURL), path(path), done(done) {}
+};
+
+int downloadFile(void *ptr);
 
 class OFSNet {
 public:
