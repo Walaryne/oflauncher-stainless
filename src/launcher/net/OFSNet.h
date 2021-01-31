@@ -21,7 +21,6 @@ extern "C" {
 #include <memory>
 
 
-
 class OFSNet {
 public:
     explicit OFSNet(std::string serverURL, std::string gameFolderName);
@@ -35,7 +34,7 @@ public:
 
 
 private:
-	static size_t DecompressStream(char *ptr, size_t size, size_t nmemb, void* path);
+	static size_t DecompressStream(char *ptr, size_t size, size_t nmemb, void* arg);
 	static inline void convertURL(std::string &s);
 	static size_t memCallback(void *data, size_t size, size_t nmemb, void *userp);
     std::string p_serverURL;

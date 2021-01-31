@@ -6,6 +6,8 @@
 #include <fstream>
 #include <utility>
 #include <zstd.h>
+#include "../hashlib2plus/hashlibpp.h"
+
 
 OFSNet::OFSNet(std::string serverURL, std::string gameFolderName) {
 	convertURL(serverURL);
@@ -44,36 +46,52 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 		std::perror("FOPEN: ");
 	}
 
-	curl_mem_buf membuf{};
+	MD5 hash = MD5();
+	HL_MD5_CTX* ctx = NULL;
+	hash.MD5Init(ctx);
+	void* ptrs[2] = {ctx, file};
+
 
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
-	//curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, OFSNet::memCallback);
-	//curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, &membuf);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
-	//CURLcode retcode = curl_easy_perform(p_curlh);
-	//std::cout << "cURL return code: " << retcode << std::endl;
-    curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, DecompressStream);
-    curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, (void *)&to);
+	curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, DecompressStream);
+	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, (void *)ptrs);
 
+	CURLcode retcode = curl_easy_perform(p_curlh);
+	std::cout << "cURL return code: " << retcode << std::endl;
+
+	// std::string checksum;
+	// checksum.reserve(16);
+	unsigned char checksum[16];
+	hash.MD5Final(checksum, ctx);
+
+	std::cout << "file checksum: " << checksum << std::endl;
 }
 
 //TODO: figure out how the callback works, add declarations, actually get it to work
-size_t OFSNet::DecompressStream(char *ptr, size_t size, size_t nmemb, void* path){
-		fs::path d_path = (char*)path;
-		FILE *out = std::fopen(d_path.string().c_str(), "wb");
-		ZSTD_DCtx* const zstd_context = ZSTD_createDCtx();
-		size_t outputSize = ZSTD_DStreamOutSize();
-		void* outputBuffer = std::malloc(outputSize);
-		size_t toRead = nmemb;
-		size_t ret;
-		ZSTD_inBuffer input = { ptr, toRead, 0 };
-		while (input.pos < input.size) {
-			ZSTD_outBuffer output = { outputBuffer, outputSize, 0 };
-			ret = ZSTD_decompressStream(zstd_context, &output , &input);
-    }
-	std::fwrite(outputBuffer, sizeof(uint8_t), outputSize, out);
-	std::fflush(out);
-	std::fclose(out);
+size_t OFSNet::DecompressStream(char *ptr, size_t size, size_t nmemb, void* arg_ptr) {
+	unsigned long long const outputSize = ZSTD_getDecompressedSize(ptr, size);
+	if(outputSize == 0) {} // very bad
+	unsigned char* outputBuffer = (unsigned char*)std::malloc(outputSize);
+	ZSTD_DCtx* const zstd_ctx = ZSTD_createDCtx();
+	ZSTD_inBuffer input = { ptr, nmemb, 0 };
+	ZSTD_outBuffer output = { outputBuffer, outputSize, 0 };
+
+
+	MD5 hash = MD5();
+	HL_MD5_CTX* ctx = ((HL_MD5_CTX **)arg_ptr)[0];
+	FILE *fout = ((FILE **)arg_ptr)[1];
+
+	int ret = 0;
+	while(input.pos < input.size) {
+		ret |= ZSTD_decompressStream(zstd_ctx, &output, &input);
+		ret |= std::fseek(fout, 0, SEEK_END);
+		ret |= std::fwrite(outputBuffer, sizeof(unsigned char), outputSize/sizeof(unsigned char), fout);
+		hash.MD5Update(ctx, outputBuffer, outputSize);
+	}
+	
+	std::fflush(fout);
+	std::fclose(fout);
 	std::free(outputBuffer);
 	return ret;
 }
