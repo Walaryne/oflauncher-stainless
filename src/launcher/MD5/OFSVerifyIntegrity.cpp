@@ -6,7 +6,7 @@
 
 static hashwrapper *md5 = new md5wrapper();
 
-bool verifyIntegrity(std::filesystem::path fToCheck, std::string md5db) {
+bool verifyIntegrity(fs::path fToCheck, std::string md5db) {
 	std::string md5ret = "";
 	try {
 		md5ret =

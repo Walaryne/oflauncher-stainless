@@ -17,7 +17,7 @@ OFSConfig::~OFSConfig() {
  * @return - succeeded
  */
 bool OFSConfig::loadFromDisk() {
-	if(!std::filesystem::exists(configFilePath)) {
+	if(!fs::exists(configFilePath)) {
 		std::ofstream newFile(configFilePath);
 		newFile << DEFAULT_CONFIG_TEXT;
 		newFile.close();
@@ -83,21 +83,9 @@ bool OFSConfig::exists(const char *path) {
  * Gets the destination path for the config file
  * @return - path of config file
  */
-std::filesystem::path OFSConfig::getConfigFilePath() {
-
-
-#if _MSC_VER
-	char buffer[MAX_PATH];
-	size_t len;
-	errno_t error = getenv_s(&len, buffer, sizeof(buffer) - 1, ENV_DIR);
-	if(error != 0) {
-		throw std::exception("Failed to get env variable for config file path");
-	}
-#else
+fs::path OFSConfig::getConfigFilePath() {
 	char * buffer = getenv(ENV_DIR);
-#endif
-
-	return buffer / std::filesystem::path(CONFIG_FILE_NAME);
+	return buffer / fs::path(CONFIG_FILE_NAME);
 }
 
 /**
@@ -120,7 +108,7 @@ void OFSConfig::assertDocumentLoaded() const {
  */
 void OFSConfig::ensureJsonPtrExists(const nlohmann::json::json_pointer &ptr) {
 	std::stringstream pathString(ptr);
-	nlohmann::json *curr = &parsedJsonDocument;
+	nlohmann::json *curr = &parsedJsonDocument; // nlohmann?
 	std::string pathSegment;
 	while(std::getline(pathString, pathSegment, '/')) {
 		if(pathSegment.empty()) {
