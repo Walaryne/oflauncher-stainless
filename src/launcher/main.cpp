@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
 	checkDirsExist();
 	TRYCATCHERR_END("Could not find or set directory correctly.")
 
-	OFSNet net("http://svn.openfortress.fun/files", gameFolderName);
+	OFSNet net("http://svn.openfortress.fun/zstd", gameFolderName);
 	//OFSNet net("http://127.0.0.1/", gameFolderName);
 
 	// To Fenteale: This should be called the moment that the "Update"
