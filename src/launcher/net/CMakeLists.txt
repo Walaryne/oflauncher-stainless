@@ -3,10 +3,11 @@ SET(NET_SOURCES
         OFSNet.h)
 
 find_package(CURL REQUIRED)
-find_package(libzstd QUIET)
-find_package(zstd QUIET)
 
-include_directories(${CURL_INCLUDE_DIR})
+find_path(ZSTD_INCLUDE_DIR zstd.h)
+find_library(ZSTD_LIBRARY zstd)
+
+include_directories(${CURL_INCLUDE_DIR} ${ZSTD_INCLUDE_DIR})
 
 add_library(OFSNet ${NET_SOURCES})
 if(${zstd_FOUND})
