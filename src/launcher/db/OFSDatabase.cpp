@@ -152,6 +152,8 @@ bool OFSDatabase::downloadSingleFile() {
 	}
 }
 
+static int tcounter = 0;
+
 struct downloadThread {
 	SDL_Thread *t;
 	bool *done;
@@ -160,7 +162,11 @@ struct downloadThread {
 	downloadThread(const std::string &serverURL, const std::string path) {
 		*done = false;
 		a = new dfArgs(serverURL, path, done);
-		t = SDL_CreateThread(downloadFile, "df", (void *)a);
+		std::string tn = "df";
+		tn.append(std::to_string(tcounter));
+		tcounter++;
+
+		t = SDL_CreateThread(downloadFile, tn.c_str(), (void *)a);
 		SDL_DetachThread(t);
 	}
 };
