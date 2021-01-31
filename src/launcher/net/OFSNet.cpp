@@ -46,8 +46,10 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 		std::perror("FOPEN: ");
 	}
 
+	std::cout << "Writing to " << to.string().c_str() << std::endl;
+
 	MD5 hash = MD5();
-	HL_MD5_CTX* ctx = NULL;
+	HL_MD5_CTX* ctx = (HL_MD5_CTX*)std::malloc(16);
 	hash.MD5Init(ctx);
 	void* ptrs[2] = {ctx, file};
 
