@@ -86,9 +86,17 @@ static void downloadFile(const std::string &serverURL, const std::string &path, 
 	uint8_t* outputBuffer = nullptr;
 	uint32_t outputSize = 0;
 
-	if (false) {
+	//if(false) { //debugging
+	if (decompress) {
 		bool success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
 								&outputSize);
+		if(!success) {
+			std::fflush(file);
+			std::fclose(file);
+			std::free(membuf.memfile);
+
+			throw std::runtime_error("Error decompressing file (1).");
+		}
 		outputBuffer = (uint8_t*)std::malloc(outputSize);
 		success = XzDecode((uint8_t *)membuf.memfile, membuf.size, outputBuffer,
 						   &outputSize);
@@ -98,7 +106,7 @@ static void downloadFile(const std::string &serverURL, const std::string &path, 
 			std::free(membuf.memfile);
 			std::free(outputBuffer);
 
-			throw std::runtime_error("Error decompressing file.");
+			throw std::runtime_error("Error decompressing file (2).");
 		}
 		else {
 			std::fwrite(outputBuffer, sizeof(uint8_t), outputSize, file);

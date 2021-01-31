@@ -160,6 +160,7 @@ struct downloadThread {
 	dfArgs *a;
 
 	downloadThread(const std::string &serverURL, const std::string path) {
+		done = new bool;
 		*done = false;
 		a = new dfArgs(serverURL, path, done);
 		std::string tn = "df";
@@ -171,11 +172,11 @@ struct downloadThread {
 	}
 };
 
-bool OFSDatabase::downloadFiles(float &prog) {
-	std::string serverURL = p_net->getServerURL();
+bool OFSDatabase::downloadFiles(float &prog, bool &c) {
+	std::string serverURL = p_net->getServerURL() + "/";
 
 	int numThreads = 0;
-	int numThreadsMax = 50;
+	int numThreadsMax = 8;
 
 	int *dummyRet;
 
@@ -186,7 +187,7 @@ bool OFSDatabase::downloadFiles(float &prog) {
 	std::vector<downloadThread> threads;
 	//threads.push_back(downloadThread(serverURL, p_downloadQueue.front()));
 	//SDL_WaitThread(threads[0].t, nullptr);
-	while(!p_downloadQueue.empty()) {
+	while(!p_downloadQueue.empty() && c) {
 		while(numThreads < numThreadsMax) {
 			std::cout << "Creating thread to download " << p_downloadQueue.front() << std::endl;
 			threads.push_back(std::move(downloadThread(serverURL, p_downloadQueue.front())));
