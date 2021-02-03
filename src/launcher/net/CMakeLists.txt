@@ -1,6 +1,8 @@
 SET(NET_SOURCES
         OFSNet.cpp
-        OFSNet.h)
+        OFSNet.h
+        md5.cpp
+        md5.h)
 
 find_package(CURL REQUIRED)
 
@@ -8,7 +10,6 @@ find_path(ZSTD_INCLUDE_DIR zstd.h)
 find_library(ZSTD_LIBRARY zstd)
 
 include_directories(${CURL_INCLUDE_DIR} ${ZSTD_INCLUDE_DIR})
-
 add_library(OFSNet ${NET_SOURCES})
 
 target_link_libraries(OFSNet ${CURL_LIBRARIES} zstd)
