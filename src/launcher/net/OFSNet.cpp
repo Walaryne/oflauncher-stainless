@@ -53,11 +53,8 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 	void* ptrs[2] = {&md5stream, file};
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
-	std::cout << "toast1" << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, DecompressStream);
-	std::cout << "toast2" << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, (void *)ptrs);
-	std::cout << "toast3" << std::endl;
 	CURLcode retcode = curl_easy_perform(p_curlh);
 	std::cout << "cURL return code: " << retcode << std::endl;
 
