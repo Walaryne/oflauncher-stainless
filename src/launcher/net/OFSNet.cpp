@@ -6,6 +6,7 @@
 #include <fstream>
 #include <utility>
 #include <zstd.h>
+#include "md5.h"
 
 OFSNet::OFSNet(std::string serverURL, std::string gameFolderName) {
 	convertURL(serverURL);
@@ -46,19 +47,21 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 	}
 
 	curl_mem_buf membuf{};
-
+	MD5 hash;
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, OFSNet::memCallback);
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, &membuf);
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
 	CURLcode retcode = curl_easy_perform(p_curlh);
 	std::cout << "cURL return code: " << retcode << std::endl;
-
+	hash.add(membuf.memfile,membuf.size);
+	const char* checksum = hash.getHash().c_str();
 	//insert all the other friggin code here for unlzma and checksumming
 	uint8_t* outputBuffer = nullptr;
 	unsigned long long outputSize = 0;
 
 	if (decompress) {
+		std::cout << "Decompressing..." << std::endl;
 		outputSize = ZSTD_getFrameContentSize(membuf.memfile,membuf.size);
 		outputBuffer = (uint8_t*)std::malloc(outputSize);
 		bool fail = ZSTD_isError(ZSTD_decompress(outputBuffer,outputSize,membuf.memfile, membuf.size));
