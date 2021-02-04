@@ -51,18 +51,27 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 
 	MD5 md5stream;
 	void* ptrs[2] = {&md5stream, file};
+
 	std::cout << "SERVER PATH IS: " + (p_serverURL + path) << std::endl;
 	curl_easy_setopt(p_curlh, CURLOPT_URL, (p_serverURL + path).c_str());
-	curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, DecompressStream);
+	if(decompress)
+		curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, DecompressStream);
+	else
+		curl_easy_setopt(p_curlh, CURLOPT_WRITEFUNCTION, memCallback);
+
 	curl_easy_setopt(p_curlh, CURLOPT_WRITEDATA, (void *)ptrs);
+
 	CURLcode retcode = curl_easy_perform(p_curlh);
+	FILE *fout = ((FILE **)ptrs)[1];
+	std::fflush(fout);
+	std::fclose(fout);
+
 	std::cout << "cURL return code: " << retcode << std::endl;
 
 	const char* checksum = md5stream.getHash().c_str();
-	
+
 	std::cout << "file checksum: " << checksum << std::endl;
 }
-
 
 size_t OFSNet::DecompressStream(char *ptr, size_t size, size_t nmemb, void* arg_ptr) {
 	unsigned long long const outputSize = ZSTD_getDecompressedSize(ptr, size);
@@ -80,9 +89,8 @@ size_t OFSNet::DecompressStream(char *ptr, size_t size, size_t nmemb, void* arg_
 		ret |= std::fwrite(outputBuffer, sizeof(unsigned char), outputSize/sizeof(unsigned char), fout);
 		md5s->add(outputBuffer, outputSize);
 	}
-	
-	std::fflush(fout);
-	std::fclose(fout);
+
+
 	std::free(outputBuffer);
 	return ret;
 }
@@ -102,17 +110,11 @@ void OFSNet::setFolderName(std::string name) {
 }
 
 size_t OFSNet::memCallback(void *data, size_t size, size_t nmemb, void *userp) {
-	size_t realsize = size * nmemb;
-	auto *mem = static_cast<curl_mem_buf*> (userp);
+	FILE *fout = ((FILE **)userp)[1];
+	size_t written;
+	written = std::fwrite(data, size, nmemb, fout);
 
-	char *ptr =
-		static_cast<char *>(realloc(mem->memfile, mem->size + realsize + 1));
 
-	mem->memfile = ptr;
+	return written;
 
-	std::memcpy(&(mem->memfile[mem->size]), data, realsize);
-	mem->size += realsize;
-	mem->memfile[mem->size] = 0;
-
-	return realsize;
 }
