@@ -58,7 +58,7 @@ void OFSNet::downloadFile(const std::string &path, const fs::path& to, const boo
 	uint8_t* outputBuffer = nullptr;
 	unsigned long long outputSize = 0;
 
-	if (decompress) {
+	if (decompress && membuf.size != 0) {
 		outputSize = ZSTD_getFrameContentSize(membuf.memfile,membuf.size);
 		outputBuffer = (uint8_t*)std::malloc(outputSize);
 		bool fail = ZSTD_isError(ZSTD_decompress(outputBuffer,outputSize,membuf.memfile, membuf.size));
