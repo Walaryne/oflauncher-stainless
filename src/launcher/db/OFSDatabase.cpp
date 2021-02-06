@@ -143,14 +143,81 @@ int OFSDatabase::compareIntegrity() {
 bool OFSDatabase::downloadSingleFile() {
 	if(!p_downloadQueue.empty()) {
 		std::string file = p_downloadQueue.front();
-		fs::path fileDownloading = (fs::current_path() / fs::path(file)).make_preferred();
-		std::cout << "Downloading file: " << fileDownloading << std::endl;
-		p_net->downloadFile("/" + file, fileDownloading, true);
+		std::cout << "Downloading file: " << file << std::endl;
+		//p_net->downloadFile("/" + file, "", true);
 		p_downloadQueue.pop_front();
 		return false;
 	} else {
 		return true;
 	}
+}
+
+static int tcounter = 0;
+
+struct downloadThread {
+	SDL_Thread *t;
+	bool *done;
+	dfArgs *a;
+
+	downloadThread(const std::string &serverURL, const std::string path) {
+		done = new bool;
+		*done = false;
+		a = new dfArgs(serverURL, path, done);
+		std::string tn = "df";
+		tn.append(std::to_string(tcounter));
+		tcounter++;
+
+		t = SDL_CreateThread(downloadFile, tn.c_str(), (void *)a);
+		SDL_DetachThread(t);
+	}
+};
+
+bool OFSDatabase::downloadFiles(float &prog, bool &c) {
+	std::string serverURL = p_net->getServerURL() + "/";
+
+	int numThreads = 0;
+	int numThreadsMax = 15;
+
+	int *dummyRet;
+
+	int totalFiles = p_downloadQueue.size();
+	int queue = totalFiles;
+	//((float)totalFiles - (float)queue) / (float)totalFiles;
+
+	std::vector<downloadThread> threads;
+	//threads.push_back(downloadThread(serverURL, p_downloadQueue.front()));
+	//SDL_WaitThread(threads[0].t, nullptr);
+	while(!p_downloadQueue.empty() && c) {
+		while(numThreads < numThreadsMax) {
+			std::cout << "Creating thread to download " << p_downloadQueue.front() << std::endl;
+			threads.push_back(std::move(downloadThread(serverURL, p_downloadQueue.front())));
+			p_downloadQueue.pop_front();
+			queue--;
+			numThreads++;
+		}
+
+		for(auto &i : threads) {
+			if(*(i.done)) {
+				//SDL_WaitThread(i.t, dummyRet);
+				std::cout << "Thread finished." << std::endl;
+				numThreads--;
+				*(i.done) = false;
+			}
+		}
+		prog = ((float)totalFiles - (float)queue) / (float)totalFiles;
+		SDL_Delay(1);
+/*
+		for(auto &i : std::as_const(threads)) {
+			if(i.done) {
+				threads.erase(i);
+				numThreads--;
+			}
+		}
+		threads.shrink_to_fit();
+		*/
+
+	}
+	return true;
 }
 
 int OFSDatabase::databasePathConsumer(void *param, int argc, char **argv, char **column) {

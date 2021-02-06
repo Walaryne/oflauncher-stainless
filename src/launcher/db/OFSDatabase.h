@@ -10,6 +10,7 @@
 
 #include "../net/OFSNet.h"
 #include "../MD5/OFSVerifyIntegrity.h"
+#include "SDL2/SDL.h"
 #include <deque>
 #include "OFFilesystem.h"
 #include <sqlite3.h>
@@ -17,6 +18,7 @@
 #include <cstring>
 #include <iostream>
 #include <algorithm>
+#include <thread>
 
 class OFSDatabase {
 public:
@@ -25,6 +27,7 @@ public:
 	void compareRevisions();
 	int compareIntegrity();
 	bool downloadSingleFile();
+	bool downloadFiles(float &prog, bool &c);
 	int getQueueSize();
 	void copyDb();
 
