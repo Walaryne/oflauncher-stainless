@@ -171,7 +171,7 @@ int main(int argc, char *argv[]) {
 				TRYCATCHERR_START()
 				db.compareRevisions();
 				int totalFiles = db.getQueueSize();
-				while(!db.downloadFiles(progData, continueData) && c && (FiredGuiAct != BUT_CLICKED_CANCEL))
+				while(!db.downloadFiles(progData, &butStateData) && c && (FiredGuiAct != BUT_CLICKED_CANCEL))
 				{
 					SDL_SemWait(progDataLock);
 					progData = ((float)totalFiles - (float)db.getQueueSize()) / (float)totalFiles;
@@ -184,7 +184,7 @@ int main(int argc, char *argv[]) {
 					butStateData = NOT_CLICKED;
 					SDL_SemPost(butDataLock);
 				}
-				if(c && (FiredGuiAct != BUT_CLICKED_CANCEL)) {
+				if(c && (butStateData != BUT_CLICKED_CANCEL)) {
 					db.copyDb();
                     SDL_SemWait(progDataLock);
                     progData = 1.0f;

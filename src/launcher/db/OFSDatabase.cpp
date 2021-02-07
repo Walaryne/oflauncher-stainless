@@ -172,7 +172,7 @@ struct downloadThread {
 	}
 };
 
-bool OFSDatabase::downloadFiles(float &prog, bool &c) {
+bool OFSDatabase::downloadFiles(float &prog, int *act) {
 	std::string serverURL = p_net->getServerURL() + "/";
 
 	int numThreads = 0;
@@ -187,7 +187,7 @@ bool OFSDatabase::downloadFiles(float &prog, bool &c) {
 	std::vector<downloadThread> threads;
 	//threads.push_back(downloadThread(serverURL, p_downloadQueue.front()));
 	//SDL_WaitThread(threads[0].t, nullptr);
-	while(!p_downloadQueue.empty() && c) {
+	while(!p_downloadQueue.empty() && *act != BUT_CLICKED_CANCEL) {
 		while(numThreads < numThreadsMax) {
 			std::cout << "Creating thread to download " << p_downloadQueue.front() << std::endl;
 			threads.push_back(std::move(downloadThread(serverURL, p_downloadQueue.front())));

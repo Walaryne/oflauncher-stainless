@@ -13,6 +13,7 @@
 #include "SDL2/SDL.h"
 #include <deque>
 #include "OFFilesystem.h"
+#include "../gui/OFSGuiActs.h"
 #include <sqlite3.h>
 #include <vector>
 #include <cstring>
@@ -27,7 +28,7 @@ public:
 	void compareRevisions();
 	int compareIntegrity();
 	bool downloadSingleFile();
-	bool downloadFiles(float &prog, bool &c);
+	bool downloadFiles(float &prog, int *act);
 	int getQueueSize();
 	void copyDb();
 
