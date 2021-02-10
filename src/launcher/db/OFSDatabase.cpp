@@ -188,7 +188,7 @@ bool OFSDatabase::downloadFiles(float &prog, int *act) {
 	//threads.push_back(downloadThread(serverURL, p_downloadQueue.front()));
 	//SDL_WaitThread(threads[0].t, nullptr);
 	while(!p_downloadQueue.empty() && *act != BUT_CLICKED_CANCEL) {
-		while(numThreads < numThreadsMax) {
+		while(numThreads < numThreadsMax && !p_downloadQueue.empty() ) {
 			std::cout << "Creating thread to download " << p_downloadQueue.front() << std::endl;
 			threads.push_back(std::move(downloadThread(serverURL, p_downloadQueue.front())));
 			p_downloadQueue.pop_front();
