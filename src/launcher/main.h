@@ -14,6 +14,7 @@
 #include "../shared/config/OFSConfig.h"
 #include "gameinfo/OFSGameInfo.h"
 #include "launchopt/OFSLaunchOpt.h"
+#include "importsvn/OFSImportSVN.h"
 #include <exception>
 #include "OFFilesystem.h"
 #include <iostream>
