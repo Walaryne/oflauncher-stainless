@@ -13,4 +13,4 @@ include_directories(${SQLITE_INCLUDE_DIR})
 add_library(OFSdb ${DB_SOURCES})
 
 #target_link_libraries(OFSdb ${SQLite3_LIBRARIES} Threads::Threads)
-target_link_libraries(OFSdb ${SQLite3_LIBRARIES} )
+target_link_libraries(OFSdb stdc++fs sqlite3 ${SQLite3_LIBRARIES} )

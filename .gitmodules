@@ -1,3 +1,6 @@
 [submodule "src/shared/minlzma"]
 	path = src/shared/minlzma
 	url = https://github.com/ionescu007/minlzma.git
+[submodule "src/launcher/zstd"]
+	path = src/launcher/zstd
+	url = https://github.com/facebook/zstd

@@ -7,6 +7,7 @@ set(SOURCES
         main.h)
 include_directories(../shared/util)
 set(OFS_LIBRARIES
+	libzstd_static
         hashlib2plus
         OFSGui
         OFSdb
@@ -23,6 +24,7 @@ set(OFS_LIBRARIES
 if(UNIX)
     find_package(PkgConfig REQUIRED)
 endif()
+add_subdirectory(zstd/build/cmake)
 add_subdirectory(hashlib2plus)
 add_subdirectory(gui)
 add_subdirectory(db)
