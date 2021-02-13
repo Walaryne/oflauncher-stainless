@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
 	TRYCATCHERR_START()
 	cf.loadFromDisk();
 	if(!cf.exists("/steamPath"))	{
+		firstTime=true;
 		steam = new OFSSteam();
 		steamPath = steam->getSteamPath().string();
 		cf.writeValue("/steamPath", steamPath);
@@ -118,6 +119,8 @@ int main(int argc, char *argv[]) {
 
 
 
+
+
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
 
 	// if(runFromGame)
@@ -130,13 +133,20 @@ int main(int argc, char *argv[]) {
 	fs::path of = fs::path(steam->getSourcemodsPath() / gameFolderName)
 					  .make_preferred();
 
+	if(firstTime)
+	{
+		OFSImportSVN svn(of);
+		std::cout << "Is this an SVN import? " << svn.isSVN() << std::endl;
+	}
+
 	//std::cout << steam.getApp(440)->getName() << std::endl;
 	//std::cout << steam.getApp(440)->getInstallPath() << std::endl;
 
 	if(!fs::exists(of)) {
-		firstTime=true;
 		fs::create_directories(of);
 	}
+
+
 
 	fs::current_path(of);
 

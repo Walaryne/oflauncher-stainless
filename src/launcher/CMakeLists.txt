@@ -17,6 +17,7 @@ set(OFS_LIBRARIES
         OFSConfig
         OFSSteam
         OFSUtil
+        OFImportSVN
         nfd
         minlzlib)
 
@@ -31,6 +32,7 @@ add_subdirectory(nativefiledialog)
 add_subdirectory(gameinfo)
 add_subdirectory(MD5)
 add_subdirectory(launchopt)
+add_subdirectory(importsvn)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

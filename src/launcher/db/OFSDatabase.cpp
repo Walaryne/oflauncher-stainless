@@ -176,17 +176,15 @@ bool OFSDatabase::downloadFiles(float &prog, int *act) {
 	std::string serverURL = p_net->getServerURL() + "/";
 
 	int numThreads = 0;
-	int numThreadsMax = 15;
+	int numThreadsMax = SDL_GetCPUCount() - 1;
+	std::cout << "Spawning maximum of " << numThreadsMax << " threads." << std::endl;
 
-	int *dummyRet;
 
 	int totalFiles = p_downloadQueue.size();
 	int queue = totalFiles;
-	//((float)totalFiles - (float)queue) / (float)totalFiles;
 
 	std::vector<downloadThread> threads;
-	//threads.push_back(downloadThread(serverURL, p_downloadQueue.front()));
-	//SDL_WaitThread(threads[0].t, nullptr);
+
 	while(!p_downloadQueue.empty() && *act != BUT_CLICKED_CANCEL) {
 		while(numThreads < numThreadsMax && !p_downloadQueue.empty() ) {
 			std::cout << "Creating thread to download " << p_downloadQueue.front() << std::endl;
@@ -198,7 +196,6 @@ bool OFSDatabase::downloadFiles(float &prog, int *act) {
 
 		for(auto &i : threads) {
 			if(*(i.done)) {
-				//SDL_WaitThread(i.t, dummyRet);
 				std::cout << "Thread finished." << std::endl;
 				numThreads--;
 				*(i.done) = false;
@@ -206,15 +203,6 @@ bool OFSDatabase::downloadFiles(float &prog, int *act) {
 		}
 		prog = ((float)totalFiles - (float)queue) / (float)totalFiles;
 		SDL_Delay(1);
-/*
-		for(auto &i : std::as_const(threads)) {
-			if(i.done) {
-				threads.erase(i);
-				numThreads--;
-			}
-		}
-		threads.shrink_to_fit();
-		*/
 
 	}
 	return true;
