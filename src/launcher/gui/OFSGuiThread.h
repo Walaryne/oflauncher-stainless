@@ -6,6 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSGUITHREAD_H
 
 #include <string>
+#include <vector>
 #include <exception>
 #include "OFSGui.h"
 #include "../../shared/config/OFSConfig.h"
@@ -33,5 +34,6 @@ extern int verifyState;
 	}
 
 int doGui(void *ptr);
+void simulateButton(GuiActs act);
 
 #endif // OFLAUNCHER_STAINLESS_OFSGUITHREAD_H

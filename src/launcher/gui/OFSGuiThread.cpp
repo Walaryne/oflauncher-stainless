@@ -4,8 +4,18 @@
 
 #include "OFSGuiThread.h"
 
+SDL_sem* actBuffLock;
+std::vector<GuiActs> actBuf;
+
+void simulateButton(GuiActs act) {
+	SDL_SemWait(actBuffLock);
+	actBuf.push_back(act);
+	SDL_SemPost(actBuffLock);
+}
 
 int doGui(void *ptr) {
+	actBuffLock = SDL_CreateSemaphore(1);
+
 	TRYCATCHERR_START()
 	OFSUserSettings us(*((std::string*)(ptr)));
 	//us.setLaunchOpt(us.getUsers()[0], "-secure -steam");
@@ -69,6 +79,12 @@ int doGui(void *ptr) {
 				butStateData = a;
 				SDL_SemPost(butDataLock);
 			}
+		}
+		for(auto x = actBuf.rbegin(); x != actBuf.rend(); x ++) {
+			g.simulateButton(*x);
+			SDL_SemWait(actBuffLock);
+			actBuf.pop_back();
+			SDL_SemPost(actBuffLock);
 		}
 		if(verifyState>=0) {
 			g.verified = verifyState;

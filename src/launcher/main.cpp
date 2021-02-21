@@ -68,50 +68,16 @@ int main(int argc, char *argv[]) {
 	TRYCATCHERR_START()
 	if(!steam->getApp(440))
 	{
-		SDL_MessageBoxButtonData buttons[] = {
-			{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
-			{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}
-		};
-
-		SDL_MessageBoxData askTF2 = {
-			SDL_MESSAGEBOX_WARNING,
-			nullptr,
-			"Did not detect TF2",
-			"Team Fortress 2 must be installed before you are\n"
-			"able to run Open Fortress.\n\n"
-			"Install now?",
-			SDL_arraysize(buttons),
-			buttons,
-			nullptr
-		};
-		int buttonid;
-		if(SDL_ShowMessageBox(&askTF2, &buttonid) < 0)
-			throw;
-		if(buttonid == 0)
+		if(OFSYesNoDialog("Did not detect TF2", "Team Fortress 2 must be installed before you are\n"
+												"able to run Open Fortress.\n\n"
+												"Install now?") == 0)
 			openURL("steam://install/440");
 	}
 	if(!steam->getApp(243750))
 	{
-		SDL_MessageBoxButtonData buttons[] = {
-			{ SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 0, "Yes"},
-			{ SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 1, "No"}
-		};
-
-		SDL_MessageBoxData askSDK = {
-			SDL_MESSAGEBOX_WARNING,
-			nullptr,
-			"Did not detect Source SDK Base",
-			"Source SDK Base 2013 Multiplayer must be\n"
-			"installed before you are able to run Open Fortress.\n\n"
-			"Install now?",
-			SDL_arraysize(buttons),
-			buttons,
-			nullptr
-		};
-		int buttonid;
-		if(SDL_ShowMessageBox(&askSDK, &buttonid) < 0)
-			throw;
-		if(buttonid == 0)
+		if(OFSYesNoDialog("Did not detect Source SDK Base", "Source SDK Base 2013 Multiplayer must be\n"
+															"installed before you are able to run Open Fortress.\n\n"
+															"Install now?") == 0)
 			openURL("steam://install/243750");
 	}
 
@@ -133,11 +99,7 @@ int main(int argc, char *argv[]) {
 	fs::path of = fs::path(steam->getSourcemodsPath() / gameFolderName)
 					  .make_preferred();
 
-	if(firstTime)
-	{
-		OFSImportSVN svn(of);
-		std::cout << "Is this an SVN import? " << svn.isSVN() << std::endl;
-	}
+
 
 	//std::cout << steam.getApp(440)->getName() << std::endl;
 	//std::cout << steam.getApp(440)->getInstallPath() << std::endl;
@@ -162,6 +124,27 @@ int main(int argc, char *argv[]) {
 
 	OFSDatabase db(&net);
 
+	OFSImportSVN svn(fs::current_path(), &db);
+	std::cout << "Is this an SVN import? " << svn.isSVN() << std::endl;
+
+	if(svn.isSVN()) {
+		if(OFSYesNoDialog("SVN Install Detected.", "An SVN install of Open Fortress has been detected.\n\n"
+												   "Import and update this install?") == 0) {
+			simulateButton(BUT_CLICKED_VERIFYINTEGRITY);
+
+			SDL_SemWait(verifyStateLock);
+			verifyState = -1;
+			SDL_SemPost(verifyStateLock);
+			std::cout << "Verifying integrity..." << std::endl;
+			int vi = svn.convertSVN();;
+			std::cout << vi << std::endl;
+			SDL_SemWait(verifyStateLock);
+			verifyState = vi;
+			SDL_SemPost(verifyStateLock);
+		}
+	}
+
+
 	// To Fenteale: Later on you'll have direct access to two automated
 	// functions. These will be updateGame and verifyIntegrity respectively.
 	// I'll try to add some callbacks and stuff so you can use progress bars!
@@ -180,20 +163,10 @@ int main(int argc, char *argv[]) {
 			case BUT_CLICKED_INSTALL:
 				TRYCATCHERR_START()
 				db.compareRevisions();
-				int totalFiles = db.getQueueSize();
-				while(!db.downloadFiles(progData, &butStateData) && c && (FiredGuiAct != BUT_CLICKED_CANCEL))
-				{
-					SDL_SemWait(progDataLock);
-					progData = ((float)totalFiles - (float)db.getQueueSize()) / (float)totalFiles;
-					SDL_SemPost(progDataLock);
-					SDL_SemWait(continueDataLock);
-					c = continueData;
-					SDL_SemPost(continueDataLock);
-					SDL_SemWait(butDataLock);
-					FiredGuiAct = butStateData;
-					butStateData = NOT_CLICKED;
-					SDL_SemPost(butDataLock);
-				}
+
+				db.downloadFiles(progData, &butStateData);
+				c = continueData;
+
 				if(c && (butStateData != BUT_CLICKED_CANCEL)) {
 					db.copyDb();
                     SDL_SemWait(progDataLock);
@@ -207,6 +180,8 @@ int main(int argc, char *argv[]) {
 #endif
 					}
 				}
+				else
+					simulateButton(INSTALL_FINISHED);
 
 				TRYCATCHERR_END("Failed to update game")
 				break;

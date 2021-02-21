@@ -26,7 +26,7 @@ DEFINE_LAYOUT(preInstallLayout) {
 	addImage("promo", DATA(promo), 570, 100);
 	addButton("patch notes", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_PN, "PATCH NOTES", 570, 300, 25);
 
-	addButton("install button", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_INSTALL, "INSTALL", 30, 100, 25);
+	addButton("install button", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_INSTALL, "INSTALL / UPDATE", 30, 100, 25);
 	addButton("options", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_OPTIONS, "OPTIONS", 30, 130, 25);
 
 	//addButton("options", FONTDATA(SourceSansPro_Regular), BUT_CLICKED_OPTIONS, "Options", 50, 200, SMALL_BUTTON);
@@ -36,6 +36,7 @@ DEFINE_LAYOUT(preInstallLayout) {
 
 	bindActivity(BUT_CLICKED_INSTALL, OFSGui::installLayout);
 	bindActivity(BUT_CLICKED_OPTIONS, OFSGui::SteamDirOption);
+	bindActivity(BUT_CLICKED_VERIFYINTEGRITY, OFSGui::verifyFiles);
 }
 DEFINE_LAYOUT(installLayout) {
 	clearLayout();
@@ -150,12 +151,12 @@ DEFINE_LAYOUT(postVerifyFiles) {
 				25, 30, 160);
 	}
 
-	addButton("cancel", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_OPTIONS, "BACK TO OPTIONS", 30, 490, 25);
+	addButton("cancel", FONTDATA(SourceCodePro_Bold), BUT_CLICKED_MAIN, "BACK TO MAIN MENU", 30, 490, 25);
 
 	addImage("stripe", DATA(stripe), 0, 470);
 	addText("log", FONTDATA(SourceCodePro_Bold), "industries.TF", 25, 730, 490);
 
-	bindActivity(BUT_CLICKED_OPTIONS, OFSGui::SteamDirOption);
+	bindActivity(BUT_CLICKED_MAIN, OFSGui::preInstallLayout);
 }
 
 DEFINE_LAYOUT(quitLayout) {

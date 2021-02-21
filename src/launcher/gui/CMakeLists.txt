@@ -20,7 +20,9 @@ SET(GUI_SOURCES
         OFSGuiDirButton.cpp
         OFSGuiDirButton.h
         OFSGuiThread.cpp
-        OFSGuiThread.h)
+        OFSGuiThread.h
+        OFSMessageDiag.cpp
+        OFSMessageDiag.h)
 
 
 find_path(SDL2_INCLUDE_DIR SDL2/SDL.h)

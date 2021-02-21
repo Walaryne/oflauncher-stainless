@@ -6,14 +6,17 @@
 #define OFLAUNCHER_STAINLESS_OFSIMPORTSVN_H
 
 #include "OFFilesystem.h"
+#include "../db/OFSDatabase.h"
 
 class OFSImportSVN {
 public:
-	OFSImportSVN(fs::path svnInstall);
+	OFSImportSVN(fs::path svnInstall, OFSDatabase* db);
 	bool isSVN() const;
+	int convertSVN();
 
 private:
 	fs::path svnInstall;
+	OFSDatabase *db;
 };
 
 #endif // OFLAUNCHER_STAINLESS_OFSIMPORTSVN_H

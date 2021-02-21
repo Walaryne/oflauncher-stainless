@@ -135,6 +135,8 @@ int OFSDatabase::compareIntegrity() {
 			}
 			ret++;
 		}
+		else
+			std::cout << lf << " checked." << std::endl;
 	}
 
 	return ret;
