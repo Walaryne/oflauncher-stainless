@@ -31,6 +31,7 @@ struct dfArgs {
 };
 
 int downloadFile(void *ptr);
+std::string downloadIntoString(const std::string &serverURL, const std::string &path);
 
 class OFSNet {
 public:

@@ -120,6 +120,27 @@ int downloadFile(void *ptr) {
 	return 0;
 }
 
+std::string downloadIntoString(const std::string &serverURL, const std::string &path) {
+	CURL *curlh = curl_easy_init();
+
+	curl_mem_buf membuf{};
+
+	//std::cout << "SERVER PATH IS: " + (serverURL + path) << std::endl;
+	curl_easy_setopt(curlh, CURLOPT_WRITEFUNCTION, memCallback);
+	curl_easy_setopt(curlh, CURLOPT_WRITEDATA, &membuf);
+	curl_easy_setopt(curlh, CURLOPT_URL, (serverURL + path).c_str());
+	CURLcode retcode = curl_easy_perform(curlh);
+	curl_easy_cleanup(curlh);
+	//std::cout << "cURL return code: " << retcode << std::endl;
+
+	if(retcode != CURLE_OK)
+		throw std::runtime_error("Error downloading file.");
+
+	std::string ret(membuf.memfile, membuf.size);
+
+	return ret;
+}
+
 void OFSNet::fetchDatabase() {
 	downloadFile(p_serverURL, "/" + p_dbFileName,
 				 fs::path("launcher/remote").make_preferred() /

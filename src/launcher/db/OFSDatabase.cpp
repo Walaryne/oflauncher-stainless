@@ -177,8 +177,24 @@ struct downloadThread {
 bool OFSDatabase::downloadFiles(float &prog, int *act) {
 	std::string serverURL = p_net->getServerURL() + "/";
 
+	//maybe don't hardcode the path in the future.
+	std::string coreCount = downloadIntoString("http://svn.openfortress.fun/launcher/", "metadata/cores.txt");
+	std::cout << "Max threads limited to: " << coreCount << std::endl;
+	int requestedCores = std::stoi(coreCount);
+	int hardwareCores = SDL_GetCPUCount() - 1;
+	int numThreadsMax;
+	if (requestedCores <= 0)
+		numThreadsMax = hardwareCores;
+	else if(requestedCores > hardwareCores)
+		numThreadsMax = hardwareCores;
+	else
+		numThreadsMax = requestedCores;
+
+	//if you make a custom build to make numThreadsMax always equal to hardwareCores,
+	//so you download faster than other people on big release days, a rabbid fennec
+	//fox will spawn in your bedroom tonight and tear you to shreds - Fenteale
+
 	int numThreads = 0;
-	int numThreadsMax = SDL_GetCPUCount() - 1;
 	std::cout << "Spawning maximum of " << numThreadsMax << " threads." << std::endl;
 
 
