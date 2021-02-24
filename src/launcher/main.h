@@ -18,6 +18,7 @@
 #include "importsvn/OFSImportSVN.h"
 #include <exception>
 #include "OFFilesystem.h"
+#include "OFSRunExe.h"
 #include <iostream>
 
 #ifdef _WIN32

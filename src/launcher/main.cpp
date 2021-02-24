@@ -26,9 +26,19 @@ void checkDirsExist() {
 
 int main(int argc, char *argv[]) {
 	bool runFromGame = false;
-	for(int i = 0; i < argc; i++)
+	bool isInGameFolder = false;
+	for(int i = 0; i < argc; i++) {
 		if(strcmp(argv[i], "-check-for-updates") == 0)
 			runFromGame = true;
+		if(strcmp(argv[i], "-force-run") == 0)
+			isInGameFolder = true;
+	}
+
+	fs::path launcherCheck = fs::current_path();
+	launcherCheck = launcherCheck / ".." / ".." / "open_fortress" / "launcher" / EXENAME;
+	std::cout << "Checking path: " << launcherCheck.string() << std::endl;
+	if(fs::exists(launcherCheck ))
+		isInGameFolder = true;
 
 	// Initialize cURL for usage program wide
 	curl_global_init(CURL_GLOBAL_ALL);
@@ -83,8 +93,15 @@ int main(int argc, char *argv[]) {
 
 	TRYCATCHERR_END("Couldn't display prompt messages.")
 
-
-
+	std::string gameFolderName = "open_fortress";
+	fs::path of = fs::path(steam->getSourcemodsPath() / gameFolderName)
+		.make_preferred();
+	fs::path launcherPath = of / "launcher" / EXENAME;
+	if(fs::exists(launcherPath) && !isInGameFolder) {
+		std::cout << "Launcher binary found in game folder, running that." << std::endl;
+		RunLauncher(launcherPath);
+		return 0;
+	}
 
 
 	SDL_Thread *guiThread = SDL_CreateThread(doGui, "Gui", (void *)(&steamPath));
@@ -92,12 +109,11 @@ int main(int argc, char *argv[]) {
 	// if(runFromGame)
 	// g.simulateButton(BUT_CLICKED_INSTALL);
 
-	std::string gameFolderName = "open_fortress";
+
 
 
 	TRYCATCHERR_START()
-	fs::path of = fs::path(steam->getSourcemodsPath() / gameFolderName)
-					  .make_preferred();
+
 
 
 

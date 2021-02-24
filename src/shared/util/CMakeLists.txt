@@ -8,6 +8,7 @@ SET(UTIL_SOURCES
         nineSlice.cpp
         nineSlice.h
         openURL.h
+        OFSRunExe.h
         )
 
 set(UTIL_SOURCES_LINUX
