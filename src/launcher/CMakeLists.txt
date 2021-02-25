@@ -25,6 +25,10 @@ set(OFS_LIBRARIES
 if(UNIX)
     find_package(PkgConfig REQUIRED)
 endif()
+
+find_package(SQLite3 REQUIRED)
+include_directories(${SQLite3_INCLUDE_DIRS})
+
 add_subdirectory(zstd/build/cmake)
 add_subdirectory(hashlib2plus)
 add_subdirectory(gui)
@@ -40,3 +44,4 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC  ${OFS_LIBRARIES})
 
+#target_link_libraries(${PROJECT_NAME} PUBLIC ${OFS_LIBRARIES})

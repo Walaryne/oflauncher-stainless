@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 		isInGameFolder = true;
 
 	// Initialize cURL for usage program wide
-	curl_global_init(CURL_GLOBAL_ALL);
+	
 
 	// init semaphore for checking button data
 	butDataLock = SDL_CreateSemaphore(2);

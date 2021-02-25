@@ -1,8 +1,8 @@
 //
 // Created by walaryne on 6/15/20.
 //
-
 #include "OFSDatabase.h"
+#include "SDL2/SDL.h"
 
 OFSDatabase::OFSDatabase(OFSNet *net) {
 	p_net = net;

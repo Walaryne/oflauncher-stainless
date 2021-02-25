@@ -5,7 +5,6 @@
 #ifndef OFLAUNCHER_STAINLESS_OFSNET_H
 #define OFLAUNCHER_STAINLESS_OFSNET_H
 
-#include <curl/curl.h>
 //#include "../lzma/OFLZMA.h"
 #include <inttypes.h>
 extern "C" {

@@ -10,7 +10,6 @@
 
 #include "../net/OFSNet.h"
 #include "../MD5/OFSVerifyIntegrity.h"
-#include "SDL2/SDL.h"
 #include <deque>
 #include "OFFilesystem.h"
 #include "../gui/OFSGuiActs.h"

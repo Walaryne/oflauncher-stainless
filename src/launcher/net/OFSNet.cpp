@@ -6,6 +6,7 @@
 #include <fstream>
 #include <utility>
 #include <zstd.h>
+#include <curl/curl.h>
 
 struct curl_mem_buf {
 	char *memfile;
@@ -30,6 +31,7 @@ size_t memCallback(void *data, size_t size, size_t nmemb, void *userp) {
 
 
 OFSNet::OFSNet(std::string serverURL, std::string gameFolderName) {
+	curl_global_init(CURL_GLOBAL_ALL);
 	convertURL(serverURL);
 	p_serverURL = std::move(serverURL);
 	p_dbFileName = "ofmanifest.db";

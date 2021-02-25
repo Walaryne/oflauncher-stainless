@@ -5,8 +5,6 @@ SET(UTIL_SOURCES
         md5.h
         md5.cpp
         json.hpp
-        nineSlice.cpp
-        nineSlice.h
         openURL.h
         OFSRunExe.h
         )

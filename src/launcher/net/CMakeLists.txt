@@ -7,7 +7,14 @@ find_package(CURL REQUIRED)
 find_path(ZSTD_INCLUDE_DIR zstd.h)
 find_library(ZSTD_LIBRARY zstd)
 
-include_directories(${CURL_INCLUDE_DIR} ../zstd/lib/)
+if(CURL_FOUND)
+    message("-- Found Curl")
+else()
+    message("-- CURL not found, terminating")
+    return()
+endif()
+
+include_directories(${CURL_INCLUDE_DIRS} ../zstd/lib/)
 
 add_library(OFSNet ${NET_SOURCES})
 
