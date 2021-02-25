@@ -3,6 +3,7 @@
 //
 
 #include "OFSGui.h"
+#include "res/icon.bmp.h"
 
 //########### OFSGui ############
 OFSGui::OFSGui() {
@@ -31,6 +32,11 @@ OFSGui::OFSGui() {
 	SDL_SetRenderDrawColor(_renderer, 0xFF, 0x00, 0xFF, 0xFF);
 	if(TTF_Init() == -1)
 		throw SDLTTFException("Can't Init SDL_ttf");
+
+	SDL_RWops *rw = SDL_RWFromMem((void *)icon_bmp_data.buf, icon_bmp_data.len);
+	SDL_Surface *iconSurface = SDL_LoadBMP_RW(rw, 1);
+	SDL_SetWindowIcon(_window, iconSurface);
+	SDL_FreeSurface(iconSurface);
 
 	preInstallLayout();
 
