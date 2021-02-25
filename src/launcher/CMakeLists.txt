@@ -1,6 +1,7 @@
 
 
 option(STATIC_LINK "Static link the libraries included" OFF)
+option(SHOW_CMD_ON_WINDOWS "Show the command prompt when running the windows binary." OFF)
 
 set(SOURCES
         main.cpp
@@ -42,6 +43,9 @@ add_subdirectory(importsvn)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+if(NOT SHOW_CMD_ON_WINDOWS)
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
+endif()
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC  ${OFS_LIBRARIES})
 
 #target_link_libraries(${PROJECT_NAME} PUBLIC ${OFS_LIBRARIES})

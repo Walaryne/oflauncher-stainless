@@ -24,7 +24,18 @@ void checkDirsExist() {
 	}
 }
 
+#ifdef WIN32
+#ifdef SHOW_CMD_ON_WINDOWS
 int main(int argc, char *argv[]) {
+#else
+int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+	int argc = 1;
+	char *argv[1];
+	argv[0] = lpCmdLine;
+#endif
+#else
+int main(int argc, char *argv[]) {
+#endif
 	bool runFromGame = false;
 	bool isInGameFolder = false;
 	for(int i = 0; i < argc; i++) {
