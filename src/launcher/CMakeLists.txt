@@ -43,10 +43,12 @@ add_subdirectory(importsvn)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-if(NOT SHOW_CMD_ON_WINDOWS)
-    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
-else()
-    add_compile_definitions(${PROJECT_NAME} SHOW_CMD_ON_WINDOWS)
+if(WIN32)
+    if(NOT SHOW_CMD_ON_WINDOWS)
+        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
+    else()
+        add_compile_definitions(${PROJECT_NAME} SHOW_CMD_ON_WINDOWS)
+    endif()
 endif()
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC  ${OFS_LIBRARIES})
 
