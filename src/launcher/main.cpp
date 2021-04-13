@@ -29,9 +29,9 @@ void checkDirsExist() {
 int main(int argc, char *argv[]) {
 #else
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
-	int argc = 1;
-	char *argv[1];
-	argv[0] = lpCmdLine;
+	#define argc __argc
+	#define argv __argv
+	
 #endif
 #else
 int main(int argc, char *argv[]) {
@@ -39,9 +39,9 @@ int main(int argc, char *argv[]) {
 	bool runFromGame = false;
 	bool isInGameFolder = false;
 	for(int i = 0; i < argc; i++) {
-		if(strcmp(argv[i], "-check-for-updates") == 0)
+		if(strstr(argv[i], "-check-for-updates"))
 			runFromGame = true;
-		if(strcmp(argv[i], "-force-run") == 0)
+		if(strstr(argv[i], "-force-run"))
 			isInGameFolder = true;
 	}
 

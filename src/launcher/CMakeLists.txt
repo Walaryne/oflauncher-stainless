@@ -44,11 +44,16 @@ add_subdirectory(importsvn)
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 if(WIN32)
-    if(NOT SHOW_CMD_ON_WINDOWS)
-        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
+    if(SHOW_CMD_ON_WINDOWS)
+        message("Showing command prompt in windows build.")
+        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:CONSOLE)
+        target_compile_definitions(${PROJECT_NAME} PUBLIC SHOW_CMD_ON_WINDOWS)
+
+        
     else()
-        add_compile_definitions(${PROJECT_NAME} SHOW_CMD_ON_WINDOWS)
-    endif()
+        message("Hiding command prompt on windows.")
+        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
+    endif(SHOW_CMD_ON_WINDOWS)
 endif()
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} LINK_PUBLIC  ${OFS_LIBRARIES})
 
