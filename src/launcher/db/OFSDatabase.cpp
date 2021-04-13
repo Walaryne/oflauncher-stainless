@@ -14,7 +14,10 @@ OFSDatabase::OFSDatabase(OFSNet *net) {
 
 	if(fs::exists(p_localDBPath)) {
 		//We already have a local db file, go ahead and load it
-		sqlite3_open(p_localDBPath.make_preferred().string().c_str(), &p_dbFileLocal);
+		int rc = sqlite3_open(p_localDBPath.make_preferred().string().c_str(), &p_dbFileLocal);
+		if(rc != SQLITE_OK) {
+			throw std::runtime_error("SQLite database didn't open!");
+		}
 	}
 	if(!fs::exists(p_remoteDBPath)) {
 		//Something failed miserably, we couldn't pull the new database from the server
@@ -242,6 +245,7 @@ int OFSDatabase::databaseSingleResultConsumer(void *param, int argc, char **argv
 
 void OFSDatabase::copyDb() {
 	if(fs::exists(p_localDBPath)) {
+		sqlite3_close(p_dbFileLocal);
 		fs::remove(p_localDBPath);
 	}
 
