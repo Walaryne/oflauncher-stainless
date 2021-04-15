@@ -4,3 +4,6 @@
 [submodule "src/launcher/zstd"]
 	path = src/launcher/zstd
 	url = https://github.com/facebook/zstd
+[submodule "src/launcher/nativefiledialog"]
+	path = src/launcher/nativefiledialog
+	url = https://github.com/Fenteale/nativefiledialog.git

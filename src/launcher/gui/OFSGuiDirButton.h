@@ -6,7 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSGUIDIRBUTTON_H
 
 #include "OFSGuiButton.h"
-#include "../nativefiledialog/include/nfd.h"
+#include "../nativefiledialog/src/include/nfd.h"
 
 class OFSGuiDirButton : public OFSGuiButton {
 private:
