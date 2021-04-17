@@ -9,7 +9,6 @@ set(SOURCES
 include_directories(../shared/util)
 set(OFS_LIBRARIES
 	libzstd_static
-        hashlib2plus
         OFSGui
         OFSdb
         OFSNet
@@ -31,7 +30,7 @@ find_package(SQLite3 REQUIRED)
 include_directories(${SQLite3_INCLUDE_DIRS})
 
 add_subdirectory(zstd/build/cmake)
-add_subdirectory(hashlib2plus)
+#add_subdirectory(hashlib2plus)
 add_subdirectory(gui)
 add_subdirectory(db)
 add_subdirectory(net)

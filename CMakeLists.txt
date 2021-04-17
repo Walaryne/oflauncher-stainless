@@ -9,5 +9,6 @@ add_subdirectory(src/shared/config)
 add_subdirectory(src/shared/steam)
 add_subdirectory(src/shared/util)
 add_subdirectory(src/shared/minlzma)
+add_subdirectory(src/shared/cryptopp)
 
 add_subdirectory(src/launcher)

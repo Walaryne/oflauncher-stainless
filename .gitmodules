@@ -7,3 +7,6 @@
 [submodule "src/launcher/nativefiledialog"]
 	path = src/launcher/nativefiledialog
 	url = https://github.com/Fenteale/nativefiledialog.git
+[submodule "src/shared/cryptopp"]
+	path = src/shared/cryptopp
+	url = https://github.com/Fenteale/cryptopp-cmake.git
