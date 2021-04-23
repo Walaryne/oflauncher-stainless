@@ -18,7 +18,7 @@ bool verifyIntegrity(fs::path fToCheck, std::string md5db) {
 
 	try {
 		CryptoPP::Weak::MD5 hash;
-		CryptoPP::HashFilter f(hash, new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest)));
+		CryptoPP::HashFilter f(hash, new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))); //, false, 8);
 
 		CryptoPP::FileSource(fToCheck.make_preferred().string().c_str(), true, new CryptoPP::Redirector(f));
 
