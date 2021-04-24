@@ -14,6 +14,7 @@
 #include "cryptopp/files.h"
 #define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
 #include "cryptopp/md5.h"
+#include "cryptopp/sha.h"
 //#include "../hashlib2plus/hashlibpp.h"
 
 

@@ -135,7 +135,7 @@ DEFINE_LAYOUT(postVerifyFiles) {
 	addImage("background", DATA(bg));
 
 	if(!verified) {
-		addText("vf", FONTDATA(SourceCodePro_Bold),"VERIFICATION FINISHES.", 25, 30, 100);
+		addText("vf", FONTDATA(SourceCodePro_Bold),"VERIFICATION FINISHED.", 25, 30, 100);
 		addText("vf", FONTDATA(SourceCodePro_Bold),"NO ERRORS DETECTED.", 25, 30, 130);
 	}
 	else {

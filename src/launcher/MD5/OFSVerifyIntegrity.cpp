@@ -17,7 +17,8 @@ bool verifyIntegrity(fs::path fToCheck, std::string md5db) {
 	//CryptoPP::HexEncoder encoder(new CryptoPP::FileSink(std::cout));
 
 	try {
-		CryptoPP::Weak::MD5 hash;
+		//CryptoPP::Weak::MD5 hash;
+		CryptoPP::SHA384 hash;
 		CryptoPP::HashFilter f(hash, new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))); //, false, 8);
 
 		CryptoPP::FileSource(fToCheck.make_preferred().string().c_str(), true, new CryptoPP::Redirector(f));
@@ -40,9 +41,13 @@ bool verifyIntegrity(fs::path fToCheck, std::string md5db) {
 	}*/
 
 	//if( md5ret == md5db)
+	transform(md5db.begin(), md5db.end(), md5db.begin(), ::toupper);
+
 	if(digest == md5db)
 		return true;
 
 	std::cout << md5ret << " " << md5db << std::endl;
 	return false;
+
+	//return true;
 }
