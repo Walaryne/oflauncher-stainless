@@ -43,10 +43,36 @@ void OFSDatabase::compareRevisions() {
 	p_downloadQueue.clear();
 
 	if(!p_dbFileLocal) {
-		for(const auto &v : p_remotePaths) {
-			p_downloadQueue.push_back(v);
+		for(auto &v : p_remotePaths) {
+			std::string stmt = (std::string("select checksum from files where path='") + v + "';");
+			std::string cs;
+			bool isSig;
+
+
+			int rc = sqlite3_exec(p_dbFileRemote, stmt.c_str(),
+								  OFSDatabase::databaseSingleResultConsumer, &cs, &err);
+			stmt = (std::string("select signature from files where path='") + v + "';");
+			rc  = sqlite3_exec(p_dbFileRemote, stmt.c_str(),
+								  OFSDatabase::databaseIsNULL, &isSig, &err);
+
+
+			if(rc != SQLITE_OK) {
+				ERRCHECK
+				throw std::runtime_error("SQLite statement didn't execute!");
+			}
+			if( isSig ) {
+				std::string sig;
+				stmt = "select signature from files where path='" + v + "';";
+				rc  = sqlite3_exec(p_dbFileRemote, stmt.c_str(),
+								  OFSDatabase::databaseSingleResultConsumer,
+								  &sig, &err);
+				p_downloadQueue.emplace_back(v, cs, true, sig);
+			}
+			else
+				p_downloadQueue.emplace_back(v, cs);
 		}
 	} else {
+		//TODO: GOTTA check if there are signatures!!!
 		rc = sqlite3_exec(p_dbFileLocal, "select path from files;",
 						  OFSDatabase::databasePathConsumer, &p_localPaths,
 						  &err);
@@ -56,14 +82,25 @@ void OFSDatabase::compareRevisions() {
 			throw std::runtime_error("SQLite statement didn't execute!");
 		}
 
-		for(const auto &v : p_remotePaths) {
+		for(auto &v : p_remotePaths) {
 			auto result = std::find(p_localPaths.begin(), p_localPaths.end(), v);
+
+			std::string stmt = "select checksum from files where path='" + v + "';";
+			std::string cs;
+			rc = sqlite3_exec(p_dbFileRemote, stmt.c_str(),
+							  OFSDatabase::databaseSingleResultConsumer, &cs,
+							  &err);
+			if(rc != SQLITE_OK) {
+				ERRCHECK
+				throw std::runtime_error("SQLite statement didn't execute!");
+			}
 
 			//We found something!
 			if(result != p_localPaths.end()) {
 				std::string remoteStmtRes;
 				std::string localStmtRes;
-				std::string stmt = (std::string("select revision from files where path='") + v + "';");
+
+				stmt = (std::string("select revision from files where path='") + v + "';");
 
 				rc = sqlite3_exec(p_dbFileRemote, stmt.c_str(),
 								  OFSDatabase::databaseSingleResultConsumer, &remoteStmtRes,
@@ -72,6 +109,9 @@ void OFSDatabase::compareRevisions() {
 				rc = sqlite3_exec(p_dbFileLocal, stmt.c_str(),
 								  OFSDatabase::databaseSingleResultConsumer, &localStmtRes,
 								  &err);
+
+
+
 
 				if(rc != SQLITE_OK) {
 					ERRCHECK
@@ -84,11 +124,11 @@ void OFSDatabase::compareRevisions() {
 
 				if(localStmtRes != remoteStmtRes) {
 					std::cout << "Revisions don't match, adding to download queue" << std::endl;
-					p_downloadQueue.push_back(v);
+					p_downloadQueue.emplace_back(v, cs);
 				}
 
 			} else {
-				p_downloadQueue.push_back(v);
+				p_downloadQueue.emplace_back(v, cs);
 			}
 		}
 	}
@@ -147,7 +187,7 @@ int OFSDatabase::compareIntegrity() {
 
 bool OFSDatabase::downloadSingleFile() {
 	if(!p_downloadQueue.empty()) {
-		std::string file = p_downloadQueue.front();
+		std::string file = p_downloadQueue.front().path;
 		std::cout << "Downloading file: " << file << std::endl;
 		//p_net->downloadFile("/" + file, "", true);
 		p_downloadQueue.pop_front();
@@ -164,10 +204,10 @@ struct downloadThread {
 	bool *done;
 	dfArgs *a;
 
-	downloadThread(const std::string &serverURL, const std::string path) {
+	downloadThread(const std::string &serverURL, const OFDbElement dbe) {
 		done = new bool;
 		*done = false;
-		a = new dfArgs(serverURL, path, done);
+		a = new dfArgs(serverURL, dbe, done);
 		std::string tn = "df";
 		tn.append(std::to_string(tcounter));
 		tcounter++;
@@ -206,10 +246,13 @@ bool OFSDatabase::downloadFiles(float &prog, int *act) {
 
 	std::vector<downloadThread> threads;
 
+
 	while(!p_downloadQueue.empty() && *act != BUT_CLICKED_CANCEL) {
 		while(numThreads < numThreadsMax && !p_downloadQueue.empty() ) {
-			std::cout << "Creating thread to download " << p_downloadQueue.front() << std::endl;
-			threads.push_back(std::move(downloadThread(serverURL, p_downloadQueue.front())));
+			OFDbElement e = p_downloadQueue.front();
+			std::cout << "Creating thread to download " << e.path << std::endl;
+
+			threads.push_back(std::move(downloadThread(serverURL, e)));
 			p_downloadQueue.pop_front();
 			queue--;
 			numThreads++;
@@ -240,6 +283,12 @@ int OFSDatabase::databasePathConsumer(void *param, int argc, char **argv, char *
 int OFSDatabase::databaseSingleResultConsumer(void *param, int argc, char **argv, char **column) {
 	auto retstring = static_cast<std::string *>(param);
 	*retstring = std::string(argv[0]);
+	return 0;
+}
+
+int OFSDatabase::databaseIsNULL(void *param, int argc, char **argv, char **column) {
+	auto retbool = static_cast<bool *>(param);
+	*retbool = argv[0] != NULL;
 	return 0;
 }
 

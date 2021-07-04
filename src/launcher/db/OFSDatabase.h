@@ -10,6 +10,7 @@
 
 #include "../net/OFSNet.h"
 #include "../MD5/OFSVerifyIntegrity.h"
+#include "OFSDatabaseElement.h"
 #include <deque>
 #include "OFFilesystem.h"
 #include "../gui/OFSGuiActs.h"
@@ -37,11 +38,15 @@ private:
 	sqlite3 *p_dbFileRemote;
 	fs::path p_localDBPath;
 	fs::path p_remoteDBPath;
-	std::deque<std::string> p_downloadQueue;
+	//std::deque<std::string> p_downloadQueue;
+	std::deque<OFDbElement> p_downloadQueue;
 	std::vector<std::string> p_remotePaths;
 	std::vector<std::string> p_localPaths;
 	static int databasePathConsumer(void *param, int argc, char **argv, char **column);
 	static int databaseSingleResultConsumer(void *param, int argc, char **argv, char **column);
+	static int databaseIsNULL(void *param, int argc, char **argv, char **column);
 };
+
+
 
 #endif // OFLAUNCHER_STAINLESS_OFSDATABASE_H

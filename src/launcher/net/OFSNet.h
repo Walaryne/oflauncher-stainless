@@ -6,6 +6,7 @@
 #define OFLAUNCHER_STAINLESS_OFSNET_H
 
 //#include "../lzma/OFLZMA.h"
+#include "../db/OFSDatabaseElement.h"
 #include <inttypes.h>
 extern "C" {
 #include "../../shared/minlzma/minlzma.h"
@@ -18,15 +19,22 @@ extern "C" {
 #include <utility>
 #include <iostream>
 #include <memory>
+#include "cryptopp/cryptlib.h"
+#include "cryptopp/hex.h"
+#include "cryptopp/files.h"
+//#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
+//#include "cryptopp/md5.h"
+#include "cryptopp/sha.h"
+#include "cryptopp/rsa.h"
 
 
 
 struct dfArgs {
 	const std::string serverURL;
-	const std::string path;
+	const OFDbElement e;
 	bool *done;
 
-	dfArgs(const std::string &serverURL, const std::string &path, bool *done) : serverURL(serverURL), path(path), done(done) {}
+	dfArgs(const std::string &serverURL, const OFDbElement &e, bool *done) : serverURL(serverURL), e(e), done(done) {}
 };
 
 int downloadFile(void *ptr);
@@ -34,10 +42,10 @@ std::string downloadIntoString(const std::string &serverURL, const std::string &
 
 class OFSNet {
 public:
-    explicit OFSNet(std::string serverURL, std::string gameFolderName);
+    explicit OFSNet(std::string serverURL, std::string &gameFolderName);
     OFSNet() =delete;
 	std::string getServerURL();
-	void setServerURL(std::string URL);
+	void setServerURL(std::string &URL);
 	std::string getFolderName();
 	void setFolderName(std::string name);
 	void fetchDatabase();
@@ -45,7 +53,6 @@ public:
 
 
 private:
-	static inline void convertURL(std::string &s);
 	//static size_t memCallback(void *data, size_t size, size_t nmemb, void *userp);
     std::string p_serverURL;
     std::string p_dbFileName;

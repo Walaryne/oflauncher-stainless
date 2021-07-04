@@ -1,6 +1,7 @@
 SET(DB_SOURCES
         OFSDatabase.cpp
-        OFSDatabase.h)
+        OFSDatabase.h
+        OFSDatabaseElement.h)
 
 find_package(SQLite3 REQUIRED)
 

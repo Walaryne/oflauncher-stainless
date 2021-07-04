@@ -1,6 +1,7 @@
 SET(NET_SOURCES
         OFSNet.cpp
-        OFSNet.h)
+        OFSNet.h
+        OFSPubKey.h)
 
 find_package(CURL REQUIRED)
 
